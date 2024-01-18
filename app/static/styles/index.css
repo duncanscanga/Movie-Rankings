@@ -1,0 +1,76 @@
+label {
+    padding-top: 0px;
+}
+
+body {
+    height: 100%;
+    width: 100%;
+    background-color: #717db600;
+}
+
+label {
+    color: rgba(211, 42, 42, 1);
+}
+
+.wrapper {
+    color: #c86a6a;
+}
+
+.btn-wrapper {
+    margin-top: 0px;
+    width: 100%;
+    text-align: center;
+}
+
+table, th, td {
+    border: 1px solid rgb(200, 216, 23);
+}
+
+td {
+    border: 1px solid rgb(200, 216, 23);
+    text-align: center;
+          vertical-align: middle;
+}
+
+th {
+    border: 1px solid rgb(200, 216, 23);
+    text-align: center;
+          vertical-align: middle;
+
+}
+
+input {
+    width: fit-content;
+    color: rgba(211, 42, 42, 1);
+}
+
+.form-control
+{
+    color: rgba(211, 42, 42, 1);
+}
+
+table {
+    width: 100%;
+}
+
+h4
+{
+    color: red;
+}
+
+h1
+{
+    padding-top: 1%;
+    color: red;
+}
+
+.float-container {
+    border: 3px solid #fff;
+    padding: 20px;
+}
+
+.float-child {
+    width: 25%;
+    float: left;
+    padding: 20px;
+}  

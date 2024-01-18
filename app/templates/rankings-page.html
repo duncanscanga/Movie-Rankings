@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Rank Movies{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<h3>Types of Rankings:</h3>
+<div style="padding-bottom: 1%;">
+  <input
+  class="btn"
+              type="button"
+  type="delete"
+  value="All Movies"
+  onclick="location.href = '/rank-all'"
+/>
+</div>
+<div style="padding-bottom: 1%;">
+  <input
+  class="btn"
+              type="button"
+  type="delete"
+  value="Similar Rankings"
+  onclick="location.href = '/rank-by-proximity'"
+/>
+</div>
+
+<div style="padding-bottom: 1%;">
+  <input
+  class="btn"
+              type="button"
+  type="delete"
+  value="👍 Rankings"
+  onclick="location.href = '/rank-by-liked'"
+/>
+</div>
+
+
+<div style="padding-bottom: 1%;">
+  <input
+  class="btn"
+              type="button"
+  type="delete"
+  value="🤝 Rankings"
+  onclick="location.href = '/rank-by-mid'"
+/>
+</div>
+
+<div style="padding-bottom: 1%;">
+  <input
+  class="btn"
+              type="button"
+  type="delete"
+  value="👎 Rankings"
+  onclick="location.href = '/rank-by-unliked'"
+/>
+</div>
+<div style="padding-bottom: 1%;">
+
+  <input
+  class="btn"
+              type="button"
+  type="delete"
+  value="Winner Stays"
+  onclick="location.href = '/rank-by-winner/0'"
+/>
+
+</div>
+<div style="padding-bottom: 1%;">
+  <input
+  class="btn"
+              type="button"
+  type="delete"
+  value="Loser Stays"
+  onclick="location.href = '/rank-by-loser/0'"
+/>
+</div>
+<div style="padding-bottom: 1%;">
+
+  <input
+  class="btn"
+              type="button"
+  type="delete"
+  value="Recently Watched"
+  onclick="location.href = '/rank-by-recent'"
+/>
+</div>
+<div style="padding-bottom: 1%;">
+
+  <input
+  class="btn"
+              type="button"
+  type="delete"
+  value="Least Ranked"
+  onclick="location.href = '/rank-by-unranked'"
+/>
+</div>
+
+<div style="padding-bottom: 1%;">
+
+  <input
+  class="btn"
+              type="button"
+  type="delete"
+  value="Unique Rankings"
+  onclick="location.href = '/rank-by-unique'"
+/>
+</div>
+
+
+
+
+
+
+
+{% endblock %}

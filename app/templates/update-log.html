@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Rankings: Update '{{movie.movieTitle}}'' Log{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <h1 style="padding-top: 2%;">Update '{{movie.movieTitle}}' Log</h1>
+  <form method="post">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-4">
+          <a href='/details/{{movie.movieId}}'><img src="/static/images/movieposters/{{ movie.moviePoster }}" alt="Poster Not Available.">  </a>
+        </div>
+        <div class="col-8">
+          <label for="newLocation">Location</label>
+          <input
+            class="form-control"
+            name="newLocation" style="color:blue; caret-color: red;"
+            id="newLocation"
+            value="{{movie.location}}"
+          />
+    
+          <label for="newPeople">People With?</label>
+          <input
+            class="form-control"
+            name="newPeople" style="color:blue; caret-color: red;"
+            id="newPeople"
+            value="{{movie.people}}"
+          />
+          
+          <label for="newNotes">Notes</label>
+          <input
+            class="form-control"
+            name="newNotes" style="color:blue; caret-color: red;"
+            id="newNotes"
+            value="{{movie.notes}}"
+          />
+          <label for="newDate">Watch Date</label>
+          <input
+            type="date"
+            class="form-control"
+            style="width: 50%;" style="color:blue; caret-color: red;"
+            name="newDate"
+            id="newDate"
+            value="{{movie.watchDate}}"
+          />
+        </div>
+
+      </div>
+
+
+      <div style="padding-top: 2%;" class="btn-wrapper">
+        <input
+          class="btn"
+              type="submit"
+          value="Update Log"
+        />
+      </div>
+      <!-- <div style="padding-top: 2%;" class="btn-wrapper">
+        <input
+          class="btn"
+              type="button"
+          type="delete"
+          value="Delete Movie"
+          onclick="location.href = '/delete-movie/{{movie.id}}'"
+        />
+      </div> -->
+    </div>
+  </form>
+</div>
+{% endblock %}

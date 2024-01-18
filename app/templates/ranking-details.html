@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Duncan's Movies | Ranking Details{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-12" >
+      <a href='/details/{{movie.id}}' title="#{{movie.rank}}"> <img style="display: block;
+      margin-left: auto;
+      margin-right: auto;
+      " width="25%" src="{{ poster }}" alt="Poster Not Available."> </a>
+       <div class="btn-wrapper">
+        <input class=" col-4 btn" type="button" value="Re-Rank"
+          onclick="location.href = '/rank-by-rerank/{{movie.id}}'" />
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <h4>
+        Movies '{{movie.title}}' Beat ({{ winners|length }}):
+      </h4>
+      <div id="movies">
+        {% for winner in winners %}
+        <div class="row">
+          <a href='http://www.google.com/search?q={{winner.winnerTitle}}' target="_blank"> {{winner.winnerTitle}}</a> {% if winner.winnerLiked == 1 %}
+          <span style="color: red;">&#128077;</span> <!-- Red heart -->
+        {% elif winner.winnerLiked == 2 %}
+          <span>&#129309;</span> <!-- Handshake -->
+        {% elif winner.winnerLiked == 3 %}
+          <span>&#128078;</span> <!-- Trash can -->
+      
+          {% endif %}
+          <a href='/rank-by-specific/{{movie.id}}/{{winner.loserMovieId}}'><img width="50%"
+              src="/static/images/movieposters/{{ winner.winnerPoster }}" alt="Poster Not Available."> </a>
+        </div>
+        {% endfor %}
+      </div>
+
+    </div>
+
+    <div class="col-6">
+      <h4>
+
+        Movies '{{movie.title}}' Lost To ({{ losers|length }}):
+      </h4>
+      <div id="movies">
+        {% for loser in losers %}
+        <div class="row">
+          <a href='http://www.google.com/search?q={{loser.loserTitle}}' target="_blank"> {{loser.loserTitle}}</a>{% if loser.loserLiked == 1 %}
+          <span style="color: red;">&#128077;</span> <!-- Red heart -->
+        {% elif loser.loserLiked == 2 %}
+          <span>&#129309;</span> <!-- Handshake -->
+        {% elif loser.loserLiked == 3 %}
+          <span>&#128078;</span> <!-- Trash can -->
+      
+          {% endif %}
+          <a href='/rank-by-specific/{{movie.id}}/{{loser.winnerMovieId}}'><img width="50%"
+              src="/static/images/movieposters/{{ loser.loserPoster }}" alt="Poster Not Available."> </a>
+        </div>
+
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+
+
+
+</div>
+{% endblock %}

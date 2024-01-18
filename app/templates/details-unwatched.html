@@ -1,0 +1,212 @@
+{% extends 'base-home.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Duncan's Movies | {{movie.title}}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div>
+
+  <div class="row">
+    <div class="col-3">
+      <div class="row">
+        <div class="col-12">
+          <img src="{{ poster }}" alt="Poster Not Available.">
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+       <h4>
+        <a style="color: brown;" href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' target="_blank" title="{{ movie.year }}" > <u> {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
+            <span style="color: red;">&#128077;</span> <!-- Red heart -->
+          {% elif movie.liked == 2 %}
+            <span>&#129309;</span> <!-- Handshake -->
+          {% elif movie.liked == 3 %}
+            <span>&#128078;</span> <!-- Trash can -->
+            {% endif %}
+      </h4>
+
+      <div class="row">
+        <h4 class="col-lg-6" style="color: black; "> Year: </h4>
+        <h4 class="col-lg-6" style="color: rgb(104, 95, 95); "> <a href='/all-movies-year/{{movie.year}}'> {{ movie.year }} </a></h4>
+
+      </div>
+
+      <div class="row">
+        <h4 class="col-lg-6" style="color: black; "> Genres: </h4>
+        <h4 class="col-lg-6" style="color: rgb(104, 95, 95); "> {{ movie.genres }}</h4>
+
+      </div>
+
+      <div class="row">
+        <h4 class="col-lg-6" style="color: black; "> Director: </h4>
+        <h4 class="col-lg-6" style="color: rgb(104, 95, 95); "> <a href='/all-movies/{{movie.director}}'> {{ movie.director }} </a>
+        </h4>
+
+      </div>
+
+      <div class="row">
+        <h4 class="col-lg-6" style="color: black; "> Runtime: </h4>
+        <h4 class="col-lg-6" style="color: rgb(104, 95, 95); "> {{ movie.runtime }} minutes</h4>
+
+      </div>
+
+      <div class="row">
+        <h4 class="col-lg-6" style="color: black; "> Notes: </h4>
+        <h4 class="col-lg-6" style="color: rgb(104, 95, 95); "> {{ movie.notes }}</h4>
+
+      </div>
+
+      <h4 style="color: black;">
+        Unwatched
+      </h4>
+
+
+
+      <div class="row" style="padding-top: 10%;">
+        <div class="col-6">
+          <div class="btn-wrapper">
+            <input class="btn" type="button" value="Log Watch"
+              onclick="location.href = '/log-movie/{{movie.id}}'" />
+          </div>
+          
+        </div>
+        <div class="col-6">
+          <div class="btn-wrapper">
+            <input class="btn" type="button" value="Edit Movie"
+              onclick="location.href = '/update-movie/{{movie.id}}'" />
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="btn-wrapper">
+            <input class="btn" type="button"  value="Watching"
+              onclick="location.href = '/current/{{movie.id}}'" />
+
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="btn-wrapper">
+            <input class="btn" type="button" value="Similar"
+              onclick="location.href = '/similar/{{movie.id}}'" />
+
+          </div>
+        </div>
+        
+      </div>
+
+    </div>
+
+    <div class="col-1">
+
+    </div>
+
+
+    <div class="col-4">
+      <div >
+
+        <div>
+          <h4>
+            Related Movies:
+          </h4>
+          <div id="movies4" class="table-responsive">
+            <table>
+              <tr>
+                <th>Movie</th>
+                <th>Title</th>
+                <th>Year</th>
+  
+                <th>Director</th>
+                <th>Genres</th>
+              </tr>
+              {% for movie in similarDirector %}
+              <tr>
+                <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img
+                      src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available."> </a></td>
+                <td><a style="color: brown;" style="color: brown;"
+                    href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' title="{{ movie.year }}"  target="_blank"> <u> 
+                      {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
+            <span style="color: red;">&#128077;</span> <!-- Red heart -->
+          {% elif movie.liked == 2 %}
+            <span>&#129309;</span> <!-- Handshake -->
+          {% elif movie.liked == 3 %}
+            <span>&#128078;</span> <!-- Trash can -->
+        
+           {% endif %}</td>
+                <td><a href='/all-movies/{{movie.year}}'>{{ movie.year }}</a></td>
+                <td><a href='/all-movies/{{movie.director}}'>{{ movie.director }}</a></td>
+                <td>{{ movie.genres }}</td>
+              </tr>
+              {% endfor %}
+              {% for movie in relatedMovies %}
+              <tr>
+                <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img
+                      src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available."> </a></td>
+                <td><a style="color: brown;" style="color: brown;"
+                    href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' title="{{ movie.year }}"  target="_blank"> <u>
+                      {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
+            <span style="color: red;">&#128077;</span> <!-- Red heart -->
+          {% elif movie.liked == 2 %}
+            <span>&#129309;</span> <!-- Handshake -->
+          {% elif movie.liked == 3 %}
+            <span>&#128078;</span> <!-- Trash can -->
+        
+           {% endif %}</td>
+                <td><a href='/all-movies/{{movie.year}}'>{{ movie.year }}</a></td>
+                <td><a href='/all-movies/{{movie.director}}'>{{ movie.director }}</a></td>
+                <td>{{ movie.genres }}</td>
+              </tr>
+              {% endfor %}
+            </table>
+          </div>
+        </div>
+        <!-- 
+              <div class="col-12">
+                <h4>
+                  Related Movies:
+                </h4>
+                <div id="movies4" class="table-responsive">
+                    <table>
+                        <tr>
+                          <th>Movie</th>
+                          <th>Title</th>
+                          <th>Year</th>
+                          
+                          <th>Director</th>
+                          <th>Genres</th>
+                        </tr>
+                        {% for movie in relatedMovies %}
+                        <tr>
+                          <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available.">  </a></td>
+                          <td><a style="color: brown;" style="color: brown;" href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' target="_blank"> <u> {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
+            <span style="color: red;">&#128077;</span> <!-- Red heart -->
+          <!-- {% elif movie.liked == 2 %}
+            <span>&#129309;</span> <Handshake -->
+          <!-- {% elif movie.liked == 3 %} -->
+            <!-- <span>&#128078;</span> Trash can -->
+        
+           <!-- {% endif %}</td>
+                          <td><a href='/all-movies/{{movie.year}}'>{{ movie.year }}</a></td>
+                          <td><a href='/all-movies/{{movie.director}}'>{{ movie.director }}</a></td>
+                          <td>{{ movie.genres }}</td>
+                        </tr>
+                        {% endfor %}
+                      </table>
+                </div>
+              </div> 
+   -->
+      </div>
+
+      {% for list in lists %}
+      <div class="col-12">
+        <input class="btn" style="text-align: center;" type="button" value="{{list.name}}" onclick="location.href = '/list/{{list.id}}'" />
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+</form>
+</div>
+{% endblock %}

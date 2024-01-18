@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Duncan's Movies | Lists{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<h3>Types of Lists:</h3>
+
+<h4> Ranked Lists: </h4>
+<div class="row">
+  
+  <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="Head To Head"
+    onclick="location.href = '/rankings'"
+  />
+  </div>
+  <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="Stars"
+    style="color: gold;"
+    onclick="location.href = '/stars'"
+  />
+  </div>
+  <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="Wins"
+    onclick="location.href = '/wins'"
+  />
+  </div>
+  <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="Best of Each Year"
+    onclick="location.href = '/best-of-year'"
+  />
+  </div>
+
+  <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="Best Directors"
+    onclick="location.href = '/best-directors'"
+  />
+  </div>
+  
+
+</div>
+
+<!-- <h4> Watch Lists: </h4>
+<div class="row">
+
+  <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="Currently Watching"
+    onclick="location.href = '/currently-watching'"
+  />
+  </div>
+  
+  <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="Rewatch"
+    onclick="location.href = '/rewatch'"
+  />
+  </div>
+
+
+  <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="Unwatched"
+    onclick="location.href = '/unwatched'"
+  />
+  </div>  
+
+
+</div> -->
+<h4 > Recent Movies: </h4>
+<div class="row">
+  
+  <!-- <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    type="delete"
+    value="Recently Watched"
+    onclick="location.href = '/recently-watched'"
+  />
+  </div> -->
+
+  <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="Logs"
+    onclick="location.href = '/logs'"
+  />
+  </div>
+  <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="First Watches"
+    onclick="location.href = '/first-logs'"
+  />
+  </div>
+</div>
+
+<h4>
+   Lists:
+</h4>
+
+<div class="row">
+ 
+  <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="People"
+    onclick="location.href = '/people'"
+  />
+  </div>
+  <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="Genres"
+    onclick="location.href = '/genre-rankings'"
+  />
+  </div>
+  
+</div>
+
+<!-- s -->
+
+<h4 > Years: </h4>
+<div class="row">
+  
+  {% for list in listOfYears %}
+  <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="{{list.name}}"
+    onclick="location.href = '/list/{{list.id}}'"
+  />
+  </div>
+  {% endfor %}
+  
+</div>
+
+<h4 > People: </h4>
+<div class="row">
+  
+  {% for list in listOfPeople %}
+  <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="{{list.name}}"
+    onclick="location.href = '/list/{{list.id}}'"
+  />
+  </div>
+  {% endfor %}
+  
+</div>
+
+<h4 > My Lists: </h4>
+<div class="row">
+  <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="New List"
+    onclick="location.href = '/add-list'"
+    style="color: greenyellow;"
+  />
+  </div>
+
+  <!-- <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="Random List"
+    onclick="location.href = '/random-list'"
+    style="color: yellow;"
+  />
+  </div> -->
+
+  
+  {% for list in lists %}
+  <div class="col-6">
+    <input
+    class="btn"
+              type="button"
+    value="{{list.name}}"
+    onclick="location.href = '/list/{{list.id}}'"
+  />
+  </div>
+  {% endfor %}
+  
+</div>
+
+
+</div>
+
+
+
+
+<div style="padding-bottom: 2%;">
+    <!-- <input
+    class="btn"
+              type="button"
+    type="delete"
+    value="Head To Head"
+    onclick="location.href = '/rankings'"
+  /> -->
+  <!-- <input
+  class="btn"
+              type="button"
+  type="delete"
+  value="Head To Head (No Posters)"
+  onclick="location.href = '/rankings-without-posters'"
+/> -->
+</div>
+
+<div style="padding-bottom: 2%;">
+    <!-- <input
+    class="btn"
+              type="button"
+    type="delete"
+    value="Stars"
+    onclick="location.href = '/rankings-by-stars-with-posters'"
+  /> -->
+  <!-- <input
+  class="btn"
+              type="button"
+  type="delete"
+  value="Stars (No Posters)"
+  onclick="location.href = '/rankings-by-stars'"
+/> -->
+</div>
+
+<div style="padding-bottom: 2%;">
+    <!-- <input
+    class="btn"
+              type="button"
+    type="delete"
+    value="Rewatch"
+    onclick="location.href = '/rewatch'"
+  /> -->
+  <!-- <input
+    class="btn"
+              type="button"
+    type="delete"
+    value="Rewatch (No Posters)"
+    onclick="location.href = '/rewatch-without-posters'"
+  /> -->
+</div>
+
+<div style="padding-bottom: 2%;">
+    <!-- <input
+    class="btn"
+              type="button"
+    type="delete"
+    value="Unwatched"
+    onclick="location.href = '/unwatched'"
+  /> -->
+  <!-- <input
+  class="btn"
+              type="button"
+  type="delete"
+  value="Unwatched (No Posters)"
+  onclick="location.href = '/unwatched-without-posters'"
+/> -->
+</div>
+
+<div style="padding-bottom: 2%;">
+    <!-- <input
+    class="btn"
+              type="button"
+    type="delete"
+    value="Recently Watched"
+    onclick="location.href = '/recently-watched'"
+  /> -->
+  <!-- <input
+  class="btn"
+              type="button"
+  type="delete"
+  value="Recently Watched (No Posters)"
+  onclick="location.href = '/recently-watched-without-posters'"
+/> -->
+
+</div>
+
+
+<div style="padding-bottom: 2%;">
+  <!-- <input
+  class="btn"
+              type="button"
+  type="delete"
+  value="Logs"
+  onclick="location.href = '/logs'"
+/> -->
+<!-- <input
+class="btn"
+              type="button"
+type="delete"
+value="Logs (No Posters)"
+onclick="location.href = '/logs'"
+/> -->
+
+</div>
+
+
+{% endblock %}

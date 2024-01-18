@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Duncan's Movies | Rank By List{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+    <div class="row">
+    </div>
+    <div class="row" id="captureThisDiv">
+        <div class="col-lg-5">
+          <a href='http://www.google.com/search?q={{firstMovie.title}} ({{firstMovie.year}})' target="_blank">
+            {{firstMovie.title}} </a> {% if firstMovie.liked == 1 %}
+            <span style="color: red;">&#128077;</span> <!-- Red heart -->
+          {% elif firstMovie.liked == 2 %}
+            <span>&#129309;</span> <!-- Handshake -->
+          {% elif firstMovie.liked == 3 %}
+            <span>&#128078;</span> <!-- Trash can -->
+            {% else %}
+            <!-- Display all icons with onclick event for users to select -->
+            <span id="heart-icon" style="color: red; cursor:pointer; {{ 'display: none;' if firstMovie.liked == 1 else '' }}" onclick="updateMovieLiked({{firstMovie.id}}, 1)">&#128077;</span> <!-- Red heart -->
+            <span id="handshake-icon" style="cursor:pointer; {{ 'display: none;' if firstMovie.liked == 2 else '' }}" onclick="updateMovieLiked({{firstMovie.id}}, 2)">&#129309;</span> <!-- Handshake -->
+            <span id="trash-icon" style="cursor:pointer; {{ 'display: none;' if firstMovie.liked == 3 else '' }}" onclick="updateMovieLiked({{firstMovie.id}}, 3)">&#128078;</span> <!-- Trash can -->
+          {% endif %}
+          <script>
+            function updateMovieLiked(movieId, likedValue) {
+              fetch(`/update-movie-liked/${movieId}/${likedValue}`)
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  // Hide all icons initially
+                  document.getElementById('heart-icon').style.display = 'none';
+                  document.getElementById('handshake-icon').style.display = 'none';
+                  document.getElementById('trash-icon').style.display = 'none';
+            
+                  // Show only the clicked icon
+                  switch (likedValue) {
+                    case 1:
+                      document.getElementById('heart-icon').style.display = 'inline';
+                      break;
+                    case 2:
+                      document.getElementById('handshake-icon').style.display = 'inline';
+                      break;
+                    case 3:
+                      document.getElementById('trash-icon').style.display = 'inline';
+                      break;
+                  }
+                } else {
+                  alert('Failed to update.');
+                }
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
+            }
+            </script>
+            <!-- {{firstMovie.title}} -->
+            ({{firstMovie.year}})
+            <div class="btn-wrapper">
+                <input
+                  class="btn"
+              type="button"
+                  type="submit"
+                  value="Rather Watch"
+                  onclick="location.href = '/update-rankings-by-list/{{firstMovie.id}}/{{secondMovie.id}}/{{list.id}}'"
+                />
+              </div>
+              <a href=/details/{{firstMovie.id}}> <img src="{{ first }}" alt="Poster Not Available."></a>
+              {% if firstMovie.rewatch != 1 %}
+              <div class="btn-wrapper">
+                  <input
+                      class="btn"
+                      type="button"
+                      value="Rewatch"
+                      onclick="location.href = '/rewatch/{{firstMovie.id}}'"
+                  />
+              </div>
+          {% endif %}
+        </div>
+        <div class="col-lg-5">
+          <a href='http://www.google.com/search?q={{secondMovie.title}} ({{secondMovie.year}})' target="_blank">
+            {{secondMovie.title}} </a>
+            {% if secondMovie.liked == 1 %}
+            <span style="color: red;">&#128077;</span> <!-- Red heart -->
+          {% elif secondMovie.liked == 2 %}
+            <span>&#129309;</span> <!-- Handshake -->
+          {% elif secondMovie.liked == 3 %}
+            <span>&#128078;</span> <!-- Trash can -->
+            {% else %}
+            <!-- Display all icons with onclick event for users to select -->
+            <span id="heart-icon2" style="color: red; cursor:pointer; {{ 'display: none;' if secondMovie.liked == 1 else '' }}" onclick="updateMovieLiked2({{secondMovie.id}}, 1)">&#128077;</span> <!-- Red heart -->
+            <span id="handshake-icon2" style="cursor:pointer; {{ 'display: none;' if secondMovie.liked == 2 else '' }}" onclick="updateMovieLiked2({{secondMovie.id}}, 2)">&#129309;</span> <!-- Handshake -->
+            <span id="trash-icon2" style="cursor:pointer; {{ 'display: none;' if secondMovie.liked == 3 else '' }}" onclick="updateMovieLiked2({{secondMovie.id}}, 3)">&#128078;</span> <!-- Trash can -->
+          {% endif %}
+          <script>
+            function updateMovieLiked2(movieId, likedValue) {
+              fetch(`/update-movie-liked/${movieId}/${likedValue}`)
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  // Hide all icons initially
+                  document.getElementById('heart-icon2').style.display = 'none';
+                  document.getElementById('handshake-icon2').style.display = 'none';
+                  document.getElementById('trash-icon2').style.display = 'none';
+            
+                  // Show only the clicked icon
+                  switch (likedValue) {
+                    case 1:
+                      document.getElementById('heart-icon2').style.display = 'inline';
+                      break;
+                    case 2:
+                      document.getElementById('handshake-icon2').style.display = 'inline';
+                      break;
+                    case 3:
+                      document.getElementById('trash-icon2').style.display = 'inline';
+                      break;
+                  }
+                } else {
+                  alert('Failed to update.');
+                }
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
+            }
+            </script>
+            ({{secondMovie.year}})
+            <div class="btn-wrapper">
+                <input
+                  class="btn"
+              type="button"
+                  type="submit"
+                  value="Rather Watch"
+                  onclick="location.href = '/update-rankings-by-list/{{secondMovie.id}}/{{firstMovie.id}}/{{list.id}}'"
+                />
+              </div>
+              <a href=/details/{{secondMovie.id}}> <img src="{{ second }}" alt="Poster Not Available."></a>
+              {% if secondMovie.rewatch != 1 %}
+              <div class="btn-wrapper">
+                <input
+                  class="btn"
+              type="button"
+                  type="submit"
+                  value="Rewatch"
+                  onclick="location.href = '/rewatch/{{secondMovie.id}}'"
+                />
+                
+              </div>
+              {% endif %}
+        </div>
+        <div class="col-lg-2">
+          <div class="row">
+            <input
+            class="btn"
+              type="submit"
+            value="View List"
+            onclick="location.href = '/list/{{list.id}}'"
+          />
+          </div>
+          Last Ranked: <span style="color: black; background-color: #FFFF00">{{flagged}} </span>
+          <div class="row">
+            <div class="col-lg-6">
+              Winner: 
+            </div>
+            <div class="col-lg-6">
+              Loser: 
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-6">
+              <a href=/details/{{winner.id}}> <img src="/static/images/movieposters/{{ winner.poster }}" alt="Poster Not Available."></a> 
+            </div>
+            <div class="col-lg-6">
+              <a href=/details/{{loser.id}}> <img  src="/static/images/movieposters/{{ loser.poster }}" alt="Poster Not Available."></a>
+            </div>
+          </div>
+
+          <div class="row">
+            <input
+            class="btn"
+              type="submit"
+            value="Reverse"
+            onclick="location.href = '/reverse-last-rank'"
+          />
+          </div>
+          
+          <div class="row">
+            <input id="screenshotButton" class="btn" type="button" value="Skip"/>
+          </div>
+    
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
+    
+    
+          <script>
+            function redirectToShare() {
+        window.location.href = '/share/{{firstMovie.id}}/{{secondMovie.id}}';
+      }
+            document.getElementById('screenshotButton').addEventListener('click', function() {
+              // Generate the screenshot
+              html2canvas(document.getElementById('captureThisDiv')).then(function(canvas) {
+                // Convert the canvas to a Blob
+                canvas.toBlob(function(blob) {
+                  // Create a new ClipboardItem from the Blob
+                  const item = new ClipboardItem({ "image/png": blob });
+          
+                  // Write the ClipboardItem to the clipboard
+                  navigator.clipboard.write([item]).then(function() {
+                    console.log('Image copied to clipboard');
+                    redirectToShare();
+                  }, function(error) {
+                    console.error('Could not copy image to clipboard: ', error);
+                  });
+                });
+              });
+            });
+          </script>
+  
+        </div>
+    </div>
+</div>
+{% endblock %}

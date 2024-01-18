@@ -1,0 +1,368 @@
+{% extends 'base-home.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Duncan's Movies | {{list.name}}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div >
+
+  <div class="row">
+    <div class="col-2">
+      <h3> {{ list.name}} </h3>
+      <div class="row">
+        <h4 class="col-lg-3" style="color: black; "> Notes: </h4>
+        <h4 class="col-lg-9" style="color: red; "> {{ list.notes }}</h4>
+      </div>
+      <div class="row">
+        <h4 class="col-lg-3" style="color: black; "> Count: </h4>
+        <h4 class="col-lg-9" style="color: red; "> {{ countOfMovies }}</h4>
+      </div>
+      <div>
+        <input
+        class="btn"
+              type="button"
+        type="delete"
+        value="Edit"
+        onclick="location.href = '/update-list/{{list.id}}'"
+      />
+      </div>
+
+      <div>
+        <input
+        class="btn"
+              type="button"
+        type="delete"
+        value="Rank All"
+        onclick="location.href = '/rank-by-list/{{list.id}}'"
+      />
+      </div>
+      <div>
+        <input
+        class="btn"
+              type="button"
+        type="delete"
+        value="{{timesRankedString}}"
+        onclick="location.href = '/rank-by-list-unique/{{list.id}}'"
+      />
+      </div>
+      <div class="btn-wrapper">
+        <input class="btn" type="button" value="Auto Rank"
+          onclick="location.href = '/auto-rank-list/{{list.id}}'" />
+      </div>
+    </div>
+
+    <div class="col-7">
+      <h3>
+        Watched Movies ({{ movies|length }}):
+      </h3>
+    <div id="movies2">
+        <table>
+            <tr>
+              <th>Movie</th>
+              <th>Title</th>
+              <th>Stars</th>
+              <th>Overall Rank</th>
+              <th>Win Percentage Against List</th>
+              <!-- <th>Overall Rank</th> -->
+              <th>Remove</th>
+              <th>Ranking Details</th>
+            </tr>
+            {% for movie in movies %}
+            <tr>
+              <td style="width: 10%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available.">  </a></td>
+              <td><a style="color: brown;" href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})'  title="{{ movie.year }}" target="_blank"> <u> {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
+            <span style="color: red;">&#128077;</span> <!-- Red heart -->
+          {% elif movie.liked == 2 %}
+            <span>&#129309;</span> <!-- Handshake -->
+          {% elif movie.liked == 3 %}
+            <span>&#128078;</span> <!-- Trash can -->
+        
+            {% endif %}</td>
+              <td style="{% if movie.stars is none or movie.stars is string and movie.stars.isdigit() == False %}color:white;
+                    {% elif movie.stars|string|int >= 8 %}color:green;
+                    {% elif movie.stars|string|int >= 6 %}color:orange;
+                    {% else %}color:red;
+                    {% endif %}">
+                      {{ movie.stars }}/10
+                  </td>
+              <td>#{{ movie.rank }}</td>
+              <td> {{ movie.rankingWinCountList }} / {{movie.rewatchCountList}} ({{movie.rankingPercentageList}}%)</td>
+              <!-- <td>#{{ movie.rank }}</td> -->
+              <td><div class="btn-wrapper">
+                <input
+                  class="btn"
+              type="button"
+                  type="delete"
+                  value="Remove"
+                  onclick="confirmRemove('{{list.id}}', '{{movie.id}}')"
+                />
+                
+              </div></td>
+              <td>
+                <div class="btn-wrapper">
+                  <input
+                    class="btn"
+              type="button"
+                    value="View"
+                    onclick="location.href = '/ranking-details-for-list/{{list.id}}/{{movie.id}}'"
+                  />
+                </div>
+                <div class="btn-wrapper">
+                  <input
+                    class="btn"
+              type="button"
+                    value="Rank"
+                    onclick="location.href = '/rank-by-movie-in-list/{{movie.id}}/{{list.id}}'"
+                  />
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+    </div>
+    <h4>
+      Unwatched Movies ({{ unwatched|length }}):
+    </h4>
+  <div id="movies2">
+      <table>
+          <tr>
+            <th>Movie</th>
+            <th>Title</th>
+            <th>Genres</th>
+            <th>Runtime</th>
+            <!-- <th>Overall Rank</th> -->
+            <th>Remove</th>
+          </tr>
+          {% for movie in unwatched %}
+          <tr>
+            <td style="width: 10%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available.">  </a></td>
+            <td><a style="color: brown;" href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' title="{{ movie.year }}"  target="_blank"> <u> {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
+            <span style="color: red;">&#128077;</span> <!-- Red heart -->
+          {% elif movie.liked == 2 %}
+            <span>&#129309;</span> <!-- Handshake -->
+          {% elif movie.liked == 3 %}
+            <span>&#128078;</span> <!-- Trash can -->
+        {% endif %}</td>
+            <td>{{ movie.genres }}</td>
+            <td>{{ movie.runtime }}</td>
+            <!-- <td>#{{ movie.rank }}</td> -->
+            <td><div class="btn-wrapper">
+              <input
+                class="btn"
+              type="button"
+                type="delete"
+                value="Remove"
+                onclick="confirmRemove('{{list.id}}', '{{movie.id}}')"
+              />
+              
+            </div></td>
+          </tr>
+          {% endfor %}
+        </table>
+  </div>
+    
+    </div>
+
+    <div class="col-3">
+      <h3>
+        All Movies:
+      </h3>
+      <form method="post">
+      <div class="row">
+        <div class="col-3">
+          <label for="title">Title</label>
+      <input
+        type="text"
+        class="form-control"
+        name="title" style="color:blue; caret-color: red;"
+        id="title"
+        value="{{ originalTitle }}"
+      />
+        </div>
+        <div class="col-3">
+          <label for="director">Director</label>
+      <input
+        type="text"
+        class="form-control"
+        name="director" style="color:blue; caret-color: red;"
+        id="director"
+        value="{{ originalDirector }}"
+      />
+        </div>
+        <div class="col-3">
+          <label for="year">Year</label>
+          <input
+            type="text"
+            class="form-control"
+            name="year" style="color:blue; caret-color: red;"
+            id="year"
+            value="{{ originalYear }}"
+          />
+        </div>
+
+        <div class="col-3">
+          <label for="recommendation">Recommendation</label>
+          <input
+            type="text"
+            class="form-control"
+            name="recommendation" style="color:blue; caret-color: red;"  
+            id="recommendation"
+            value="{{ originalRecommendation }}"
+          />
+        </div>
+
+
+        <div class="col-3">
+                
+      
+      <label for="start">Runtime Minimum</label>
+      <input
+        type="number"
+        class="form-control"
+        name="start" style="color:blue; caret-color: red;"
+        id="start"
+        value="{{ originalMinimum }}"
+      />
+        </div>
+
+
+        <div class="col-3">
+              
+
+      
+      <label for="end">Runtime Maximum</label>
+      <input
+        type="number"
+        class="form-control"
+        name="end" style="color:blue; caret-color: red; "
+        id="end"
+        value="{{ originalMaximum }}"
+      />
+     
+      
+        </div>  
+        <div class="col-4">
+          <label for="genres">Genres</label>
+          <input
+            type="text"
+            class="form-control"
+            name="genres" style="color:blue; caret-color: red; "  
+            id="genres"
+            value="{{ genres }}"
+          />
+        </div>
+
+      </div>
+      <div class="btn-wrapper">
+        <input
+          class="btn"
+              type="submit"
+          value="Filter"
+        />
+      </div>
+      </form>
+      <div id="movies">
+          <table>
+              <tr>
+                <th>Movie</th>
+                <th>Title</th>
+                <!-- <th>Genres</th> -->
+                <!-- <th>Points</th> -->
+                <!-- <th>Rank</th> -->
+                <th>Add</th>
+              </tr>
+              {% for movie in allMovies %}
+              <tr>
+                <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available.">  </a></td>
+                <td><a style="color: brown;" href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' title="{{ movie.year }}"  target="_blank"> <u> {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
+            <span style="color: red;">&#128077;</span> <!-- Red heart -->
+          {% elif movie.liked == 2 %}
+            <span>&#129309;</span> <!-- Handshake -->
+          {% elif movie.liked == 3 %}
+            <span>&#128078;</span> <!-- Trash can -->
+        
+            {% endif %}</td>
+                <!-- <td>{{ movie.genres }}</td>
+                <td>{{ movie.rewatchScore }}</td>
+                <td>#{{ movie.rank }}</td> -->
+                <td> <div class="btn-wrapper">
+                  <input
+                    class="btn"
+              type="button"
+                    type="delete"
+                    value="Add"
+                    onclick="location.href = '/add-to-list/{{list.id}}/{{movie.id}}'"
+                  />
+                  
+                </div></td>
+              </tr>
+              {% endfor %}
+            </table>
+      </div>
+      <div class="btn-wrapper">
+        <input
+          class="btn"
+              type="button"
+          value="Add Random Movie"
+          onclick="location.href = '/random-movie/{{list.id}}'"
+        />
+        
+      </div>
+      <div class="btn-wrapper">
+        <input
+          class="btn"
+          id="deleteListButton"
+              type="button"
+          value="Delete List"
+          onclick="confirmDelete('{{list.id}}')"
+        />
+        
+      </div>
+      
+      </div>
+
+  </div>
+
+  <script>
+    function confirmDelete(listId) {
+      // Use confirm() to show a popup
+      if(confirm('Are you sure you want to delete this list?')) {
+        // If the user confirms, redirect to the delete URL
+        location.href = '/delete-list/' + listId;
+      }
+      // If the user cancels, do nothing
+    }
+
+    function confirmDuplicate(listId) {
+      // Use confirm() to show a popup
+      if(confirm('Are you sure you want to duplicate this list?')) {
+        // If the user confirms, redirect to the delete URL
+        location.href = '/duplicate-list/' + listId;
+      }
+      // If the user cancels, do nothing
+    }
+
+    function confirmRemove(listId, movieId) {
+      // Use confirm() to show a popup
+      if(confirm('Are you sure you want to remove from this list')) {
+        // If the user confirms, redirect to the delete URL
+        location.href = '/remove-to-list/' + listId + '/' + movieId;
+      }
+      // If the user cancels, do nothing
+    }
+
+  </script>
+  
+
+ 
+  
+      
+      
+      
+    </div>
+  </form>
+</div>
+{% endblock %}

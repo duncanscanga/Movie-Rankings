@@ -1,0 +1,154 @@
+{% extends 'base-home.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Duncan's Movies | {{originalName}}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div >
+
+  <div class="row">
+    <div class="col-12" style="text-align: center;">
+      <form method="post">
+        <div class="row" style="text-align: center;">
+          <div class="col-4">
+
+          </div>
+          <div class="col-4" style="text-align: center;">
+            
+            <label for="name">Name of Person:</label>
+        <input
+          type="text"
+          class="form-control"
+          name="name" style="color:blue; caret-color: red;"
+          id="name"
+          value="{{ originalName }}"
+        />
+        <label for="name">Title:</label>
+            <input
+              type="text"
+              class="form-control"
+              name="title" style="color:blue; caret-color: red;"
+              id="title"
+              value="{{ title }}"
+            />
+        <div class="btn-wrapper">
+          <input
+            class="btn"
+              type="submit"
+            value="Submit"
+          />
+        </div>
+          </div>
+        </div>
+        </form>
+    </div>
+  </div>
+
+  {% if orginalName != "" %}
+
+  <div class="row">
+
+    <!-- <div class="col-6">
+      <h3 style="padding-top: 5%;">
+        Movies Watched Together ({{count}}):
+      </h3>
+    <div id="movies2">
+        <table>
+            <tr>
+              <th>Movie</th>
+              <th>Title</th>
+              <th>Genres</th>
+              <th>Points</th>
+               <th>Overall Rank</th> -->
+            <!-- </tr>
+            {% for movie in movies %}
+            <tr>
+              <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available.">  </a></td>
+              <td><a style="color: brown;" href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' target="_blank"> <u> {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
+            <span style="color: red;">&#128077;</span> <!-- Red heart -->
+          {% elif movie.liked == 2 %}
+            <span>&#129309;</span> <!-- Handshake -->
+          {% elif movie.liked == 3 %}
+            <span>&#128078;</span> <!-- Trash can -->
+        
+           {% endif %}</td>
+              <td>{{ movie.genres }}</td>
+              <td>{{ movie.rewatchScore }}</td>
+              <!-<td>#{{ movie.rank }}</td> -->
+            <!-- </tr>
+            {% endfor %}
+          </table>
+    </div>
+    
+    </div> --> 
+    <div class="col-12">
+      <h3 style="padding-top: 5%;">
+        Movies Watched Together ({{count}}):
+      </h3>
+      <table style="width: 100%;">
+        <tr>
+          
+          <th></th>
+          <th>Movie</th>
+          <!-- <th>Year</th> -->
+          <!-- <th>Director</th>
+          <th>Runtime</th> -->
+          <!-- <th>Count</th>
+          <th>Points</th> -->
+          <!-- <th>Genres</th> -->
+          <th>Location</th>
+          <th>Watch Date</th>
+          <th>People</th>
+          <!-- <th>IMDB</th>
+          <th>Rotten Tomatoes</th>
+          <th>Audience Rating</th> -->
+          <!-- <th></th> -->
+          <th>Watch Notes</th>
+          <th>Stars</th>
+          <th>Recommendation</th>
+          <th>Overall Notes</th>
+        </tr>
+        {% for movie in watches %}
+        <tr>
+          <td style=" text-align: center;
+          vertical-align: middle; width: 10%;"><a href='/update-log/{{movie.id}}'><img src="/static/images/movieposters/{{ movie.moviePoster }}" alt="Poster Not Available.">  </a></td>
+          <!-- <td style="width: 10%;"> <img src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available."> </td> -->
+          <td><a href='http://www.google.com/search?q={{movie.movieTitle}}' target="_blank"> {{ movie.movieTitle }}</a></td>
+          <!-- <td><a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></td> -->
+          <!-- <td><a href='/all-movies/{{movie.director}}'> {{ movie.director }} </a></td>
+          <td>{{ movie.runtime }}</td> -->
+          <!-- <td>{{ movie.rewatchCount }}</td>
+          <td>{{ movie.rewatchScore }}</td> -->
+          <!-- <td>{{ movie.genres }}</td> -->
+          <td>{{ movie.location }}</td>
+          <td>{{ movie.watchDate }}</td>
+          <td>{{ movie.people }}</td>
+          <!-- <td>{{ movie.imdbRating }}</td>
+          <td>{{ movie.rottenTomatoRating }}</td>
+          <td>{{ movie.audienceRating }}</td> -->
+          <!-- <td><a href='/update-movie/{{movie.id}}'>Update </a></td> -->
+          <td>{{ movie.notes }}</td>
+          <td>{{ movie.movieStars }}/10</td>
+          <td>{{ movie.movieRecommendation }}</td>
+          <td>{{ movie.movieOverallNotes }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+  </div>
+
+  {% endif %}
+
+ 
+  
+      
+      
+      
+    </div>
+  </form>
+</div>
+{% endblock %}

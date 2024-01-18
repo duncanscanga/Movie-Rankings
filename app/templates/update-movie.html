@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Duncan's Movies | Update Movie{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <h1 style="padding-top: 2%;">Update Movie</h1>
+  <form method="post">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-6">
+          <label for="title">Title</label>
+      <input
+        class="form-control"
+        name="title"
+        id="title" style="color:blue; caret-color: red;"
+        value="{{movie.title}}"
+        required
+      />
+      <label for="year">Year</label>
+      <input
+        class="form-control"
+        name="year" style="color:blue; caret-color: red;"
+        id="year"
+        value="{{movie.year}}"
+        required
+      />
+      <label for="director">Director</label>
+      <input
+        class="form-control"
+        name="director" style="color:blue; caret-color: red;"
+        id="director"
+        value="{{movie.director}}"
+      />
+      <label for="runtime">Runtime</label>
+      <input
+        class="form-control"
+        name="runtime" style="color:blue; caret-color: red;"
+        id="runtime"
+        value="{{movie.runtime}}"
+      />
+      <label for="poster">Poster File Name</label>
+      <input
+        class="form-control"
+        name="poster" style="color:blue; caret-color: red;"
+        id="poster"
+        value="{{movie.poster}}"
+      />
+      <label for="firstGenre">First Genre</label>
+      <input
+        class="form-control"
+        name="firstGenre" style="color:blue; caret-color: red;"
+        id="firstGenre"
+        value="{{firstGenre}}"
+      />
+      <label for="secondGenre">Second Genre</label>
+      <input
+        class="form-control"
+        name="secondGenre" style="color:blue; caret-color: red;"
+        id="secondGenre"
+        value="{{secondGenre}}"
+      />
+        </div>
+        <div class="col-6">
+          <label>Recommendation:</label>
+          <input
+            class="form-control"
+            name="recommend" style="color:blue; caret-color: red;"
+            id="recommend"
+            value="{{movie.recommend}}"
+          />
+          <label for="stars">Stars: (out of 10)</label>
+          <input
+            class="form-control"
+            name="stars"
+            id="stars" style="color:blue; caret-color: red;"
+            value="{{movie.stars}}"
+          />
+          <label for="notes">Notes</label>
+          <input
+            class="form-control"
+            name="notes" style="color:blue; caret-color: red;"
+            id="notes"
+            value="{{movie.notes}}"
+          />
+          <!-- <textarea cols="100" rows="4" style="color:blue; caret-color: red;" value="{{movie.notes}}">
+            </textarea> -->
+          <label for="faveQuote">Favourite Quote? :</label>
+          <input
+            class="form-control"
+            name="faveQuote" style="color:blue; caret-color: red;"
+            id="faveQuote"
+            value="{{movie.faveQuote}}"
+          />
+          <label for="rewatch">Do you seen want to rewatch this?</label>
+          <input
+            type="checkbox"
+            class="form-control"
+            name="rewatch"
+            id="rewatch"
+            value="{{ movie.rewatch }}"
+            {{'checked="checked"' if movie.rewatch else ""}}
+          />
+          <label for="liked">Did you like this movie?</label>
+          <input
+            type="number"
+            class="form-control"
+            name="liked" style="color:blue; caret-color: red;"
+            id="liked"
+            value="{{ movie.liked }}"
+          />
+
+        <div class="btn-wrapper" style="padding-top: 5%;">
+          <input
+            class="btn"
+            id="deleteListButton"
+                type="button"
+            value="Delete Movie"
+            onclick="confirmDelete('{{movie.id}}')"
+          />
+          
+        </div>
+        </div>
+
+
+        <script>
+          function confirmDelete(movieId) {
+            // Use confirm() to show a popup
+            if(confirm('Are you sure you want to delete this movie?')) {
+              // If the user confirms, redirect to the delete URL
+              location.href = '/delete-movie/' + movieId;
+            }
+            // If the user cancels, do nothing
+          }
+
+      
+        </script>
+
+        
+
+      </div>
+
+
+      <div style="padding-top: 2%;" class="btn-wrapper">
+        <input
+          class="btn"
+              type="submit"
+          value="Update Movie"
+        />
+      </div>
+      <!-- <div style="padding-top: 2%;" class="btn-wrapper">
+        <input
+          class="btn"
+              type="button"
+          type="delete"
+          value="Delete Movie"
+          onclick="location.href = '/delete-movie/{{movie.id}}'"
+        />
+      </div> -->
+    </div>
+  </form>
+</div>
+{% endblock %}

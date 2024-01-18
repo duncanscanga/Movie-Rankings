@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Duncan's Movies | Skipped Rankings {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+      <div class="row">
+        <div class="col-12"> <h4>
+          Skipped Rankings ({{ flagged|length }}):
+        </h4></div>
+       
+        <div>
+          <div id="movies">
+            <table>
+              <tr>
+                <th>First Movie</th>
+                <th>Second Movie</th>
+                <th>Date</th>
+                <th></th>
+                <th></th>
+              </tr>
+              {% for ranking in flagged %}
+              <tr>
+                <td style="width: 16%;"> 
+                  <div class="row">
+                    <div class="col-12">
+                      <a style="color: brown;" style="color: brown;"
+                    href='http://www.google.com/search?q={{ranking.winnerTitle}} ({{ranking.winnerYear}})' target="_blank"> <u> {{
+                      ranking.winnerTitle }} (#{{ranking.winnerRank}}) </u></a>
+                    </div>
+                    <div class="col-12">
+                      <a href='/details/{{ranking.winnerMovieId}}'>
+                        <img src="/static/images/movieposters/{{ ranking.winnerPoster }}" alt="Poster Not Available."> 
+                      </a>
+                    </div>
+                  </div>
+                </td>
+                <td style="width: 16%;"> 
+                  <div class="row">
+                    <div class="col-12">
+                      <a style="color: brown;"
+                    href='http://www.google.com/search?q={{ranking.loserTitle}} ({{ranking.loserYear}})' target="_blank"> <u> {{
+                      ranking.loserTitle }} (#{{ranking.loserRank}}) </u></a>
+                    </div>
+                    <div class="col-12">
+                      <a href='/details/{{ranking.loserMovieId}}'>
+                        <img src="/static/images/movieposters/{{ ranking.loserPoster }}" alt="Poster Not Available."> 
+                      </a>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ ranking.rankingDate }}</td>
+                <td>
+                  <a style="color: blue;"
+                    href='/removeShared/{{ranking.id}}/{{ranking.winnerMovieId}}' >  <u>{{ranking.winnerTitle}}</u> </a>
+                </td>
+                <td>
+                  <a style="color: blue;"
+                  href='/removeShared/{{ranking.id}}/{{ranking.loserMovieId}}' >  <u>{{ranking.loserTitle}}</u> </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </table>
+          </div>
+  
+        </div>
+
+
+
+      
+      
+    </div>
+  </form>
+</div>
+{% endblock %}

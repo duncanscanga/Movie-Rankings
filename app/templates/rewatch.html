@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Rewatch{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<h3>Movies to Rewatch:</h3>
+
+<form method="post">
+  <label for="title">Title</label>
+<input
+  type="text"
+  class="form-control"
+  name="title" style="color:blue; caret-color: red; width: 50%;"
+  id="title"
+  value="{{ originalTitle }}"
+/>
+
+<label for="director">Director</label>
+<input
+  type="text"
+  class="form-control"
+  name="director" style="color:blue; caret-color: red; width: 50%;"
+  id="director"
+  value="{{ originalDirector }}"
+/>
+
+<label for="year">Year</label>
+<input
+  type="text"
+  class="form-control"
+  name="year" style="color:blue; caret-color: red; width: 50%;"
+  id="year"
+  value="{{ originalYear }}"
+/>
+
+<label for="recommendation">Recommendation</label>
+<input
+  type="text"
+  class="form-control"
+  name="recommendation" style="color:blue; caret-color: red; width: 50%;"  
+  id="recommendation"
+  value="{{ originalRecommendation }}"
+/>
+
+
+<label for="start">Runtime Minimum</label>
+<input
+  type="number"
+  class="form-control"
+  name="start" style="color:blue; caret-color: red; width: 50%;"
+  id="start"
+  value="{{ originalMinimum }}"
+/>
+
+<label for="end">Runtime Maximum</label>
+<input
+  type="number"
+  class="form-control"
+  name="end" style="color:blue; caret-color: red; width: 50%;"
+  id="end"
+  value="{{ originalMaximum }}"
+/>
+
+<div class="btn-wrapper">
+  <input
+    class="btn"
+              type="submit"
+    value="Filter"
+    style="width: 50% !important; "
+  />
+</div>
+</form>
+
+
+<div id="movies">
+    <table>
+        <tr>
+          <th>Title</th>
+          <th>Year</th>
+          <th>Director</th>
+          <th>Runtime</th>
+          <th>Genres</th>
+          <th>Update</th>
+          <th>Rank</th>
+        </tr>
+        {% for movie in movies %}
+        <tr>
+          <td style=" text-align: center;
+          vertical-align: middle;"><a href='http://www.google.com/search?q={{movie.title}}' target="_blank"> <u> {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
+            <span style="color: red;">&#128077;</span> <!-- Red heart -->
+          {% elif movie.liked == 2 %}
+            <span>&#129309;</span> <!-- Handshake -->
+          {% elif movie.liked == 3 %}
+            <span>&#128078;</span> <!-- Trash can -->
+        
+           {% endif %}</td>
+          <td style=" text-align: center;
+          vertical-align: middle;"><a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></td>
+          <td style=" text-align: center;
+          vertical-align: middle;"><a href='/all-movies/{{movie.director}}'> {{ movie.director }} </a></td>
+          <td style=" text-align: center;
+          vertical-align: middle;">{{ movie.runtime }}</td>
+          <td style=" text-align: center;
+          vertical-align: middle;">{{ movie.genres }}</td>
+          <td style=" text-align: center;
+          vertical-align: middle;"><a href='/details/{{movie.id}}' title="#{{movie.rank}}">Update</a></td>
+          <td style=" text-align: center;
+          vertical-align: middle;"><a href='/rank-by-movie/{{movie.id}}'>Rank</a></td>
+        </tr>
+        {% endfor %}
+      </table>
+</div>
+
+{% endblock %}

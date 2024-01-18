@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Unlogged Movies{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<h3>Unlogged Movies ({{ movies|length }}):</h3>
+
+<div id="movies">
+    <table style="width: 100%;">
+        <tr>
+          <th></th>
+          <th>Movie</th>
+          <th>Recommendation</th>
+          <th>Stars</th>
+          <th>Notes</th>
+          <th></th>
+        </tr>
+        {% for movie in movies %}
+        <tr>
+          <td style=" text-align: center;
+          vertical-align: middle; width: 10%;"><a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available.">  </a></td>
+          <td><a style="color: brown;" style="color: brown;"
+            href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' target="_blank"> <u> 
+              {{ movie.title }} ({{movie.year}})   </u></a> {% if movie.liked == 1 %}
+            <span style="color: red;">&#128077;</span> <!-- Red heart -->
+          {% elif movie.liked == 2 %}
+            <span>&#129309;</span> <!-- Handshake -->
+          {% elif movie.liked == 3 %}
+            <span>&#128078;</span> <!-- Trash can -->
+        
+           {% endif %}</td>
+              <td style="{% if movie.stars is none or movie.stars is string and movie.stars.isdigit() == False %}color:white;
+              {% elif movie.stars|string|int >= 8 %}color:green;
+              {% elif movie.stars|string|int >= 6 %}color:orange;
+              {% else %}color:red;
+              {% endif %}">
+                {{ movie.stars }}/10
+            </td>
+  <td style="{{ 'color:white;' if movie.recommend is none or movie.recommend == 'None' else 'color:green;' if movie.recommend == 'Would recommned' else 'color:darkorange;' if movie.recommend == 'If you have time' else 'color:red' }}">
+    {{ movie.recommend }}
+</td>
+<td style="{{ 'color:white;' if movie.notes is none or movie.notes == 'None' else 'color:green;' if movie.notes == 'Would recommned' else 'color:darkorange;' if movie.notes == 'If you have time' else 'color:black' }}">
+  {{ movie.notes }}
+</td>
+          <td><a href='/log-movie/{{movie.id}}' target="_blank">Log</a></td>
+        </tr>
+        {% endfor %}
+      </table>
+</div>
+
+{% endblock %}

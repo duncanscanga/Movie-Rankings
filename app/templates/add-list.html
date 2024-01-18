@@ -1,0 +1,46 @@
+{% extends 'base.html' %} {% block content %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1 style="padding-top: 2%;">{% block title %}Add List{% endblock %}</h1>
+{% endblock %}
+
+<div class="container">
+  <form method="post">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-6">
+          <label for="title">Name</label>
+          <input
+            class="form-control"
+            name="title"
+            id="title"
+            style="color:blue; caret-color: red;"
+            required
+          />
+        </div>
+        <div class="col-6">
+          <label for="notes">Notes</label>
+          <input
+            class="form-control"
+            name="notes" style="color:blue; caret-color: red;"
+            id="notes"
+          />
+        </div>
+      
+     
+
+
+      
+    </div>
+    <div class="btn-wrapper" >
+      <input
+        class="btn"
+        type="submit"
+        value="Add List"
+        
+      />
+    </div>
+  </form>
+</div>
+{% endblock %}

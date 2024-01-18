@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Log Movie{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <h2> <a style="color: brown;" href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' title="{{ movie.year }}"  target="_blank"> <u> {{ movie.title }} ({{movie.year}})</u></a> </h2>
+  <form method="post">
+    <div class="form-group">
+      <div class="row">
+
+      <div class="col-2">
+        <a href="/details/{{movie.id}}"> <img  src="{{ poster }}" alt="Poster Not Available."></a>
+      </div>
+
+      <div class="col-4">
+        <h4>
+          Overall:
+        </h4>
+        <label>Recommendation:</label>
+        <input
+          class="form-control"
+          name="recommend" style="color:blue; caret-color: red;"
+          id="recommend"
+          value="{{movie.recommend}}"
+        />
+        <label for="stars">Stars: (out of 10)</label>
+        <input
+          class="form-control"
+          name="stars"
+          id="stars" style="color:blue; caret-color: red;"
+          value="{{movie.stars}}"
+        />
+        <label for="notes">Overall Notes:</label>
+        <input
+          class="form-control"
+          name="notes" style="color:blue;  caret-color: red;"
+          id="notes"
+          value="{{movie.notes}}"
+        />
+        <label for="faveQuote">Favourite Quote? :</label>
+        <input
+          class="form-control"
+          name="faveQuote" style="color:blue; caret-color: red;"
+          id="faveQuote"
+          value="{{movie.faveQuote}}"
+        />
+      </div>
+
+      <div class="col-4">
+        <h4>
+          Latest Watch:
+        </h4>
+        <label for="newLocation">Location:</label>
+      <input
+        class="form-control"
+        name="newLocation" style="color:blue; caret-color: red;"
+        id="newLocation"
+      />
+
+      <label for="newPeople">People With? :</label>
+      <input
+        class="form-control"
+        name="newPeople" style="color:blue; caret-color: red;"
+        id="newPeople"
+      />
+      
+      <label for="newNotes">Watch Notes:</label>
+      <input
+        class="form-control"
+        name="newNotes" style="color:blue; caret-color: red;"
+        id="newNotes"
+      />
+      <label for="newDate">Watch Date:</label>
+      <input
+        type="date"
+        class="form-control"
+        style="width: 50%;" style="color:blue; caret-color: red;"
+        name="newDate"
+        id="newDate"
+      />
+      </div>
+
+      <div style="padding-top: 1%;" class="col-12">
+        <div class="btn-wrapper">
+          <input
+            class="btn"
+              type="submit"
+            value="Submit Latest Watch"
+          />
+        </div>
+      </div>
+
+      
+
+      <div class="col-12">
+        <h4 style="padding-top: 1%;" >
+          Past Watches:
+        </h4>
+        {% for movie in watches %}
+        <h4 style="color: black;">
+          Watch:
+        </h4>
+        <div class="row">
+          <div class="col-10">
+            {% if movie.location is not none and movie.location != 'None' and movie.location|length > 0 %}
+            <div class="row">
+              <h5 class="col-lg-3" style="color: black; "> Location: </h5>
+              <h5 class="col-lg-9" style="color: red; "> {{ movie.location }}</h5>
+              
+            </div>
+
+            {% endif %}
+    
+            <div class="row">
+              <h5 class="col-lg-3" style="color: black; "> Watch Date: </h5>
+              <h5 class="col-lg-9" style="color: red; "> {{ movie.watchDate }} {% if movie.firstWatch == 1 %}
+                <span style="color: black;"> (First Watch)</span>
+              {% endif %} </h5>
+              
+            </div>
+
+              
+            {% if movie.people is not none and movie.people != 'None' and movie.people|length > 0 %}
+  <div class="row">
+    <h5 class="col-lg-3" style="color: black; ">People: </h5>
+    <h5 class="col-lg-9" style="color: red; "> {{ movie.people }}</h5>
+  </div>
+{% endif %}
+    
+{% if movie.notes is not none and movie.notes != 'None' and movie.notes|length > 0 %}
+            <div  style="padding-bottom: 1%;" class="row">
+              <h5 class="col-lg-3" style="color: black; "> Specific Notes: </h5>
+              <h5 class="col-lg-9" style="color: red; "> {{ movie.notes }}</h5>
+              
+            </div>
+
+            {% endif %}
+            
+          </div>
+          <div class="col-2">
+            <div class="btn-wrapper">
+              <input
+                class="btn"
+              type="button"
+                value="Edit Log"
+                onclick="location.href = '/update-log/{{movie.id}}'"
+              />
+            </div>      
+          </div>
+        </div>
+        
+  
+
+        {% endfor %}
+        </div>
+
+    </div>
+     
+      
+
+      
+    </div>
+  </form>
+</div>
+{% endblock %}

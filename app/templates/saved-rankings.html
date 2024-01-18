@@ -1,0 +1,123 @@
+{% extends 'base-home.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Duncan's Movies | Saved Rankings{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div >
+
+  <div class="row">
+
+
+
+  <div class="row">
+
+
+    <div class="col-12">
+      <h3 style="padding-top: 5%;">
+        Movies Watched Together ({{count}}):
+      </h3>
+      <table style="width: 100%;">
+        <tr>
+          
+          <th></th>
+          <th>Movie</th>
+          <!-- <th>Year</th> -->
+          <!-- <th>Director</th>
+          <th>Runtime</th> -->
+          <!-- <th>Count</th>
+          <th>Points</th> -->
+          <!-- <th>Genres</th> -->
+          <th>Location</th>
+          <th>Watch Date</th>
+          <th>People</th>
+          <!-- <th>IMDB</th>
+          <th>Rotten Tomatoes</th>
+          <th>Audience Rating</th> -->
+          <!-- <th></th> -->
+          <th>Watch Notes</th>
+          <th>Stars</th>
+          <th>Recommendation</th>
+          <th>Overall Notes</th>
+        </tr>
+        {% for movie in watches %}
+        <tr>
+          <td style=" text-align: center;
+          vertical-align: middle; width: 10%;"><a href='/update-log/{{movie.id}}'><img src="/static/images/movieposters/{{ movie.moviePoster }}" alt="Poster Not Available.">  </a></td>
+          <!-- <td style="width: 10%;"> <img src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available."> </td> -->
+          <td><a href='http://www.google.com/search?q={{movie.movieTitle}}' target="_blank"> {{ movie.movieTitle }}</a> {% if movie.movieLiked == 1 %}
+            <span style="color: red;">&#128077;</span> <!-- Red heart -->
+          {% elif movie.movieLiked == 2 %}
+            <span>&#129309;</span> <!-- Handshake -->
+          {% elif movie.movieLiked == 3 %}
+            <span>&#128078;</span> <!-- Trash can -->
+           {% endif %}
+          <script>
+            function updateMovieLiked(movieId, likedValue) {
+              fetch(`/update-movie-liked/${movieId}/${likedValue}`)
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  // Hide all icons initially
+                  document.getElementById('heart-icon-{{movie.id}}').style.display = 'none';
+                  document.getElementById('handshake-icon-{{movie.id}}').style.display = 'none';
+                  document.getElementById('trash-icon-{{movie.id}}').style.display = 'none';
+            
+                  // Show only the clicked icon
+                  switch (likedValue) {
+                    case 1:
+                      document.getElementById('heart-icon-{{movie.id}}').style.display = 'inline';
+                      break;
+                    case 2:
+                      document.getElementById('handshake-icon-{{movie.id}}').style.display = 'inline';
+                      break;
+                    case 3:
+                      document.getElementById('trash-icon-{{movie.id}}').style.display = 'inline';
+                      break;
+                  }
+                } else {
+                  alert('Failed to update.');
+                }
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
+            }
+            </script></td>
+          <!-- <td><a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></td> -->
+          <!-- <td><a href='/all-movies/{{movie.director}}'> {{ movie.director }} </a></td>
+          <td>{{ movie.runtime }}</td> -->
+          <!-- <td>{{ movie.rewatchCount }}</td>
+          <td>{{ movie.rewatchScore }}</td> -->
+          <!-- <td>{{ movie.genres }}</td> -->
+          <td>{{ movie.location }}</td>
+          <td>{{ movie.watchDate }}</td>
+          <td>{{ movie.people }}</td>
+          <!-- <td>{{ movie.imdbRating }}</td>
+          <td>{{ movie.rottenTomatoRating }}</td>
+          <td>{{ movie.audienceRating }}</td> -->
+          <!-- <td><a href='/update-movie/{{movie.id}}'>Update </a></td> -->
+          <td>{{ movie.notes }}</td>
+          <td>{{ movie.movieStars }}/10</td>
+          <td>{{ movie.movieRecommendation }}</td>
+          <td>{{ movie.movieOverallNotes }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+  </div>
+
+
+ 
+  
+      
+      
+      
+    </div>
+  </form>
+</div>
+{% endblock %}

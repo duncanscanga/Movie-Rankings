@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Duncan's Movies | Best of Year {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12"> 
+            <h4>Best of Each Year:</h4>
+        </div>
+        <div class="btn-wrapper">
+            <input class="btn" type="button" value="Order By Likes"
+              onclick="location.href = '/best-of-year'" />
+          </div>
+       
+        <div>
+            <div id="movies">
+                <table>
+                    <tr>
+                        <th>Director</th>
+                        <!-- <th>Average Rank</th> -->
+                        <th>Movies Watched</th>
+                        <th>#1</th>
+                        <th>#2</th>
+                        <th>#3</th>
+                    </tr>
+                    {% for year, average_rewatchScore, total_watched, liked_count, decent_count, bad_count, top_movie_id_1, top_movie_poster_1, top_movie_id_2, top_movie_poster_2, top_movie_id_3, top_movie_poster_3 in combined_list %}
+                    <tr>
+                        <td><a href='/all-movies-year/{{ year }}'> {{ year }} </a> </td>
+                        <td> <h3>{{ total_watched }} movies</h3>
+                            {% if liked_count and liked_count > 0 %}
+                            {{ liked_count }}  <span style="color: red;">&#128077;</span> 
+                            {% endif %}
+                            {% if decent_count and decent_count > 0 %}
+                            {{ decent_count }}     <span>&#129309;</span>
+                            {% endif %}
+                            {% if bad_count and bad_count > 0 %}
+                            {{ bad_count }}  <span>&#128078;</span> 
+                            {% endif %}
+                        </td>
+                        <td style=" text-align: center;
+          vertical-align: middle; width: 10%;"><a href='/details/{{top_movie_id_1}}'><img src="/static/images/movieposters/{{ top_movie_poster_1 }}" alt=""></a> </td>
+          <td style=" text-align: center;
+          vertical-align: middle; width: 10%;"><a href='/details/{{top_movie_id_2}}'><img src="/static/images/movieposters/{{ top_movie_poster_2 }}" alt=""></a> </td>
+          <td style=" text-align: center;
+          vertical-align: middle; width: 10%;"><a href='/details/{{top_movie_id_3}}'><img src="/static/images/movieposters/{{ top_movie_poster_3 }}" alt=""></a> </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

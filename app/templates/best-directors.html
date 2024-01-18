@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Duncan's Movies | Favourite Directors {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12"> 
+            <h4>Favourite Directors:</h4>
+        </div>
+       
+        <div>
+            <div id="movies">
+                <table>
+                    <tr>
+                        <th>Director</th>
+                        <th>Movies Watched</th>
+                        <th>#1</th>
+                        <th>#2</th>
+                        <th>#3</th>
+                    </tr>
+                    {% for director, liked_counts, decent_counts, bad_counts, scores, counts, firsts, firsts1, seconds, seconds1, thirds, thirds1 in combined_list %}
+                    <tr>
+                        <td><a href='/all-movies/{{director}}'> {{ director }} </a> </td>
+                        <td> <h3>{{ counts }} movies</h3>
+                            {% if liked_counts and liked_counts > 0 %}
+                            {{ liked_counts }}  <span style="color: red;">&#128077;</span> 
+                            {% endif %}
+                            {% if decent_counts and decent_counts > 0 %}
+                            {{ decent_counts }}     <span>&#129309;</span>
+                            {% endif %}
+                            {% if bad_counts and bad_counts > 0 %}
+                            {{ bad_counts }}  <span>&#128078;</span> 
+                            {% endif %}
+                        </td>
+                        <td style="text-align: center; vertical-align: middle; width: 10%;"><a href='/details/{{firsts}}'><img src="/static/images/movieposters/{{ firsts1 }}" alt=""></a> </td>
+                        <td style="text-align: center; vertical-align: middle; width: 10%;"><a href='/details/{{seconds}}'><img src="/static/images/movieposters/{{ seconds1 }}" alt=""></a> </td>
+                        <td style="text-align: center; vertical-align: middle; width: 10%;"><a href='/details/{{thirds}}'><img src="/static/images/movieposters/{{ thirds1 }}" alt=""></a> </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

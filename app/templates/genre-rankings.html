@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Duncan's Movies | Genres{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<h3>Genres ({{ genres|length }}):</h3>
+
+<div id="movies">
+    <table>
+        <tr>
+          <th>Name</th>
+          <th>Number of Movies</th>
+        </tr>
+        {% for genre in genres %}
+        <tr>
+          <td> <a href='/genre-movie-rankings/{{genre.id}}'>{{ genre.name }}</a></td>
+          <td>{{ genre.count }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+</div>
+
+{% endblock %}

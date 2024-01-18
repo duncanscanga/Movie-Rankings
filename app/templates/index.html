@@ -1,0 +1,205 @@
+{% extends 'base-home.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Duncan's Movies | Home {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-lg-3">
+    <h3>Trending:</h3>
+  </div>
+
+  <div class="col-lg-9">
+    <h3>Data:</h3>  
+  </div>
+
+
+  <div class="col-lg-3">
+    <input
+    class="btn"
+              type="button"
+    value="Trends"
+    onclick="location.href = '/trending'"
+  />
+  <input
+  class="btn"
+            type="button"
+  value="New Movies' Ranks"
+  onclick="location.href = '/recent-movie-ranks'"
+/>
+  <input
+  class="btn"
+            type="button"
+  value="Recent Rankings"
+  onclick="location.href = '/view-rankings'"
+/>
+
+<input
+class="btn"
+          type="button"
+value="Upsets (Winners)"
+onclick="location.href = '/upsets'"
+/>
+
+<input
+class="btn"
+          type="button"
+value="Upsets (Losers)"
+onclick="location.href = '/upsets-losers'"
+/>
+
+
+  </div>
+
+  <div class="col-lg-3">
+    
+
+    <h4 style="color: black;">Watching Stats:</h4>
+
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-3" style="color: red;"> <a href='/logs/{{weeklySubtraction}}'> {{ moviesWatchedInWeek }} </a> </h4>
+      <h4 class="col-lg-9" style="color: blue; "> Movies Watched this Week </h4>
+    </div>
+
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-3" style="color: red;"> <a href='/logs/{{monthlySubtraction}}'> {{ moviesWatchedInMonth }} </a> </h4>
+      <h4 class="col-lg-9" style="color: blue; "> Movies Watched in this Month </h4>
+    </div>
+
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-3" style="color: red;">  <a href='/logs/{{yearlySubtraction}}'> {{ moviesWatchedInYear }} </a> <a title="First Time Watches" href='/first-logs/{{yearlySubtraction}}'> ({{ firstmoviesWatchedInYear }}) </a> </h4>
+      <h4 class="col-lg-9" style="color: blue; "> Movies Watched this Year </h4>
+    </div>
+    
+    <!-- <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-3" style="color: red;"> <a href='/first-logs/{{yearlySubtraction}}'> {{ firstmoviesWatchedInYear }} </a> </h4>
+      <h4 class="col-lg-9" style="color: blue; "> Movies Watched for the first time this Year </h4>
+    </div> -->
+
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-3" style="color: red;">{{ howOftenIWatch }} </h4>
+      <h4 class="col-lg-9" style="color: blue; "> Average Movies Watched Per Week </h4>
+    </div>
+
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-3" style="color: red;"> <a href='/logs/{{longestWatchStreakEnd}}/{{longestWatchStreakDays}}'> {{ longestWatchStreak  }} days</a> <a title="Current Streak" href='/logs/{{currentWatchStreakResultEnd}}/{{currentWatchStreakResultDays}}'> ({{ currentWatchStreak }} curr.) </a>  </h4>
+      <h4 class="col-lg-9" style="color: blue; "> Longest Watched Streak </h4>
+    </div>
+
+    <h4 style="color: black;">Time Spent Watching This Year:</h4>
+
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-12" style="color: red;"> {{ hourCount1 }} </h4>
+    </div>
+
+  </div>
+
+  <div class="col-lg-3">
+    <h4 style="color: black;">Totals:</h4>
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-3" style="color: red;"> <a href='/rankings'>{{ moviesWatched }}</a> </h4>
+      <h4 class="col-lg-9" style="color: blue; "> Total Movies Watched </h4>
+    </div>
+
+
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-3" style="color: red;"> <a href='/unwatched'>{{ unwatched }}</a> </h4>
+      <h4 class="col-lg-9" style="color: blue; "> Movies To Watch </h4>
+    </div>
+
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-3" style="color: red;"> <a href='/currently-watching'>{{ currentWatch }}</a> </h4>
+      <h4 class="col-lg-9" style="color: blue; "> Movies Watching </h4>
+    </div>
+
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-3" style="color: red;"> <a href='/rewatch'>{{ rewatched }}</a> </h4>
+      <h4 class="col-lg-9" style="color: blue; "> Movies To Re-Watch </h4>
+    </div>
+
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-3" style="color: red;"> <a href='/unrated'>{{ unrated }}</a> </h4>
+      <h4 class="col-lg-9" style="color: blue; "> Movies To Recommend/Rate </h4>
+    </div>
+    
+    
+  </div>
+
+  <div class="col-lg-3">
+    <h4 style="color: black;">Ranking Stats:</h4>
+
+    <div class="row">
+      <h4 class="col-lg-3" style="color: red;"> <a href="/view-rankings">{{ rankingCountToday }}</a></h4>
+      <h4 class="col-lg-9" style="color: blue; "> Movies Compared Today </h4>
+    </div>
+
+    <div class="row">
+      <h4 class="col-lg-3" style="color: red;"> {{ rankingCountMonth }}</h4>
+      <h4 class="col-lg-9" style="color: blue; "> Movies Compared in the Past Month </h4>
+    </div>
+
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-3" style="color: red;"> {{ rankingCountTotal }}</h4>
+      <h4 class="col-lg-9" style="color: blue; "> Total Movies Compared </h4>
+    </div>
+
+    <div class="row">
+      <h4 class="col-lg-3" style="color: red;"> <a href="/skipped">{{ skippedRankings }}</a></h4>
+      <h4 class="col-lg-9" style="color: blue; "> Skipped Rankings </h4>
+    </div>
+
+    <div class="row">
+      <h4 class="col-lg-3" style="color: red;"> <a href="/flagged">{{ flaggedRankings }}</a></h4>
+      <h4 class="col-lg-9" style="color: blue; "> Flagged Rankings </h4>
+    </div>
+
+    <div class="row">
+      <h4 class="col-lg-3" style="color: red;"> {{ reversedRankings }}</h4>
+      <h4 class="col-lg-9" style="color: blue; "> Reversed Rankings </h4>
+    </div>
+
+  
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-3" style="color: red;"> {{ averageCount }}</h4>
+      <h4 class="col-lg-9" style="color: blue; "> Average Times a Movie Has Been Ranked </h4>
+    </div>
+
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-3" style="color: red;"> {{ averageRankingPerDay }}</h4>
+      <h4 class="col-lg-9" style="color: blue; "> Average Rankings Per Day </h4>
+    </div>
+
+
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-3" style="color: red;"> {{ percentDone }}%</h4>
+      <h4 class="col-lg-9" style="color: blue; "> Percentage of All Movies Ranked </h4>
+    </div>
+
+    <!-- <div class="row">
+      <div class="col-lg-6">
+        <h4 style="color: black;">Creation Date:</h4>
+
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-12" style="color: red;"> {{ creationDate }} </h4>
+    </div>
+
+      </div>
+      <div class="col-lg-6">
+        <h4 style="color: black;">Completion Date:</h4>
+
+        <div class="row" style="padding-top: 1%;">
+          <h4 class="col-lg-12" style="color: red;"> {{ end_date }} </h4>
+        </div>
+      </div>
+    </div> -->
+
+
+  </div>
+
+
+</div>
+
+{% endblock %}

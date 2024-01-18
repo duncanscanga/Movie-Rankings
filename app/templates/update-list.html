@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Update List{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <h1 style="padding-top: 2%;">Update List</h1>
+  <form method="post">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-6">
+          <label for="title">Name</label>
+      <input
+        class="form-control"
+        name="title"
+        id="title" style="color:blue; caret-color: red;"
+        value="{{list.name}}"
+        required
+      />
+        </div>
+        <div class="col-6">
+          
+          <label for="notes">Notes</label>
+          <input
+            class="form-control"
+            name="notes" style="color:blue; caret-color: red;"
+            id="notes"
+            value="{{list.notes}}"
+          />
+        </div>
+
+      </div>
+
+
+      <div style="padding-top: 2%;" class="btn-wrapper">
+        <input
+          class="btn"
+              type="submit"
+          value="Update List"
+        />
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

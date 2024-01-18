@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Duncan's Movies | Currently Watching {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<h3>Movies Watching: ({{ movies|length }})</h3>
+
+<form method="post">
+  <div class="row">
+    <div class="col-6">
+      <label for="title">Title</label>
+      <input
+        type="text"
+        class="form-control"
+        name="title" style="color:blue; caret-color: red; "
+        id="title"
+        value="{{ originalTitle }}"
+      />
+    </div>
+    <div class="col-6">
+      <label for="director">Director</label>
+<input
+  type="text"
+  class="form-control"
+  name="director" style="color:blue; caret-color: red; "
+  id="director"
+  value="{{ originalDirector }}"
+/>
+    </div>
+    <div class="col-6">
+      <label for="year">Year</label>
+<input
+  type="text"
+  class="form-control"
+  name="year" style="color:blue; caret-color: red; "
+  id="year"
+  value="{{ originalYear }}"
+/>
+    </div>
+    <div class="col-6">
+      <label for="start">Runtime Minimum</label>
+<input
+  type="number"
+  class="form-control"
+  name="start" style="color:blue; caret-color: red; "
+  id="start"
+  value="{{ originalMinimum }}"
+/>
+    </div>
+    <div class="col-6">
+      <label for="end">Runtime Maximum</label>
+<input
+  type="number"
+  class="form-control"
+  name="end" style="color:blue; caret-color: red; "
+  id="end"
+  value="{{ originalMaximum }}"
+/>
+
+    </div>
+    <div class="col-6">
+      <label for="genres">Genres</label>
+      <input
+        type="text"
+        class="form-control"
+        name="genres" style="color:blue; caret-color: red; "  
+        id="genres"
+        value="{{ genres }}"
+      />
+    </div>
+  </div>
+
+<div class="btn-wrapper">
+  <input
+    class="btn"
+              type="submit"
+    value="Filter"
+    style="width: 50% !important; "
+  />
+</div>
+</form>
+
+<div id="movies">
+  <table>
+    <tr>
+      <th></th>
+      <th>Title</th>
+      <th>Year</th>
+      <th>Director</th>
+      <th>Runtime</th>
+      <th>Genres</th>
+      <th>Log</th>
+      <th></th>
+    </tr>
+    {% for movie in movies %}
+    <tr>
+      
+      <!-- <td style="width: 18%;"> <img src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available."> </td> -->
+      <td style=" text-align: center;
+      vertical-align: middle; width: 10%;"><a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available.">  </a></td>
+      <td><a style="color: brown;" href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})'' title="{{ movie.year }}"  target="_blank"> <u> {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
+            <span style="color: red;">&#128077;</span> <!-- Red heart -->
+          {% elif movie.liked == 2 %}
+            <span>&#129309;</span> <!-- Handshake -->
+          {% elif movie.liked == 3 %}
+            <span>&#128078;</span> <!-- Trash can -->
+        
+           {% endif %}</td>
+      <td><a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></td>
+      <td><a href='/all-movies/{{movie.director}}'> {{ movie.director }} </a></td>
+      <td>{{ movie.runtime }}</td>
+      <td>{{ movie.genres }}</td>
+      <td><a href='/log-movie/{{movie.id}}'>Watched </a></td>
+      <td style=" text-align: center;
+          vertical-align: middle;"><a href='/uncurrent/{{movie.id}}'>Remove Current Watch </a></td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+{% endblock %}

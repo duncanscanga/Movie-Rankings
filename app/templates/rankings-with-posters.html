@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Duncan's Movies | Rankings{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<h3>Head To Head Rankings ({{ movies|length }}):</h3>
+
+{% block scripts %}
+<script>
+window.onload = function() {
+  // Check if scroll_to_id is provided
+  {% if scroll_to_id %}
+    var element = document.getElementById('movie-' + '{{ scroll_to_id }}');
+    if (element) {
+      element.scrollIntoView();
+    }
+  {% endif %}
+};
+</script>
+{% endblock %}
+
+<form method="post">
+  <div class="row">
+    <div class="col-6">
+      <label for="title">Title</label>
+      <input
+        type="text"
+        class="form-control"
+        name="title" style="color:blue; caret-color: red; "
+        id="title"
+        value="{{ originalTitle }}"
+      />
+    </div>
+    <div class="col-6">
+      <label for="director">Director</label>
+<input
+  type="text"
+  class="form-control"
+  name="director" style="color:blue; caret-color: red; "
+  id="director"
+  value="{{ originalDirector }}"
+/>
+    </div>
+    <div class="col-6">
+      <label for="year">Year</label>
+<input
+  type="text"
+  class="form-control"
+  name="year" style="color:blue; caret-color: red; "
+  id="year"
+  value="{{ originalYear }}"
+/>
+    </div>
+    <div class="col-6">
+      <label for="recommendation">Recommendation</label>
+<input
+  type="text"
+  class="form-control"
+  name="recommendation" style="color:blue; caret-color: red; "  
+  id="recommendation"
+  value="{{ originalRecommendation }}"
+/>
+
+
+    </div>
+    <div class="col-6">
+      <label for="start">Runtime Minimum</label>
+<input
+  type="number"
+  class="form-control"
+  name="start" style="color:blue; caret-color: red; "
+  id="start"
+  value="{{ originalMinimum }}"
+/>
+    </div>
+    <div class="col-6">
+      <label for="end">Runtime Maximum</label>
+<input
+  type="number"
+  class="form-control"
+  name="end" style="color:blue; caret-color: red; "
+  id="end"
+  value="{{ originalMaximum }}"
+/>
+    </div>
+
+    <div class="col-6">
+      <label for="genres">Genres</label>
+      <input
+        type="text"
+        class="form-control"
+        name="genres" style="color:blue; caret-color: red; "  
+        id="genres"
+        value="{{ genres }}"
+      />
+    </div>
+
+  </div>
+
+
+
+<div class="btn-wrapper">
+  <input
+    class="btn"
+              type="submit"
+    value="Filter"
+    style="width: 50% !important; "
+  />
+</div>
+</form>
+
+<div id="movies" style="width: 100%;">
+    <table>
+        <tr>
+          <th>Rank</th>
+          <th></th>
+          <th>Title</th>
+          <!-- <th>Year</th> -->
+          <!-- <th>Director</th>
+          <th>Runtime</th> -->
+          <th>Beat Below:</th>
+          <th>Count</th>
+          <!-- <th>Win Percentage</th> -->
+          <th>Stars</th>
+          <th>Genres</th>
+          <!-- <th>Win Percentage</th> -->
+          <!-- <th>IMDB</th>
+          <th>Rotten Tomatoes</th>
+          <th>Audience Rating</th> -->
+          
+          
+          <th></th>
+          <!-- <th></th> -->
+        </tr>
+        {% for movie in movies %}
+        <tr id="movie-{{movie.id}}">
+          <td>{{ movie.rank }}</td>
+          <!-- <td style="width: 10%;"> <img src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available."> </td> -->
+          <td style=" text-align: center;
+          vertical-align: middle; width: 10%;"><a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available.">  </a></td>
+          <td><a style="color: brown;" href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' target="_blank"> <u> {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
+            <span style="color: red;">&#128077;</span> <!-- Red heart -->
+          {% elif movie.liked == 2 %}
+            <span>&#129309;</span> <!-- Handshake -->
+          {% elif movie.liked == 3 %}
+            <span>&#128078;</span> <!-- Trash can -->
+        
+          {% endif %}</td>
+          <!-- <td><a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></td> -->
+          <!-- <td><a href='/all-movies/{{movie.director}}'> {{ movie.director }} </a></td>
+          <td>{{ movie.runtime }}</td> -->
+          <td>{% if movie.beatBelow %}
+            <span style="color: green;">&#10003;</span> <!-- Green checkmark -->
+          {% else %}
+            <span style="color: red;">&#10007;</span> <!-- Red 'X' -->
+          {% endif %}</td>
+          <td>{{ movie.rankingWinCount }} / {{movie.rewatchCount}} </td>
+          <!-- <td>{{ movie.rankingPercentage }}%</td> -->
+          <td style="{% if movie.stars is none or movie.stars is string and movie.stars.isdigit() == False %}color:white;
+                    {% elif movie.stars|string|int >= 8 %}color:green;
+                    {% elif movie.stars|string|int >= 6 %}color:orange;
+                    {% else %}color:red;
+                    {% endif %}">
+                      {{ movie.stars }}/10
+                  </td>
+          <td>{{ movie.genres }}</td>
+          <!-- <td>{{ movie.imdbRating }}</td>
+          <td>{{ movie.rottenTomatoRating }}</td>
+          <td>{{ movie.audienceRating }}</td> -->
+          <!-- <td><a href='/update-movie/{{movie.id}}'>Update </a></td> -->
+          <td><a href='/rank-by-movie/{{movie.id}}'>Rank</a></td>
+        </tr>
+        {% endfor %}
+      </table>
+</div>
+
+
+{% endblock %}
