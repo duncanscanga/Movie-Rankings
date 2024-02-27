@@ -28,3 +28,5 @@ htmlcov/
 *,cover
 db.sqlite
 mysql_data
+
+/static/images
