@@ -134,7 +134,7 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
         
-           {% endif %}</td>
+           {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
           <td>#{{ movie.rank }}</td>
           <td> {{ movie.rankingWinCount }} / {{movie.rewatchCount}} ({{movie.rankingPercentage}}%)</td>
           <td style="{% if movie.stars is none or movie.stars is string and movie.stars.isdigit() == False %}color:white;

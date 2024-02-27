@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
-<h1>{% block title %}Duncan's Movies | Unwatched{% endblock %}</h1>
+<h1>{% block title %} Unwatched{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -126,7 +126,7 @@
             <span>&#129309;</span> <!-- Handshake -->
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
-        {% endif %}</td>
+        {% endif %}{% if movie.onComputer %} 🖥️ {% endif %}</td>
       <td><a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></td>
       <td><a href='/all-movies/{{movie.director}}'> {{ movie.director }} </a></td>
       <td>{{ movie.runtime }}</td>

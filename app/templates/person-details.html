@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
-<h1>{% block title %}Duncan's Movies | {{originalName}}{% endblock %}</h1>
+<h1>{% block title %} {{originalName}}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -74,7 +74,7 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
         
-           {% endif %}</td>
+           {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
               <td>{{ movie.genres }}</td>
               <td>{{ movie.rewatchScore }}</td>
               <!-<td>#{{ movie.rank }}</td> -->
