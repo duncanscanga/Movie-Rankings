@@ -124,7 +124,7 @@
               {% for movie in similarDirector %}
               <tr>
                 <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img
-                      src="{{ winner.title|get_poster }}" alt="Poster Not Available."> </a></td>
+                      src="{{ movie.title|get_poster }}" alt="Poster Not Available."> </a></td>
                 <td><a style="color: brown;" style="color: brown;"
                     href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' title="{{ movie.year }}"  target="_blank"> <u> 
                       {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
@@ -143,7 +143,7 @@
               {% for movie in relatedMovies %}
               <tr>
                 <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img
-                      src="{{ winner.title|get_poster }}" alt="Poster Not Available."> </a></td>
+                      src="{{ movie.title|get_poster }}" alt="Poster Not Available."> </a></td>
                 <td><a style="color: brown;" style="color: brown;"
                     href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' title="{{ movie.year }}"  target="_blank"> <u>
                       {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
