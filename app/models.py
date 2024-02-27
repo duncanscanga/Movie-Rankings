@@ -2938,7 +2938,6 @@ def saveForLater(winnerId, loserId):
     db.session.add(ranking)
     db.session.commit()
 
-
 def add_movie(new_title, new_year, people, new_director, new_runtime, rewatched, new_poster, newFirstGenre, newSecondGenre, notes, stars, recommend, date, location, faveQuote, watchNotes):
     if date is not None and date != '' and date != "":
         newDate = datetime.strptime(date, '%Y-%m-%d')
@@ -2948,7 +2947,7 @@ def add_movie(new_title, new_year, people, new_director, new_runtime, rewatched,
         unwateched = 0
     else:
         unwateched = 1
-    movie = Movie(title=new_title, year=new_year, rewatch=rewatched, rewatchScore=1500, rewatchCount=0, cinematicScore=1500, cinematicCount=0, poster=new_poster,
+    movie = Movie(title=new_title, year=new_year, rewatch=rewatched, rewatchScore=1500, rewatchCount=0, cinematicScore=1500, cinematicCount=0, poster="",
      unwatched=unwateched, director=new_director, runtime=new_runtime, notes=notes, stars=stars, recommend=recommend, lastWatchedDate=newDate, location=location, rankingPercentage=0, rankingWinCount=0, faveQuote=faveQuote)
     db.session.add(movie)
     db.session.commit()
@@ -3997,9 +3996,7 @@ def getLastRanking():
     return result
 
 def reverseLastRank():
-    rankings = Ranking.query.order_by(desc(Ranking.modifiedDate)).all()
-
-    lastRanked = rankings[0]
+    lastRanked = Ranking.query.order_by(desc(Ranking.modifiedDate)).first()
 
     lastRanked.overwriteRankingId = lastRanked.id + 1
     lastRanked.reversed = True
@@ -4046,9 +4043,7 @@ def findNumOfSkippedRankings():
     return len(flaggedRankings)
 
 def reverseFlaggedRanking(rankingId):
-    rankings = Ranking.query.filter(Ranking.id == rankingId).all()
-
-    lastRanked = rankings[0]
+    lastRanked = Ranking.query.order_by(desc(Ranking.modifiedDate)).first()
 
     lastRanked.overwriteRankingId = lastRanked.id + 1
     lastRanked.reversed = True

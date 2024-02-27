@@ -244,7 +244,7 @@ def rank_all():
     if lastRanked[2] == 1:
         flagged = "Flagged"
     return render_template('rank-all.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,  second = second, winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
 
 @app.route('/update-rankings/<int:winner_id>/<int:loser_id>/<int:movie_id>', methods=['GET'])
 def rank_by_movie_post(winner_id, loser_id, movie_id):
@@ -324,7 +324,7 @@ def rank_by_movie(movie_id):
     if lastRanked[2] == 1:
         flagged = "Flagged"
     return render_template('rank-by-movie.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,  second = second, winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
 
 @app.route('/rank-by-movie-unique/<string:movie_id>', methods=['GET'])
 def rank_by_movie_unique(movie_id):
@@ -343,7 +343,7 @@ def rank_by_movie_unique(movie_id):
     if lastRanked[2] == 1:
         flagged = "Flagged"
     return render_template('rank-by-movie-unique.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,  second = second, winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
 
 @app.route('/rank-by-stars/<string:movie_id>', methods=['GET'])
 def rank_by_mostar_unique(movie_id):
@@ -362,7 +362,7 @@ def rank_by_mostar_unique(movie_id):
     if lastRanked[2] == 1:
         flagged = "Flagged"
     return render_template('rank-by-movie-star.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,  second = second, winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
 
 
 @app.route('/rank-by-specific-star/<string:movie_id>/<string:stars>', methods=['GET'])
@@ -382,7 +382,7 @@ def rank_by_mostar_unique_star(movie_id, stars):
     if lastRanked[2] == 1:
         flagged = "Flagged"
     return render_template('rank-by-movie-star-specific.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,  second = second, winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
 
 
 @app.route('/rank-by-specific-star-range/<string:movie_id>/<string:stars>', methods=['GET'])
@@ -402,7 +402,7 @@ def rank_by_mostar_unique_starrage(movie_id, stars):
     if lastRanked[2] == 1:
         flagged = "Flagged"
     return render_template('rank-by-movie-star-specific-range.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,  second = second, winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, star=stars)
+                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, star=stars)
 
 
 
@@ -424,7 +424,7 @@ def rank_by_mclose_unique(movie_id):
     if lastRanked[2] == 1:
         flagged = "Flagged"
     return render_template('rank-by-close.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,  second = second, winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
 
 
 
@@ -1312,7 +1312,7 @@ def rank_by_movie_in_list(movie_id, list_id):
     if lastRanked[2] == 1:
         flagged = "Flagged"
     return render_template('rank-by-movie-in-list.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie, list = list,  second = second, winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
 
                            
 
@@ -1633,7 +1633,7 @@ def detailsSimilarGet(movie_id):
     actualMovie = similar[1]
     similar2 = similar[2]
     
-    return render_template('details-with-similar.html', lists=lists, recommendedMovies=recommendedMovies[0], unwatchedRecommended=recommendedMovies[1], similarDirector=recommendedMovies[2], similarRanking=recommendedMovies[3], relatedMovies=recommendedMovies[4], movie = movie, poster=poster, similar1=similar1, similar2=similar2, actualMovie=actualMovie)
+    return render_template('details-with-similar.html', lists=lists, recommendedMovies=recommendedMovies[0], unwatchedRecommended=recommendedMovies[1], similarDirector=recommendedMovies[2], similarRanking=recommendedMovies[3], relatedMovies=recommendedMovies[4], movie = movie,  similar1=similar1, similar2=similar2, actualMovie=actualMovie)
 
 # Cache dictionary
 poster_cache = {}
@@ -1644,10 +1644,14 @@ def get_movie_poster(title):
     if title in poster_cache:
         return poster_cache[title]
     
+    # year = getMovieYear(title)
+    
     # If not in cache, fetch from API
     api_key = '60dd74c6'
     title_encoded = title.replace(" ", "+")  # URL encode the title
     response = requests.get(f"http://www.omdbapi.com/?t={title_encoded}&apikey={api_key}")
+    # title_encoded = title.replace(" ", "+")  # URL encode the title
+    # response = requests.get(f"http://www.omdbapi.com/?t={title_encoded}&apikey={api_key}")
     data = response.json()
     poster_url = data.get('Poster', '/path/to/default/poster.jpg')
     
@@ -1672,7 +1676,7 @@ def detailsGet(movie_id):
 
     if movie.unwatched == 1:
         recommendedMovies = getRecommendedMovies(movie_id)
-        return render_template('details-unwatched.html', lists=lists, movie=movie, poster=poster, similarDirector=recommendedMovies[2], relatedMovies=recommendedMovies[4])
+        return render_template('details-unwatched.html', lists=lists, movie=movie,  similarDirector=recommendedMovies[2], relatedMovies=recommendedMovies[4])
     
     similar = getPlusMinusMovies(movie_id)
     similar1, actualMovie, similar2 = similar
@@ -1686,7 +1690,7 @@ def detailsGet(movie_id):
     if timesRanked == moviesWatched - 1:
         timesRankedString = "Fully Ranked"
 
-    return render_template('details.html', timesRankedString=timesRankedString, lists=lists, currently=currently, movie=movie, poster=poster, similar1=similar1, similar2=similar2, actualMovie=actualMovie, rewatched=rewatch)
+    return render_template('details.html', timesRankedString=timesRankedString, lists=lists, currently=currently, movie=movie,  similar1=similar1, similar2=similar2, actualMovie=actualMovie, rewatched=rewatch)
 
 @app.route('/update-movie-liked/<int:movie_id>/<int:liked>', methods=['GET'])
 def update_movie_liked(movie_id, liked):
@@ -1711,7 +1715,7 @@ def LogGet(movie_id):
             x.watchDate = format_date(x.watchDate, locale='en')
 
 
-    return render_template('log-movie.html', movie = movie, poster=poster, watches=watches)
+    return render_template('log-movie.html', movie = movie,  watches=watches)
 
 
 
@@ -1728,7 +1732,7 @@ def rankingDetailsGet(movie_id):
     
 
 
-    return render_template('ranking-details.html', movie = movie, poster=poster, winners=rankings[0],  losers=rankings[1])
+    return render_template('ranking-details.html', movie = movie,  winners=rankings[0],  losers=rankings[1])
 
 @app.route('/ranking-details-by-stars/<int:movie_id>', methods=['GET'])
 def rankingDetailsStarsGet(movie_id):
@@ -1742,7 +1746,7 @@ def rankingDetailsStarsGet(movie_id):
     
 
 
-    return render_template('ranking-details-by-stars.html', movie = movie, star = rankings[4], poster=poster, winners=rankings[0],  losers=rankings[1],loserScore=rankings[2],  winnerScore=rankings[3], suggestedStar = rankings[4], explainSt = rankings[5])
+    return render_template('ranking-details-by-stars.html', movie = movie, star = rankings[4],  winners=rankings[0],  losers=rankings[1],loserScore=rankings[2],  winnerScore=rankings[3], suggestedStar = rankings[4], explainSt = rankings[5])
 
 
 @app.route('/ranking-details-by-stars/<int:movie_id>', methods=['POST'])
@@ -1770,7 +1774,7 @@ def rankingDeIpsersteGet(movie_id):
     
 
 
-    return render_template('ranking-upsets.html', movie = movie, poster=poster, winners=rankings[0],  losers=rankings[1])
+    return render_template('ranking-upsets.html', movie = movie,  winners=rankings[0],  losers=rankings[1])
 
 
 @app.route('/ranking-details-for-list/<int:list_id>/<int:movie_id>', methods=['GET'])
@@ -1785,7 +1789,7 @@ def rankingDetailsGetList(list_id, movie_id):
     
 
 
-    return render_template('ranking-details-from-list.html', movie = movie, poster=poster, winners=rankings[0],  losers=rankings[1])
+    return render_template('ranking-details-from-list.html', movie = movie,  winners=rankings[0],  losers=rankings[1])
 
 @app.route('/update-movie/<int:movie_id>', methods=['POST'])
 def updateMoviePost(movie_id):
@@ -1932,7 +1936,7 @@ def rank_by_proximity():
     if lastRanked[2] == 1:
         flagged = "Flagged"
     return render_template('rank-by-proximity.html', firstMovie = movies[0], 
-                           secondMovie = movies[1],  second = second, winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+                           secondMovie = movies[1],   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
 
 
 @app.route('/rank-by-liked')
@@ -1949,7 +1953,7 @@ def rank_by_liked():
     if lastRanked[2] == 1:
         flagged = "Flagged"
     return render_template('rank-by-liked.html', firstMovie = movies[0], 
-                           secondMovie = movies[1],  second = second, winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+                           secondMovie = movies[1],   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
 
 
 @app.route('/rank-by-unliked')
@@ -1967,7 +1971,7 @@ def rank_by_unliked():
     if lastRanked[2] == 1:
         flagged = "Flagged"
     return render_template('rank-by-unliked.html', firstMovie = movies[0], 
-                           secondMovie = movies[1],  second = second, winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+                           secondMovie = movies[1],   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
 
 
 @app.route('/rank-by-mid')
@@ -1985,7 +1989,7 @@ def rank_by_mid():
     if lastRanked[2] == 1:
         flagged = "Flagged"
     return render_template('rank-by-mid.html', firstMovie = movies[0], 
-                           secondMovie = movies[1],  second = second, winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+                           secondMovie = movies[1],   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
 
 
 #Query to update the list of movies a certain person has seen with me
