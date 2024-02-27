@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
-<h1>{% block title %}Duncan's Movies | Movie Finder {% endblock %}</h1>
+<h1>{% block title %} Movie Finder {% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -30,7 +30,13 @@
   <div class="col-8">
     <h4>
         <a style="color: brown;"
-       href='http://www.google.com/search?q={{ movie.title }} ({{movie.year}})' target="_blank"> <u> {{ movie.title }} </u></a>
+       href='http://www.google.com/search?q={{ movie.title }} ({{movie.year}})' target="_blank"> <u> {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
+       <span style="color: red;">&#128077;</span> <!-- Red heart -->
+     {% elif movie.liked == 2 %}
+       <span>&#129309;</span> <!-- Handshake -->
+     {% elif movie.liked == 3 %}
+       <span>&#128078;</span> <!-- Trash can -->
+       {% endif %}  {% if movie.onComputer %} 🖥️ {% endif %}
     </h4>
 
     <div class="row">

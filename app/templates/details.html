@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
-<h1>{% block title %}Duncan's Movies | {{movie.title}}{% endblock %}</h1>
+<h1>{% block title %} {{movie.title}}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -22,20 +22,18 @@
             <input class="btn" type="button" value="Rank" onclick="location.href = '/rank-by-movie/{{movie.id}}'" />
           </div>
           <div class="btn-wrapper">
-            <input class="btn" type="button" value="Rank By Proximity" onclick="location.href = '/rank-by-close/{{movie.id}}'" />
-          </div>
-          <div class="btn-wrapper">
             <input class="btn" type="button" value="{{timesRankedString}}" onclick="location.href = '/rank-by-movie-unique/{{movie.id}}'" />
           </div>
+          <div class="btn-wrapper">
+            <input class="btn" type="button" value="Rank By Proximity" onclick="location.href = '/rank-by-close/{{movie.id}}'" />
+          </div>
+         
           
           <div class="btn-wrapper">
             <input class="btn" type="button" value="Ranking Details"
               onclick="location.href = '/ranking-details/{{movie.id}}'" />
           </div>
-          <div class="btn-wrapper">
-            <input class="btn" type="button" value="Ranking Details (For Stars)"
-              onclick="location.href = '/ranking-details-by-stars/{{movie.id}}'" />
-          </div>
+          
           <div class="btn-wrapper">
             <input class="btn" type="button" value="Ranking Upsets"
               onclick="location.href = '/ranking-upsets/{{movie.id}}'" />
@@ -157,6 +155,14 @@
       
 
       {% endif %}
+
+      <div class="row">
+        <h4 class="col-lg-6" style="color: black; "> Recommended Stars: </h4>
+        <h4 class="col-lg-6" > <a href="/ranking-details-by-stars/{{movie.id}}">{{ movie.movieRecommendStars }}/10</a> 
+
+        </h4>
+
+      </div>
 
       
 

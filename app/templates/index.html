@@ -2,19 +2,19 @@
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
-<h1>{% block title %}Duncan's Movies | Home {% endblock %}</h1>
+<h1>{% block title %} Home {% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
 
 <div class="row">
-  <div class="col-lg-3">
+  <!-- <div class="col-lg-3">
     <h3>Trending:</h3>
   </div>
 
   <div class="col-lg-9">
     <h3>Data:</h3>  
-  </div>
+  </div> -->
 
 
   <div class="col-lg-3">
@@ -50,6 +50,22 @@ class="btn"
 value="Upsets (Losers)"
 onclick="location.href = '/upsets-losers'"
 />
+
+<br>
+
+
+{% for list in listOfYears %}
+<input
+class="btn"
+          type="button"
+value="{{list.name}}"
+onclick="location.href = '/list/{{list.id}}'"
+/>
+{% endfor %}
+
+
+
+
 
 
   </div>
@@ -118,6 +134,12 @@ onclick="location.href = '/upsets-losers'"
     <div class="row" style="padding-top: 1%;">
       <h4 class="col-lg-3" style="color: red;"> <a href='/rewatch'>{{ rewatched }}</a> </h4>
       <h4 class="col-lg-9" style="color: blue; "> Movies To Re-Watch </h4>
+    </div>
+
+
+    <div class="row" style="padding-top: 1%;">
+      <h4 class="col-lg-3" style="color: red;"> <a href='/confirm'>{{ confirm }}</a> </h4>
+      <h4 class="col-lg-9" style="color: blue; "> Movies To Confirm </h4>
     </div>
 
     <div class="row" style="padding-top: 1%;">

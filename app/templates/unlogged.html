@@ -18,6 +18,8 @@
           <th>Stars</th>
           <th>Notes</th>
           <th></th>
+          <th></th>
+          <th></th>
         </tr>
         {% for movie in movies %}
         <tr>
@@ -46,7 +48,10 @@
 <td style="{{ 'color:white;' if movie.notes is none or movie.notes == 'None' else 'color:green;' if movie.notes == 'Would recommned' else 'color:darkorange;' if movie.notes == 'If you have time' else 'color:black' }}">
   {{ movie.notes }}
 </td>
+
+<td><a href='/ranking-details-by-stars/{{movie.id}}' target="_blank">Check Stars</a></td>
           <td><a href='/log-movie/{{movie.id}}' target="_blank">Log</a></td>
+          <td><a href='/rewatch/{{movie.id}}'>Rewatch</a></td>
         </tr>
         {% endfor %}
       </table>

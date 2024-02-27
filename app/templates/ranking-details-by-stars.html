@@ -2,33 +2,78 @@
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
-<h1>{% block title %}Duncan's Movies | Ranking Details For Stars{% endblock %}</h1>
+<h1>{% block title %} Ranking Details For Stars{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
+<form method="post">
 
 <div class="container">
   <div class="row">
     <div class="col-12" >
-      <a href='/details/{{movie.id}}' title="#{{movie.rank}}"> <img style="display: block;
-      margin-left: auto;
-      margin-right: auto;
-      " width="25%" src="{{ poster }}" alt="Poster Not Available."> </a>
-       <div class="btn-wrapper">
-        <input class=" col-4 btn" type="button" value="Re-Rank"
-          onclick="location.href = '/rank-by-rerank/{{movie.id}}'" />
+      <div>
+
       </div>
+     
+      
+      <div class="row">
+        <div class="col-6" style="text-align: center;">
+          <!-- Container for the image, set to inline-block to contain size -->
+          <div style="display: inline-block;">
+            <!-- Anchor tag directly wrapping the image -->
+            <a href='/details/{{movie.id}}' title="#{{movie.rank}}">
+              <img style="width: 30%; margin-left: auto; margin-right: auto;" src="{{ poster }}" alt="Poster Not Available.">
+            </a>
+          </div>
+  
+        </div>
+        <div class="col-6">
+          <label for="star">Rank By Specific Star</label>
+      <input type="number" class="form-control" name="star" style="color:blue; caret-color: red; " id="star"
+        value="{{ star }}"step="0.5" />
+      <input class="btn" type="submit" value="Rank" />
+      <div class="btn-wrapper">
+        <input class=" col-12 btn" type="button" value="Rank From {{star - 0.5}} to {{star + 0.5}}"
+          onclick="location.href = '/rank-by-specific-star-range/{{movie.id}}/{{star}}'" />
+      </div>
+      <div class="btn-wrapper">
+        <input class=" col-12 btn" type="button" value="Rank By All Stars"
+          onclick="location.href = '/rank-by-stars/{{movie.id}}'" />
+      </div>
+      <div class="btn-wrapper">
+        <input class="btn" type="button" value="Edit Movie"
+          onclick="location.href = '/log-movie/{{movie.id}}'" />
+      </div>
+        </div>
+      </div>
+       
+      {% if movie.stars is not none and movie.stars != 0 and movie.stars|string|length > 0 and movie.stars != 'None' %}
+      <h4 style="text-align: center; color: rgb(165, 143, 21);">
+        Current Rating: {{ movie.stars }}/10
+      </h4>
+      {% endif %}
+
+      <h4 title="{{ explainSt }}" style="text-align: center; color:orange">
+        Suggested Rating: {{ suggestedStar }}/10
+       
+      </h4>
+
+      
     </div>
   </div>
   <div class="row">
     <div class="col-6">
-      <h4>
-        Movies '{{movie.title}}' Beat ({{ winners|length }}):
+      <h4 style="color: black;">
+        Always Beats: {{ winnerScore }}/10
       </h4>
+      <h4>
+        Movies '<a style="color: brown;" href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' target="_blank" title="{{ movie.year }}" > <u> {{ movie.title }} ({{movie.year}}) </u></a>' Beat ({{ winners|length }}):
+      </h4>
+
       <div id="movies">
         {% for winner in winners %}
         <div class="row">
-          <a href='http://www.google.com/search?q={{winner.winnerTitle}}' target="_blank"> {{winner.winnerTitle}}</a> {% if winner.winnerLiked == 1 %}
+          <a href='http://www.google.com/search?q={{winner.winnerTitle}}' target="_blank"> {{winner.winnerTitle}} </a> {% if winner.winnerLiked == 1 %}
           <span style="color: red;">&#128077;</span> <!-- Red heart -->
         {% elif winner.winnerLiked == 2 %}
           <span>&#129309;</span> <!-- Handshake -->
@@ -36,7 +81,7 @@
           <span>&#128078;</span> <!-- Trash can -->
       
           {% endif %}
-          {{winnerStars}}/10
+          {{winner.winnerStars}}/10
           <a href='/rank-by-specific/{{movie.id}}/{{winner.loserMovieId}}'><img width="50%"
               src="/static/images/movieposters/{{ winner.winnerPoster }}" alt="Poster Not Available."> </a>
         </div>
@@ -46,21 +91,25 @@
     </div>
 
     <div class="col-6">
+      <h4 style="color: black;">
+        Always Loses to: {{ loserScore }}/10
+      </h4>
       <h4>
 
-        Movies '{{movie.title}}' Lost To ({{ losers|length }}):
+        Movies '<a style="color: brown;" href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' target="_blank" title="{{ movie.year }}" > <u> {{ movie.title }} ({{movie.year}}) </u> </a>' Lost To ({{ losers|length }}):
       </h4>
+     
       <div id="movies">
         {% for loser in losers %}
         <div class="row">
-          <a href='http://www.google.com/search?q={{loser.loserTitle}}' target="_blank"> {{loser.loserTitle}}</a>{% if loser.loserLiked == 1 %}
+          <a href='http://www.google.com/search?q={{loser.loserTitle}}' target="_blank"> {{loser.loserTitle}} </a>{% if loser.loserLiked == 1 %}
           <span style="color: red;">&#128077;</span> <!-- Red heart -->
         {% elif loser.loserLiked == 2 %}
           <span>&#129309;</span> <!-- Handshake -->
         {% elif loser.loserLiked == 3 %}
           <span>&#128078;</span> <!-- Trash can -->
       
-          {% endif %} {{loserStars}}/10
+          {% endif %} {{loser.loserStars}}/10
           <a href='/rank-by-specific/{{movie.id}}/{{loser.winnerMovieId}}'><img width="50%"
               src="/static/images/movieposters/{{ loser.loserPoster }}" alt="Poster Not Available."> </a>
         </div>
@@ -74,4 +123,5 @@
 
 
 </div>
+</form>
 {% endblock %}
