@@ -1673,6 +1673,25 @@ def detailsSimilarGet(movie_id):
     
     return render_template('details-with-similar.html', lists=lists, recommendedMovies=recommendedMovies[0], unwatchedRecommended=recommendedMovies[1], similarDirector=recommendedMovies[2], similarRanking=recommendedMovies[3], relatedMovies=recommendedMovies[4], movie = movie, poster=poster, similar1=similar1, similar2=similar2, actualMovie=actualMovie)
 
+# Cache dictionary
+poster_cache = {}
+
+@app.template_filter('get_poster')
+def get_movie_poster(title):
+    # Check if the poster URL is already in the cache
+    if title in poster_cache:
+        return poster_cache[title]
+    
+    # If not in cache, fetch from API
+    api_key = '60dd74c6'
+    title_encoded = title.replace(" ", "+")  # URL encode the title
+    response = requests.get(f"http://www.omdbapi.com/?t={title_encoded}&apikey={api_key}")
+    data = response.json()
+    poster_url = data.get('Poster', '/path/to/default/poster.jpg')
+    
+    # Store in cache and return
+    poster_cache[title] = poster_url
+    return poster_url
 
 
 @app.route('/details/<int:movie_id>', methods=['GET'])
@@ -1681,9 +1700,9 @@ def detailsGet(movie_id):
     lists = getListsForMovie(movie_id)
 
     # Replace 'YOUR_OMDB_API_KEY' with your actual OMDB API key
-    api_key = 'YOUR_OMDB_API_KEY'
+    api_key = '60dd74c6'
     title = movie.title.replace(" ", "+")  # Ensure the title is URL encoded
-    response = requests.get(f"http://www.omdbapi.com/?t={title}&apikey=60dd74c6")
+    response = requests.get(f"http://www.omdbapi.com/?t={title}&apikey={api_key}")
     data = response.json()
 
     # Use a default poster if not found or if the response does not contain 'Poster'

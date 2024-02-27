@@ -69,7 +69,8 @@
                   onclick="location.href = '/update-rankings-by-list-unique/{{firstMovie.id}}/{{secondMovie.id}}/{{list.id}}'"
                 />
               </div>
-              <a href=/details/{{firstMovie.id}}> <img src="{{ first }}" alt="Poster Not Available."></a>
+              <a href=/details/{{firstMovie.id}}> <img src="{{ firstMovie.title|get_poster }}" alt="Movie Poster">
+              </a>
               {% if firstMovie.rewatch != 1 %}
               <div class="btn-wrapper">
                   <input
@@ -139,7 +140,7 @@
                   onclick="location.href = '/update-rankings-by-list-unique/{{secondMovie.id}}/{{firstMovie.id}}/{{list.id}}'"
                 />
               </div>
-              <a href=/details/{{secondMovie.id}}> <img src="{{ second }}" alt="Poster Not Available."></a>
+              <a href=/details/{{secondMovie.id}}> <img src="{{ secondMovie.title|get_poster  }}" alt="Poster Not Available."></a>
               {% if secondMovie.rewatch != 1 %}
               <div class="btn-wrapper">
                 <input
