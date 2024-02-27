@@ -238,27 +238,27 @@ def rank_all():
         secondMovie = getRandomMovie()
         if firstMovie.title != secondMovie.title:
             break
+
     
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-all.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-rankings/" + str(firstMovie.id) + "/" + str(secondMovie.id) 
+    secondMovieLink="/update-rankings/" + str(secondMovie.id) + "/" + str(firstMovie.id) 
+
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
+
+    title = "Rank By All"
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
+
 
 @app.route('/update-rankings/<int:winner_id>/<int:loser_id>/<int:movie_id>', methods=['GET'])
 def rank_by_movie_post(winner_id, loser_id, movie_id):
     updateRankings(winner_id, loser_id, False)
-    # while True:
-    #     firstMovie = getMovieById(movie_id)   
-    #     secondMovie = getRandomMovie()
-    #     if firstMovie.title != secondMovie.title:
-    #         break
-    # start = "/static/images/movieposters/"
-    # first = start + firstMovie.poster
-    # second = start + secondMovie.poster
-    # return render_template('rank-by-movie.html', firstMovie = firstMovie, 
-    #                        secondMovie = secondMovie,  second = second)
     urlBuild = '/rank-by-movie/' + str(movie_id)
     return redirect(urlBuild)
 
@@ -297,16 +297,6 @@ def rank_by_movie_post_close(winner_id, loser_id, movie_id):
 @app.route('/update-rankings/<int:winner_id>/<int:loser_id>', methods=['GET'])
 def rank_all_post(winner_id, loser_id):
     updateRankings(winner_id, loser_id, False)
-    # while True:
-    #     firstMovie = getRandomMovie()
-    #     secondMovie = getRandomMovie()
-    #     if firstMovie.title != secondMovie.title:
-    #         break
-    # start = "/static/images/movieposters/"
-    # first = start + firstMovie.poster
-    # second = start + secondMovie.poster
-    # return render_template('rank-all.html', firstMovie = firstMovie, 
-    #                        secondMovie = secondMovie,  second = second)
     return redirect('/rank-all')
 
 
@@ -323,8 +313,17 @@ def rank_by_movie(movie_id):
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-movie.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+
+    firstMovieLink="/update-rankings/" + str(firstMovie.id) + "/" + str(secondMovie.id) + "/" + str(firstMovie.id)
+    secondMovieLink="/update-rankings/" + str(secondMovie.id) + "/" + str(firstMovie.id) + "/" + str(firstMovie.id)
+
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
+
+    title = "Rank By " + str(firstMovie.title)
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
 
 @app.route('/rank-by-movie-unique/<string:movie_id>', methods=['GET'])
 def rank_by_movie_unique(movie_id):
@@ -342,8 +341,16 @@ def rank_by_movie_unique(movie_id):
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-movie-unique.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-rankings-unique/" + str(firstMovie.id) + "/" + str(secondMovie.id) + "/" + str(firstMovie.id)
+    secondMovieLink="/update-rankings-unique/" + str(secondMovie.id) + "/" + str(firstMovie.id) + "/" + str(firstMovie.id)
+
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
+
+    title = "Rank By " + firstMovie.title + " Unique"
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
 
 @app.route('/rank-by-stars/<string:movie_id>', methods=['GET'])
 def rank_by_mostar_unique(movie_id):
@@ -361,9 +368,16 @@ def rank_by_mostar_unique(movie_id):
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-movie-star.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-rankings-stars/" + str(firstMovie.id) + "/" + str(secondMovie.id) + "/" + str(firstMovie.id)
+    secondMovieLink="/update-rankings-stars/" + str(secondMovie.id) + "/" + str(firstMovie.id) + "/" + str(firstMovie.id)
 
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
+
+    title = "Rank By " + firstMovie.title + " For Stars"
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
 
 @app.route('/rank-by-specific-star/<string:movie_id>/<string:stars>', methods=['GET'])
 def rank_by_mostar_unique_star(movie_id, stars):
@@ -381,8 +395,18 @@ def rank_by_mostar_unique_star(movie_id, stars):
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-movie-star-specific.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-rankings-star/" + str(firstMovie.id) + "/" + str(secondMovie.id) + "/" + str(firstMovie.id) + "/" + str(secondMovie.stars)
+    secondMovieLink="/update-rankings-star/" + str(secondMovie.id) + "/" + str(firstMovie.id) + "/" + str(firstMovie.id) + "/" + str(secondMovie.stars)
+
+
+
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
+
+    title = "Rank By " + firstMovie.title + " For Specific " + stars
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
 
 
 @app.route('/rank-by-specific-star-range/<string:movie_id>/<string:stars>', methods=['GET'])
@@ -401,8 +425,18 @@ def rank_by_mostar_unique_starrage(movie_id, stars):
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-movie-star-specific-range.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, star=stars)
+    firstMovieLink="/update-rankings-star-range/" + str(firstMovie.id) + "/" + str(secondMovie.id) + "/" + str(firstMovie.id) + "/" + str(stars)
+    secondMovieLink="/update-rankings-star-range/" + str(secondMovie.id) + "/" + str(firstMovie.id) + "/" + str(firstMovie.id) + "/" + str(stars)
+
+
+
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
+
+    title = "Rank By " + firstMovie.title + " For Specific " + stars
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
 
 
 
@@ -423,8 +457,19 @@ def rank_by_mclose_unique(movie_id):
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-close.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-rankings-close/" + str(firstMovie.id) + "/" + str(secondMovie.id) + "/" + str(firstMovie.id) 
+    secondMovieLink="/update-rankings-close/" + str(secondMovie.id) + "/" + str(firstMovie.id) + "/" + str(firstMovie.id) 
+
+
+
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
+
+    title = "Rank By " + firstMovie.title + " Close"
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
+
 
 
 
@@ -966,10 +1011,16 @@ def rank_by_specific(first_movie_id,  second_movie_id):
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-specific.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-specific-rankings/" + str(firstMovie.id) + "/" + str(secondMovie.id) + "/" + str(firstMovie.id) 
+    secondMovieLink="/update-specific-rankings/" + str(secondMovie.id) + "/" + str(firstMovie.id) + "/" + str(firstMovie.id) 
 
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
 
+    title = "Rank By Specific"
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
 
 @app.route('/update-specific-rankings/<int:winner_id>/<int:loser_id>/<int:movie_id>', methods=['GET'])
 def rank_by_specific_movie_post(winner_id, loser_id, movie_id):
@@ -1004,8 +1055,19 @@ def rank_by_winner(movie_id):
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-winner.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-winner-rankings/" + str(firstMovie.id) + "/" + str(secondMovie.id) + "/" + str(firstMovie.id) 
+    secondMovieLink="/update-winner-rankings/" + str(secondMovie.id) + "/" + str(firstMovie.id) + "/" + str(secondMovie.id) 
+
+
+
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
+
+    title = "Rank By Winner"
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
+
 
 @app.route('/update-winner-rankings/<int:winner_id>/<int:loser_id>/<int:movie_id>', methods=['GET'])
 def rank_by_winner_movie_post(winner_id, loser_id, movie_id):
@@ -1018,8 +1080,6 @@ def rank_by_winner_movie_post(winner_id, loser_id, movie_id):
     
     urlBuild = '/rank-by-winner/' + str(movie_id)
     return redirect(urlBuild)
-    # return render_template('rank-by-winner.html', firstMovie = firstMovie, 
-    #                        secondMovie = secondMovie,  second=second)
 
 @app.route('/rank-by-loser/<int:movie_id>', methods=['GET'])
 def rank_by_loser(movie_id):
@@ -1041,24 +1101,25 @@ def rank_by_loser(movie_id):
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-loser.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-loser-rankings/" + str(firstMovie.id) + "/" + str(secondMovie.id) + "/" + str(secondMovie.id) 
+    secondMovieLink="/update-loser-rankings/" + str(secondMovie.id) + "/" + str(firstMovie.id) + "/" + str(firstMovie.id) 
+
+
+
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
+
+    title = "Rank By Loser"
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
+
 
 @app.route('/update-loser-rankings/<int:winner_id>/<int:loser_id>/<int:movie_id>', methods=['GET'])
 def rank_by_loser_movie_post(winner_id, loser_id, movie_id):
     updateRankings(winner_id, loser_id, False)
-    # while True:
-    #     firstMovie = getMovieById(movie_id)   
-    #     secondMovie = getRandomMovie()
-    #     if firstMovie.title != secondMovie.title:
-    #         break
-    # start = "/static/images/movieposters/"
-    # first = start + firstMovie.poster
-    # second = start + secondMovie.poster
     urlBuild = '/rank-by-loser/' + str(movie_id)
     return redirect(urlBuild)
-    # return render_template('rank-by-loser.html', firstMovie = firstMovie, 
-    #                        secondMovie = secondMovie,  second=second)
 
 @app.route('/genre-rankings')
 def genres():
@@ -1096,8 +1157,19 @@ def rank_by_urerank(movieId):
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-rerank.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-rerank-rankings/" + str(firstMovie.id) + "/" + str(secondMovie.id) + "/" + str(firstMovie.id) 
+    secondMovieLink="/update-rerank-rankings/" + str(secondMovie.id) + "/" + str(firstMovie.id) + "/" + str(firstMovie.id) 
+
+
+
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
+
+    title = "Rank By Re-Rank"
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
+
 
 
 @app.route('/rank-by-unique')
@@ -1119,16 +1191,24 @@ def rank_by_unique():
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-unique.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-unique-rankings/" + str(firstMovie.id) + "/" + str(secondMovie.id)
+    secondMovieLink="/update-unique-rankings/" + str(secondMovie.id) + "/" + str(firstMovie.id)
+
+
+
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
+
+    title = "Rank By Unique"
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
+
 
 @app.route('/update-unique-rankings/<int:winner_id>/<int:loser_id>', methods=['GET'])
 def rank_by_unranked_post_unoique(winner_id, loser_id):
     updateRankings(winner_id, loser_id, False)
     return redirect('/rank-by-unique')
-    # return render_template('rank-by-unranked-movies.html', firstMovie = firstMovie, 
-    #                        secondMovie = secondMovie,  second=second)
-
 
 @app.route('/update-rerank-rankings/<int:winner_id>/<int:loser_id>/<int:movie_id>', methods=['GET'])
 def rank_by_unranked_postrerank(winner_id, loser_id, movie_id):
@@ -1154,8 +1234,19 @@ def rank_by_unranked():
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-unranked-movies.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-rank-by-unranked/" + str(firstMovie.id) + "/" + str(secondMovie.id)
+    secondMovieLink="/update-rank-by-unranked/" + str(secondMovie.id) + "/" + str(firstMovie.id)
+
+
+
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
+
+    title = "Rank By Unranked"
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
+
 
                            
 
@@ -1163,9 +1254,6 @@ def rank_by_unranked():
 def rank_by_unranked_post(winner_id, loser_id):
     updateRankings(winner_id, loser_id, False)
     return redirect('/rank-by-unranked')
-    # return render_template('rank-by-unranked-movies.html', firstMovie = firstMovie, 
-    #                        secondMovie = secondMovie,  second=second)
-
 
 @app.route('/rank-by-recent')
 def rank_by_recent():
@@ -1191,8 +1279,19 @@ def rank_by_recent():
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-recent-watch.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-rank-by-recent/" + str(firstMovie.id) + "/" + str(secondMovie.id)
+    secondMovieLink="/update-rank-by-recent/" + str(secondMovie.id) + "/" + str(firstMovie.id)
+
+
+
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
+
+    title = "Rank By Recent Watches"
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
+
 
                            
 
@@ -1228,8 +1327,20 @@ def rank_by_genre_list(genre_id):
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-genre.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie, genre = genre,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-rankings-by-genre/" + str(firstMovie.id) + "/" + str(secondMovie.id)+ "/" + str(genre.id)
+    secondMovieLink="/update-rankings-by-genre/" + str(secondMovie.id) + "/" + str(firstMovie.id)+ "/" + str(genre.id)
+
+
+
+    buttonName = "View Genres" 
+    buttonValue = "/genres"
+
+    title = "Rank By " + genre.name
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
+
+
 
 
 @app.route('/rank-by-list/<int:list_id>')
@@ -1256,33 +1367,46 @@ def rank_by_list(list_id):
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-list.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-rankings-by-list/" + str(firstMovie.id) + "/" + str(secondMovie.id) + "/" + str(list.id)
+    secondMovieLink="/update-rankings-by-list/" + str(secondMovie.id) + "/" + str(firstMovie.id) + "/" + str(list.id)
+
+    buttonName = "View List"
+    buttonValue = "/list/" + str(list.id)
+
+    title = "Rank By List"
+    
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
+
 
 
 @app.route('/rank-by-list-unique/<int:list_id>')
 def rank_by_unique_list(list_id):
-    #print("getting list")
     list = find_list_by_id(list_id)
-    #print("found list")
     if(list.count < 2):
         str_reditct = '/list/' + str(list_id)
         return redirect (str_reditct)
-    #print("getting movies")
     movies = getUniqueMoviesFromList(list_id)
-    #print("found movies")
     if len(movies) < 1:
         str_reditct = '/list/' + str(list_id)
         return redirect (str_reditct)
     firstMovie = movies[0]
     secondMovie = movies[1]
-    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-list-unique.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    
+    firstMovieLink="/update-rankings-by-list-unique/" + str(firstMovie.id) + "/" + str(secondMovie.id) + "/" + str(list.id)
+    secondMovieLink="/update-rankings-by-list-unique/" + str(secondMovie.id) + "/" + str(firstMovie.id) + "/" + str(list.id)
+
+    buttonName = "View List"
+    buttonValue = "/list/" + str(list.id)
+
+    title = "Rank By List"
+    
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
 
 
 
@@ -1311,8 +1435,17 @@ def rank_by_movie_in_list(movie_id, list_id):
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-movie-in-list.html', firstMovie = firstMovie, 
-                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-rankings-for-movie-by-list/" + str(firstMovie.id) + "/" + str(secondMovie.id) + "/" + str(firstMovie.id) + "/" + str(list.id)
+    secondMovieLink="/update-rankings-for-movie-by-list/" + str(secondMovie.id) + "/" + str(firstMovie.id)  + "/" + str(firstMovie.id) + "/"  +  str(list.id)
+
+    buttonName = "View List"
+    buttonValue = "/list/" + str(list.id)
+
+    title = "Rank By " + str(firstMovie.title) + " in " + list.name
+    
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
+
 
                            
 
@@ -1627,7 +1760,7 @@ def detailsSimilarGet(movie_id):
 
     lists = getListsForMovie(movie_id)
 
-    start = "/static/images/movieposters/"
+    
     
     similar1 = similar[0]
     actualMovie = similar[1]
@@ -1639,24 +1772,23 @@ def detailsSimilarGet(movie_id):
 poster_cache = {}
 
 @app.template_filter('get_poster')
-def get_movie_poster(title):
+def get_movie_poster(title, year):
     # Check if the poster URL is already in the cache
-    if title in poster_cache:
-        return poster_cache[title]
+    cache_key = f"{title}_{year}"  # Use both title and year as the cache key
+    if cache_key in poster_cache:
+        return poster_cache[cache_key]
     
-    # year = getMovieYear(title)
-    
-    # If not in cache, fetch from API
     api_key = '60dd74c6'
     title_encoded = title.replace(" ", "+")  # URL encode the title
-    response = requests.get(f"http://www.omdbapi.com/?t={title_encoded}&apikey={api_key}")
-    # title_encoded = title.replace(" ", "+")  # URL encode the title
-    # response = requests.get(f"http://www.omdbapi.com/?t={title_encoded}&apikey={api_key}")
+    title_encoded = title_encoded.replace("&", " ")  # URL encode the title
+    print(title_encoded)
+    # Include the year in the API request
+    response = requests.get(f"http://www.omdbapi.com/?t={title_encoded}&y={year}&apikey={api_key}")
     data = response.json()
     poster_url = data.get('Poster', '/path/to/default/poster.jpg')
     
     # Store in cache and return
-    poster_cache[title] = poster_url
+    poster_cache[cache_key] = poster_url
     return poster_url
 
 
@@ -1707,7 +1839,7 @@ def LogGet(movie_id):
 
     watches = getMovieWatches(movie_id)
 
-    start = "/static/images/movieposters/"
+    
     
 
     for x in watches:
@@ -1728,7 +1860,7 @@ def rankingDetailsGet(movie_id):
     rankings = getRankings(movie_id)
     
 
-    start = "/static/images/movieposters/"
+    
     
 
 
@@ -1742,7 +1874,7 @@ def rankingDetailsStarsGet(movie_id):
     rankings = getRankingForStars(movie_id)
     
 
-    start = "/static/images/movieposters/"
+    
     
 
 
@@ -1770,7 +1902,7 @@ def rankingDeIpsersteGet(movie_id):
     rankings = getUpsets(movie_id)
     
 
-    start = "/static/images/movieposters/"
+    
     
 
 
@@ -1785,7 +1917,7 @@ def rankingDetailsGetList(list_id, movie_id):
     rankings = getRankingsInList(list_id, movie_id)
     
 
-    start = "/static/images/movieposters/"
+    
     
 
 
@@ -1928,15 +2060,25 @@ def rank_by_proximity():
         if movies[0].title != movies[1].title:
             if checkNotLastRanked(movies[0].id, movies[1].id):
                 break
-    start = "/static/images/movieposters/"
-    first = start + movies[0].poster
-    second = start + movies[1].poster
+    
+    firstMovie = movies[0]
+    secondMovie = movies[1]
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-proximity.html', firstMovie = movies[0], 
-                           secondMovie = movies[1],   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-proximity-rankings/" + str(firstMovie.id) + "/" + str(secondMovie.id) 
+    secondMovieLink="/update-proximity-rankings/" + str(secondMovie.id) + "/" + str(firstMovie.id) 
+
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
+
+    title = "Rank By Proximity"
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
+
 
 
 @app.route('/rank-by-liked')
@@ -1945,15 +2087,26 @@ def rank_by_liked():
         movies = getLikedMovies()
         if movies[0].title != movies[1].title:
             break
-    start = "/static/images/movieposters/"
-    first = start + movies[0].poster
-    second = start + movies[1].poster
+    
+    firstMovie = movies[0]
+    secondMovie = movies[1]
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-liked.html', firstMovie = movies[0], 
-                           secondMovie = movies[1],   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-liked-ranking/" + str(firstMovie.id) + "/" + str(secondMovie.id) 
+    secondMovieLink="/update-liked-unique/" + str(secondMovie.id) + "/" + str(firstMovie.id) 
+
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
+
+    title = "Rank By Linked"
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
+
+
 
 
 @app.route('/rank-by-unliked')
@@ -1963,15 +2116,26 @@ def rank_by_unliked():
         if movies[0].title != movies[1].title:
             if checkNotLastRanked(movies[0].id, movies[1].id):
                 break
-    start = "/static/images/movieposters/"
-    first = start + movies[0].poster
-    second = start + movies[1].poster
+    
+    
+    firstMovie = movies[0]
+    secondMovie = movies[1]
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-unliked.html', firstMovie = movies[0], 
-                           secondMovie = movies[1],   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-unliked-ranking/" + str(firstMovie.id) + "/" + str(secondMovie.id) 
+    secondMovieLink="/update-unliked-unique/" + str(secondMovie.id) + "/" + str(firstMovie.id) 
+
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
+
+    title = "Rank By Unliked"
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
+
 
 
 @app.route('/rank-by-mid')
@@ -1981,20 +2145,24 @@ def rank_by_mid():
         if movies[0].title != movies[1].title:
             if checkNotLastRanked(movies[0].id, movies[1].id):
                 break
-    start = "/static/images/movieposters/"
-    first = start + movies[0].poster
-    second = start + movies[1].poster
+    
+    firstMovie = movies[0]
+    secondMovie = movies[1]
+    
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
-    return render_template('rank-by-mid.html', firstMovie = movies[0], 
-                           secondMovie = movies[1],   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged)
+    firstMovieLink="/update-mid-ranking/" + str(firstMovie.id) + "/" + str(secondMovie.id) 
+    secondMovieLink="/update-mid-unique/" + str(secondMovie.id) + "/" + str(firstMovie.id) 
 
+    buttonName = "View " + str(firstMovie.title)
+    buttonValue = "/details/" + str(firstMovie.id)
 
-#Query to update the list of movies a certain person has seen with me
-# INSERT INTO list_movie(movieid, listId)
-# SELECT movieId, 8 FROM movie_watch
-# WHERE people like '%Isabella%'
+    title = "Rank By Mid"
+
+    return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
+                           secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
 
 

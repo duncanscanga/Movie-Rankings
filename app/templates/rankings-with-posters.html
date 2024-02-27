@@ -139,9 +139,9 @@ window.onload = function() {
         {% for movie in movies %}
         <tr id="movie-{{movie.id}}">
           <td>{{ movie.rank }}</td>
-          <!-- <td style="width: 10%;"> <img src="{{ movie.title|get_poster }}" alt="Poster Not Available."> </td> -->
+          <!-- <td style="width: 10%;"> <img src="{{ movie.title|get_poster (movie.year)}}" alt="Poster Not Available."> </td> -->
           <td style=" text-align: center;
-          vertical-align: middle; width: 10%;"><a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img src="{{ movie.title|get_poster }}" alt="Poster Not Available.">  </a></td>
+          vertical-align: middle; width: 10%;"><a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img src="{{ movie.title|get_poster (movie.year)}}" alt="Poster Not Available.">  </a></td>
           <td><a style="color: brown;" href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' target="_blank"> <u> {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
             <span style="color: red;">&#128077;</span> <!-- Red heart -->
           {% elif movie.liked == 2 %}

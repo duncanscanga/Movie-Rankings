@@ -13,7 +13,7 @@
       <a href='/details/{{movie.id}}' title="#{{movie.rank}}"> <img style="display: block;
       margin-left: auto;
       margin-right: auto;
-      " width="25%" src="{{ movie.title|get_poster }}" alt="Poster Not Available."> </a>
+      " width="25%" src="{{ movie.title|get_poster (movie.year)}}" alt="Poster Not Available."> </a>
     </div>
   </div>
   <div class="row">

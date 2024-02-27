@@ -121,6 +121,7 @@ class Ranking(db.Model):
     loserLiked = db.Column(db.Integer, nullable=True)
     winnerStars = db.Column(db.Integer, nullable=True)
     loserStars = db.Column(db.Integer, nullable=True)
+    listId = db.Column(db.Integer, nullable=True)
 
 
     def __repr__(self):

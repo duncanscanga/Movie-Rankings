@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %} {{title}}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<style>
+  .poster-wrapper {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    text-align: center !important;
+    /* Ensure that the blur does not extend outside the image area */
+  }
+
+  .poster-wrapper img {
+    width: 100%;
+    display: block;
+    transition: filter 0.5s ease-in-out;
+    /* Smooth transition for the blur effect */
+  }
+
+  .poster-wrapper .hover-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.7);
+    /* Light background with some opacity */
+    background-size: contain;
+    color: black;
+    /* Text color */
+    border-radius: 5px;
+    /* Soften the edges */
+    font-size: 20px;
+    /* Adjust based on your design */
+    visibility: hidden;
+    /* Hidden by default */
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s ease-in-out;
+  }
+
+  .poster-wrapper:hover img {
+    filter: blur(2px);
+    /* Apply blur to the image on hover */
+  }
+
+  .poster-wrapper:hover .hover-text {
+    visibility: visible;
+    opacity: 1;
+  }
+</style>
+
+
+<div class="container-fluid">
+  <div class="row" id="captureThisDiv">
+    <div style="background-color: #f0f0f0;" class="col-lg-4">
+      <div style="color: grey; font-size: 20px;"><a
+          href='http://www.google.com/search?q={{firstMovie.title}} ({{firstMovie.year}})' target="_blank">{{
+          firstMovie.title }} ({{ firstMovie.year }})</a></div>
+      <div class="poster-wrapper" style="margin-top: 10px;"><a href="{{firstMovieLink}}"><img
+            src="{{ firstMovie.title|get_poster(firstMovie.year) }}" alt="Movie Poster" style="width: 100%;">
+          <div class="hover-text">Rather Watch</div>
+        </a></div>
+      <div style="margin-top: 10px;">Director: <span style="font-weight: bold;">{{ firstMovie.director }}</span></div>
+      <div>Rating: <span style="font-weight: bold;">{{ firstMovie.stars }}/10</span> {% if firstMovie.liked == 1 %}<span style="color: red;">&#128077;</span>{% elif firstMovie.liked == 2 %}
+        <span>&#129309;</span>{% elif firstMovie.liked == 3 %}<span>&#128078;</span>{% endif %}</div>
+      <div class="btn-wrapper">
+        <input class="btn" type="button" value="More Details" onclick="window.open('/details/{{secondMovie.id}}')" />
+      </div>
+
+      {% if firstMovie.rewatch != 1 %}
+      <div class="btn-wrapper">
+        <input class="btn" type="button" value="Add to Rewatch List"
+          onclick="window.open('/rewatch/{{firstMovie.id}}')" />
+      </div>
+      {% endif %}
+    </div>
+    <div style="background-color: #f0f0f0;" class="col-lg-4">
+      <div style="color: grey; font-size: 20px;"><a
+          href='http://www.google.com/search?q={{secondMovie.title}} ({{secondMovie.year}})' target="_blank">{{
+          secondMovie.title }} ({{ secondMovie.year }})</a></div>
+      <div class="poster-wrapper" style="margin-top: 10px;"><a href="{{secondMovieLink}}" alt="Movie Poster"
+          style="width: 100%;"><img src="{{ secondMovie.title|get_poster(secondMovie.year) }}" alt="Movie Poster"
+            style="width: 100%;">
+          <div class="hover-text">Rather Watch</div>
+        </a></div>
+      <div style="margin-top: 10px;">Director: <span style="font-weight: bold;">{{ secondMovie.director }}</span></div>
+      <div>Rating: <span style="font-weight: bold;">{{ secondMovie.stars }}/10</span> {% if secondMovie.liked == 1
+        %}<span style="color: red;">&#128077;</span>{% elif secondMovie.liked == 2 %}
+        <span>&#129309;</span>{% elif secondMovie.liked == 3 %}<span>&#128078;</span>{% endif %}
+      </div>
+      <div class="btn-wrapper">
+        <input class="btn" type="button" value="More Details" onclick="window.open('/details/{{secondMovie.id}}')" />
+      </div>
+      {% if secondMovie.rewatch != 1 %}
+
+      <div class="btn-wrapper">
+        <input class="btn" type="button" value="Add to Rewatch List"
+          onclick="window.open('/rewatch/{{secondMovie.id}}')" />
+      </div>
+      {% endif %}
+    </div>
+    <div class="col-lg-4">
+      <div class="row">
+        <input class="btn" type="submit" value="{{buttonName}}" onclick="window.open('{{buttonValue}}')" />
+      </div>
+      Last Ranked: <span style="color: black; background-color: #FFFF00">{{flagged}} </span>
+      <div class="row">
+        <div class="col-lg-6">
+          Winner:
+        </div>
+        <div class="col-lg-6">
+          Loser:
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6">
+          <a href=/details/{{winner.id}}> <img src="{{ winner.title|get_poster(winner.year) }}"
+              alt="Poster Not Available."></a>
+        </div>
+        <div class="col-lg-6">
+          <a href=/details/{{loser.id}}> <img src="{{ loser.title|get_poster(loser.year) }}"
+              alt="Poster Not Available."></a>
+        </div>
+      </div>
+
+      <div class="row">
+        <input class="btn" type="submit" value="Reverse" onclick="window.open('/reverse-last-rank')" />
+      </div>
+
+      <div class="row">
+        <input id="screenshotButton" class="btn" type="button" value="Skip" />
+      </div>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
+
+      <script>
+        function redirectToShare() {
+          window.location.href = '/share/{{firstMovie.id}}/{{secondMovie.id}}';
+        }
+        document.getElementById('screenshotButton').addEventListener('click', function () {
+          // Generate the screenshot
+          html2canvas(document.getElementById('captureThisDiv')).then(function (canvas) {
+            // Convert the canvas to a Blob
+            canvas.toBlob(function (blob) {
+              // Create a new ClipboardItem from the Blob
+              const item = new ClipboardItem({ "image/png": blob });
+
+              // Write the ClipboardItem to the clipboard
+              navigator.clipboard.write([item]).then(function () {
+                console.log('Image copied to clipboard');
+                redirectToShare();
+              }, function (error) {
+                console.error('Could not copy image to clipboard: ', error);
+              });
+            });
+          });
+        });
+      </script>
+    </div>
+  </div>
+</div>
+{% endblock %}

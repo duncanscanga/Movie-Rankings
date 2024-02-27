@@ -13,7 +13,7 @@
     <div class="col-3">
       <div class="row">
         <div class="col-12">
-          <a href="/details/{{movie.id}}"> <img src="{{ movie.title|get_poster }}" alt="Poster Not Available."> </a>
+          <a href="/details/{{movie.id}}"> <img src="{{ movie.title|get_poster (movie.year)}}" alt="Poster Not Available."> </a>
         </div>
       </div>
     </div>
