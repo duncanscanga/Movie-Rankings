@@ -6,6 +6,7 @@ from app import app
 import random
 from datetime import date, datetime, timedelta
 from flask import jsonify
+import requests
 
 @app.route('/trending')
 def trending():
@@ -1672,47 +1673,58 @@ def detailsSimilarGet(movie_id):
     
     return render_template('details-with-similar.html', lists=lists, recommendedMovies=recommendedMovies[0], unwatchedRecommended=recommendedMovies[1], similarDirector=recommendedMovies[2], similarRanking=recommendedMovies[3], relatedMovies=recommendedMovies[4], movie = movie, poster=poster, similar1=similar1, similar2=similar2, actualMovie=actualMovie)
 
+# Cache dictionary
+poster_cache = {}
+
+@app.template_filter('get_poster')
+def get_movie_poster(title):
+    # Check if the poster URL is already in the cache
+    if title in poster_cache:
+        return poster_cache[title]
+    
+    # If not in cache, fetch from API
+    api_key = '60dd74c6'
+    title_encoded = title.replace(" ", "+")  # URL encode the title
+    response = requests.get(f"http://www.omdbapi.com/?t={title_encoded}&apikey={api_key}")
+    data = response.json()
+    poster_url = data.get('Poster', '/path/to/default/poster.jpg')
+    
+    # Store in cache and return
+    poster_cache[title] = poster_url
+    return poster_url
 
 
 @app.route('/details/<int:movie_id>', methods=['GET'])
 def detailsGet(movie_id):
     movie = getMovieDetails(movie_id)
-
     lists = getListsForMovie(movie_id)
 
-    start = "/static/images/movieposters/"
-    poster = start + movie.poster
+    # Replace 'YOUR_OMDB_API_KEY' with your actual OMDB API key
+    api_key = '60dd74c6'
+    title = movie.title.replace(" ", "+")  # Ensure the title is URL encoded
+    response = requests.get(f"http://www.omdbapi.com/?t={title}&apikey={api_key}")
+    data = response.json()
+
+    # Use a default poster if not found or if the response does not contain 'Poster'
+    poster = data.get('Poster', '/path/to/default/poster.jpg')
 
     if movie.unwatched == 1:
         recommendedMovies = getRecommendedMovies(movie_id)
-        return render_template('details-unwatched.html', lists=lists,  movie = movie, poster=poster, similarDirector=recommendedMovies[2], relatedMovies=recommendedMovies[4])
+        return render_template('details-unwatched.html', lists=lists, movie=movie, poster=poster, similarDirector=recommendedMovies[2], relatedMovies=recommendedMovies[4])
     
     similar = getPlusMinusMovies(movie_id)
+    similar1, actualMovie, similar2 = similar
 
-    similar1 = similar[0]
-    actualMovie = similar[1]
-    similar2 = similar[2]
-    
+    rewatch = "Yes" if movie.rewatch else "No"
+    currently = "Yes" if movie.currentlyWatching else "No"
 
-    rewatch = "No"
-    if movie.rewatch:
-        rewatch = "Yes"
-
-    currently = "No"
-    if movie.currentlyWatching:
-        currently = "Yes"
-
-    timesRankedString = ""
     timesRanked = movie.rewatchCount
     moviesWatched = findNumOfWatchedMovies()
-
-    timesRankedString = "Rank Unique " + str(timesRanked) + "/" + str(moviesWatched - 1)
+    timesRankedString = f"Rank Unique {timesRanked}/{moviesWatched - 1}"
     if timesRanked == moviesWatched - 1:
         timesRankedString = "Fully Ranked"
 
-
-    return render_template('details.html', timesRankedString=timesRankedString, lists=lists, currently=currently, movie = movie, poster=poster, similar1=similar1, similar2=similar2, actualMovie=actualMovie,  rewatched=rewatch)
-
+    return render_template('details.html', timesRankedString=timesRankedString, lists=lists, currently=currently, movie=movie, poster=poster, similar1=similar1, similar2=similar2, actualMovie=actualMovie, rewatched=rewatch)
 
 @app.route('/update-movie-liked/<int:movie_id>/<int:liked>', methods=['GET'])
 def update_movie_liked(movie_id, liked):

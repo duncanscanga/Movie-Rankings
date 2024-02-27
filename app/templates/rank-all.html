@@ -29,7 +29,7 @@
                   onclick="location.href = '/update-rankings/{{firstMovie.id}}/{{secondMovie.id}}'"
                 />
               </div>
-              <a href=/details/{{firstMovie.id}}> <img src="{{ first }}" alt="Poster Not Available."></a>
+              <a href=/details/{{firstMovie.id}}> <img src="{{ firstMovie.title|get_poster }}" alt="Movie Poster">
               <div class="btn-wrapper">
                 <input
                   class="btn"
@@ -104,7 +104,7 @@
                   onclick="location.href = '/update-rankings/{{secondMovie.id}}/{{firstMovie.id}}'"
                 />
               </div>
-              <a href=/details/{{secondMovie.id}}> <img src="{{ second }}" alt="Poster Not Available."></a>
+              <a href=/details/{{secondMovie.id}}> <img src="{{ secondMovie.title|get_poster  }}" alt="Poster Not Available."></a>
               <div class="btn-wrapper">
                 <input
                   class="btn"
