@@ -236,7 +236,6 @@ def getListDetailsFromNAme(name, title):
 
     for x in records:
         movie = Movie.query.filter(Movie.id == x.movieId).all()[0]
-        x.moviePoster = movie.poster
         x.movieTitle = movie.title
         x.movieLiked = movie.liked
         x.movieRecommendation = movie.recommend
@@ -1019,7 +1018,6 @@ def find_filtered_movies_first_logged(location, people, notes, start, end, title
 
     for x in logs:
             movie = Movie.query.filter(Movie.id == x.movieId).all()[0]
-            x.moviePoster = movie.poster
             x.movieTitle = movie.title
             x.movieLiked = movie.liked
             x.movieRecommendation = movie.recommend
@@ -1080,7 +1078,6 @@ def find_filtered_movies_logged(location, people, notes, start, end, title):
 
     for x in logs:
             movie = Movie.query.filter(Movie.id == x.movieId).all()[0]
-            x.moviePoster = movie.poster
             x.movieTitle = movie.title
             x.movieLiked = movie.liked
             x.movieRecommendation = movie.recommend
@@ -1107,7 +1104,6 @@ def uncofnrimtedLogs():
 
     for x in logs:
             movie = Movie.query.filter(Movie.id == x.movieId).all()[0]
-            x.moviePoster = movie.poster
             x.movieTitle = movie.title
             x.movieLiked = movie.liked
             x.movieRecommendation = movie.recommend
@@ -2226,7 +2222,6 @@ def getRecentRankings():
 def getMovieLog(id):
     log = MovieWatch.query.filter(MovieWatch.id == id).all()[0]
     movie = Movie.query.filter(Movie.id == log.movieId).all()[0]
-    log.moviePoster = movie.poster
     log.movieTitle = movie.title
     log.movieLiked = movie.liked
     return log

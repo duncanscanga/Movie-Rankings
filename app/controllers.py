@@ -238,9 +238,7 @@ def rank_all():
         secondMovie = getRandomMovie()
         if firstMovie.title != secondMovie.title:
             break
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
@@ -320,9 +318,7 @@ def rank_by_movie(movie_id):
         if firstMovie.title != secondMovie.title:
             if checkNotLastRanked(firstMovie.id, secondMovie.id):
                 break
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
@@ -341,9 +337,7 @@ def rank_by_movie_unique(movie_id):
             return ('',204)
         if firstMovie.title != secondMovie.title:
             break
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
@@ -362,9 +356,7 @@ def rank_by_mostar_unique(movie_id):
             return ('',204)
         if firstMovie.title != secondMovie.title:
             break
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
@@ -384,9 +376,7 @@ def rank_by_mostar_unique_star(movie_id, stars):
             return ('',204)
         if firstMovie.title != secondMovie.title:
             break
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
@@ -406,9 +396,7 @@ def rank_by_mostar_unique_starrage(movie_id, stars):
             return ('',204)
         if firstMovie.title != secondMovie.title:
             break
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
@@ -430,9 +418,7 @@ def rank_by_mclose_unique(movie_id):
         if firstMovie.title != secondMovie.title:
             if checkNotLastRanked(firstMovie.id, secondMovie.id):
                     break
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
@@ -975,9 +961,7 @@ def rank_by_specific(first_movie_id,  second_movie_id):
     firstMovie = getMovieById(first_movie_id)
     secondMovie = getMovieById(second_movie_id)
 
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
@@ -1014,9 +998,7 @@ def rank_by_winner(movie_id):
             if firstMovie.title != secondMovie.title:
                 if checkNotLastRanked(firstMovie.id, secondMovie.id):
                     break
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
 
     lastRanked = getLastRanking()
     flagged = ""
@@ -1033,9 +1015,7 @@ def rank_by_winner_movie_post(winner_id, loser_id, movie_id):
         secondMovie = getRandomMovie()
         if firstMovie.title != secondMovie.title:
             break
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
     urlBuild = '/rank-by-winner/' + str(movie_id)
     return redirect(urlBuild)
     # return render_template('rank-by-winner.html', firstMovie = firstMovie, 
@@ -1056,9 +1036,7 @@ def rank_by_loser(movie_id):
             if firstMovie.title != secondMovie.title:
                 if checkNotLastRanked(firstMovie.id, secondMovie.id):
                     break
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
@@ -1113,9 +1091,7 @@ def rank_by_urerank(movieId):
         return redirect ('/')
     firstMovie = movies[0]
     secondMovie = movies[1]
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
@@ -1137,9 +1113,7 @@ def rank_by_unique():
     elif firstMovie.liked == 3 and secondMovie.liked == 1:
         updateRankings(secondMovie.id, firstMovie.id, True)
         return redirect('/rank-by-unique')
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
 
     lastRanked = getLastRanking()
     flagged = ""
@@ -1174,9 +1148,7 @@ def rank_by_unranked():
         if firstMovie.title != secondMovie.title:
             if checkNotLastRanked(firstMovie.id, secondMovie.id):
                 break
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
 
     lastRanked = getLastRanking()
     flagged = ""
@@ -1212,9 +1184,7 @@ def rank_by_recent():
             if checkNotLastRanked(firstMovie.id, secondMovie.id):
                 break
     #print("loading page")
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
     #print("get last rank")
     lastRanked = getLastRanking()
     #print("found last ranked")
@@ -1253,9 +1223,7 @@ def rank_by_genre_list(genre_id):
             counter = counter + 1
     if counter > 11:
         return redirect('/')
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
@@ -1283,9 +1251,7 @@ def rank_by_list(list_id):
         if counter > 11:
             urlBuild = '/list/' + str(list_id)
             return redirect(urlBuild)
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
@@ -1310,9 +1276,7 @@ def rank_by_unique_list(list_id):
         return redirect (str_reditct)
     firstMovie = movies[0]
     secondMovie = movies[1]
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
@@ -1342,9 +1306,7 @@ def rank_by_movie_in_list(movie_id, list_id):
     if counter > 11:
         str_reditct = '/list/' + str(list_id)
         return redirect (str_reditct)
-    start = "/static/images/movieposters/"
-    first = start + firstMovie.poster
-    second = start + secondMovie.poster
+    
     lastRanked = getLastRanking()
     flagged = ""
     if lastRanked[2] == 1:
@@ -1666,7 +1628,7 @@ def detailsSimilarGet(movie_id):
     lists = getListsForMovie(movie_id)
 
     start = "/static/images/movieposters/"
-    poster = start + movie.poster
+    
     similar1 = similar[0]
     actualMovie = similar[1]
     similar2 = similar[2]
@@ -1742,7 +1704,7 @@ def LogGet(movie_id):
     watches = getMovieWatches(movie_id)
 
     start = "/static/images/movieposters/"
-    poster = start + movie.poster
+    
 
     for x in watches:
         if x.watchDate is not None:
@@ -1763,7 +1725,7 @@ def rankingDetailsGet(movie_id):
     
 
     start = "/static/images/movieposters/"
-    poster = start + movie.poster
+    
 
 
     return render_template('ranking-details.html', movie = movie, poster=poster, winners=rankings[0],  losers=rankings[1])
@@ -1777,7 +1739,7 @@ def rankingDetailsStarsGet(movie_id):
     
 
     start = "/static/images/movieposters/"
-    poster = start + movie.poster
+    
 
 
     return render_template('ranking-details-by-stars.html', movie = movie, star = rankings[4], poster=poster, winners=rankings[0],  losers=rankings[1],loserScore=rankings[2],  winnerScore=rankings[3], suggestedStar = rankings[4], explainSt = rankings[5])
@@ -1805,7 +1767,7 @@ def rankingDeIpsersteGet(movie_id):
     
 
     start = "/static/images/movieposters/"
-    poster = start + movie.poster
+    
 
 
     return render_template('ranking-upsets.html', movie = movie, poster=poster, winners=rankings[0],  losers=rankings[1])
@@ -1820,7 +1782,7 @@ def rankingDetailsGetList(list_id, movie_id):
     
 
     start = "/static/images/movieposters/"
-    poster = start + movie.poster
+    
 
 
     return render_template('ranking-details-from-list.html', movie = movie, poster=poster, winners=rankings[0],  losers=rankings[1])
