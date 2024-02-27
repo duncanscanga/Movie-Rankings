@@ -30,3 +30,5 @@ db.sqlite
 mysql_data
 
 static/images
+
+*.pyc
