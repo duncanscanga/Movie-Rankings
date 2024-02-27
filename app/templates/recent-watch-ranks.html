@@ -21,7 +21,7 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
         
-            {% endif %}</h3>
+            {% endif %}{% if movie.onComputer %} 🖥️ {% endif %}</h3>
         <div class="row">
           <h4 class="col-lg-6" style="color: blue; "> Watched on </h4>
           <h4 class="col-lg-6" style="color: red;">{{ movie.location }}</h4>
@@ -62,7 +62,7 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
         
-           {% endif %}</td>
+           {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
                         <td style="{{ 'color:white;' if movie.recommend is none or movie.recommend == 'None' else 'color:green;' if movie.recommend == 'Would recommned' else 'color:darkorange;' if movie.recommend == 'If you have time' else 'color:red' }}">
                           {{ movie.recommend }}
                       </td>
@@ -89,7 +89,7 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
         
-           {% endif %}</td>
+           {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
                     <td style="background-color: beige; {{ 'color:white;' if movie.recommend is none or movie.recommend == 'None' else 'color:green;' if movie.recommend == 'Would recommned' else 'color:darkorange;' if movie.recommend == 'If you have time' else 'color:red' }}">
                       {{ movie.recommend }}
                   </td>
@@ -116,7 +116,7 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
         
-           {% endif %}</td>
+           {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
                       <td style="{{ 'color:white;' if movie.recommend is none or movie.recommend == 'None' else 'color:green;' if movie.recommend == 'Would recommned' else 'color:darkorange;' if movie.recommend == 'If you have time' else 'color:red' }}">
                         {{ movie.recommend }}
                     </td>
@@ -220,7 +220,7 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
         
-           {% endif %}</td>
+           {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
             <td> {{ movie.rankingWinCount }} / {{ movie.cinematicScore}} <p style="color: black;">
                 ({{movie.winsGained}}%)
               </p>

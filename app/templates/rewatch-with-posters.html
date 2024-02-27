@@ -125,7 +125,7 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
         
-           {% endif %}</td>
+           {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
           <td style=" text-align: center;
           vertical-align: middle;"><a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></td>
           <td style=" text-align: center;

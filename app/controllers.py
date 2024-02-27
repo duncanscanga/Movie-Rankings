@@ -1,6 +1,6 @@
 from flask import render_template, redirect, request, session, url_for
 import os
-from app.models import addMoviesToListRandom, autoRank, autoRankCertain, autoRankList, checkNotLastRanked, createListWithRandomMovies, currentWatchStreak, currentlyWatching, deleteList, duplicateList, find_all_movies_to_watch, find_all_unwatched_filtered_movies, find_all_unwatched_movies, find_all_watched_filtered_movies, find_all_watched_movies, find_best_movies_by_win_percentage, find_current_watch_movies, find_filtered_currently_movies, find_filtered_movies_by_win_percentage, find_filtered_movies_first_logged, find_filtered_movies_forRanking, find_movies_by_genre_filter, find_recently_watched_days, findHourCountAll, findHourCountThisYear, findMoviesForMonth, findMoviesWithHighestWinPercentage, findNumOfCurrentWatch, findNumOfFirstWatchedMovies, findNumOfFlaggedRankings, findNumOfMoviesInMonth, findNumOfMoviesInWeek, findNumOfMoviesToRecommend, findNumOfMoviesWeek, findNumOfReversedMovies, findNumOfSkippedRankings, findNumOfupset, findUniqueMovieRankings, findmoviesToRecommend, getBestOfEachYear, getBiggestUpsets, getClosestRankings, getFlaggedRankings, getLatestSession, getLikedMovies, getListOfYears, getListsForMovie, getListsOfPeople, getMoviesRankedInSession, getRankOfRecentMovies, getRankingStartDate, getRankingsInList, getRecentRankings, getRecommendedMovies, getSharedRankings, getTimesRankedString, getTimesWatched, getTopMoviesInRankingSession, getUniqueMovies, getUniqueMoviesFromList, getUniqueMoviesReank, getUniqueRankingForMovie, getUniquieProximity, getUnwatchedMoviesFromList, getUpsets, getUpsetsRankings, getmidMovies, getunlikedMovies, isOpenSession, longestWatchStreak, misLikedUosetLoserss, misLikedUosets, predictStars, removeCurrentWatch, removeFlagFromRanking, removeSharedMovie, reverseFlaggedRanking, saveForLater, saveRanking, removeSavedRanking,  add_list, addMovieToList, find_all_filtered_movies_without, find_all_movies_without, find_filtered_movies_logged, find_list_by_id, getAllLists, getListDetails, getListDetailsFromNAme, getListPeople, getMovieLog, getMovieWatches, getMoviesFromList, getPerson, getRandomMovieByList, log_movie, findNumOfRewatchedMovies, removeMovieFromList, reverseLastRank, getLastRanking,  getRankings, getPlusMinusMovies,  getMovieDetails, findMoviesWithMostPointsGained, findMoviesWithHighestWins, findNumOfWatchedMovies, findNumOfUnwatchedMovies, findNumOfMovies, findNumOfRanking, find_filtered_rewatched_movies, find_filtered_unwatched_movies, find_all_movies,  find_filtered_movies_by_stars, find_filtered_movies, filterRecentWatched, getRandomUnrankedMovie, getRandomRecentMovie, find_best_movies,  find_recently_watched, getMovieGenres, find_top_movies, getProximityMovie, deleteMovie, startedSession, top_directors, top_movie_from_year, top_movie_from_year_ordered, unloggedMovies, update_list, update_log, update_movie, find_unwatched_movies, unRewatchMovie, rewatchMovie, getRandomMovie, updateLiked, updateRankings, getMovieById, find_rewatch_movies, find_genres, find_movies_by_genre, updateMovie, find_genres_by_id, getRandomMovieByGenre, add_movie
+from app.models import addMoviesToListRandom, autoRank, autoRankCertain, autoRankList, checkNotLastRanked, createListWithRandomMovies, currentWatchStreak, currentlyWatching, deleteList, duplicateList, find_all_movies_to_watch, find_all_unwatched_filtered_movies, find_all_unwatched_movies, find_all_watched_filtered_movies, find_all_watched_movies, find_best_movies_by_win_percentage, find_current_watch_movies, find_filtered_currently_movies, find_filtered_movies_by_win_percentage, find_filtered_movies_first_logged, find_filtered_movies_forRanking, find_movies_by_genre_filter, find_recently_watched_days, findHourCountAll, findHourCountThisYear, findMoviesForMonth, findMoviesWithHighestWinPercentage, findNumOfCurrentWatch, findNumOfFirstWatchedMovies, findNumOfFlaggedRankings, findNumOfMoviesInMonth, findNumOfMoviesInWeek, findNumOfMoviesToRecommend, findNumOfMoviesWeek, findNumOfReversedMovies, findNumOfSkippedRankings, findNumOfupset, findUniqueMovieRankings, findmoviesToRecommend, getBestOfEachYear, getBiggestUpsets, getClosestRankings, getFlaggedRankings, getLatestSession, getLikedMovies, getListOfYears, getListsForMovie, getListsOfPeople, getMoviesRankedInSession, getRankOfRecentMovies, getRankingForStars, getRankingStartDate, getRankingsInList, getRecentRankings, getRecommendedMovies, getSharedRankings, getTimesRankedString, getTimesWatched, getTopMoviesInRankingSession, getUniqueMovies, getUniqueMoviesFromList, getUniqueMoviesReank, getUniqueRankingForMovie, getUniquieProximity, getUnwatchedMoviesFromList, getUpsets, getUpsetsRankings, getmidMovies, getunlikedMovies, isOpenSession, longestWatchStreak, misLikedUosetLoserss, misLikedUosets, predictStars, removeCurrentWatch, removeFlagFromRanking, removeSharedMovie, reverseFlaggedRanking, saveForLater, saveRanking, removeSavedRanking,  add_list, addMovieToList, find_all_filtered_movies_without, find_all_movies_without, find_filtered_movies_logged, find_list_by_id, getAllLists, getListDetails, getListDetailsFromNAme, getListPeople, getMovieLog, getMovieWatches, getMoviesFromList, getPerson, getRandomMovieByList, log_movie, findNumOfRewatchedMovies, removeMovieFromList, reverseLastRank, getLastRanking,  getRankings, getPlusMinusMovies,  getMovieDetails, findMoviesWithMostPointsGained, findMoviesWithHighestWins, findNumOfWatchedMovies, findNumOfUnwatchedMovies, findNumOfMovies, findNumOfRanking, find_filtered_rewatched_movies, find_filtered_unwatched_movies, find_all_movies,  find_filtered_movies_by_stars, find_filtered_movies, filterRecentWatched, getRandomUnrankedMovie, getRandomRecentMovie, find_best_movies,  find_recently_watched, getMovieGenres, find_top_movies, getProximityMovie, deleteMovie, startedSession, top_directors, top_movie_from_year, top_movie_from_year_ordered, unloggedMovies, update_list, update_log, update_movie, find_unwatched_movies, unRewatchMovie, rewatchMovie, getRandomMovie, updateLiked, updateRankings, getMovieById, find_rewatch_movies, find_genres, find_movies_by_genre, updateMovie, find_genres_by_id, getRandomMovieByGenre, add_movie
 from babel.dates import format_date, format_datetime, format_time
 from app import app
 import random
@@ -1638,6 +1638,20 @@ def rankingDetailsGet(movie_id):
 
     return render_template('ranking-details.html', movie = movie, poster=poster, winners=rankings[0],  losers=rankings[1])
 
+@app.route('/ranking-details-by-stars/<int:movie_id>', methods=['GET'])
+def rankingDetailsStarsGet(movie_id):
+
+    movie = getMovieDetails(movie_id)
+
+    rankings = getRankingForStars(movie_id)
+    
+
+    start = "/static/images/movieposters/"
+    poster = start + movie.poster
+
+
+    return render_template('ranking-details.html', movie = movie, poster=poster, winners=rankings[0],  losers=rankings[1])
+
 @app.route('/ranking-upsets/<int:movie_id>', methods=['GET'])
 def rankingDeIpsersteGet(movie_id):
 
@@ -1685,6 +1699,7 @@ def updateMoviePost(movie_id):
     faveQuote = request.form.get('faveQuote')
     location = request.form.get('locationOfWatch')
     liked = request.form.get('liked')
+    onComputer = request.form.get('onComputer')
     if unwatched == None:
         unwatched = 0
     else:
@@ -1693,7 +1708,11 @@ def updateMoviePost(movie_id):
         rewatched = 0
     else:
         rewatched = 1
-    update_movie(movie_id, new_title, new_year, unwatched, rewatched, new_poster, new_firstGenre, new_secondGenre, new_director, new_runtime, notes, stars, recommend, date, location, faveQuote, liked)
+    if onComputer == None:
+        onComputer = 0
+    else:
+        onComputer = 1
+    update_movie(movie_id, new_title, new_year, unwatched, rewatched, new_poster, new_firstGenre, new_secondGenre, new_director, new_runtime, notes, stars, recommend, date, location, faveQuote, liked, onComputer)
     urlBuild = '/details/' + str(movie_id)
     return redirect(urlBuild)
 

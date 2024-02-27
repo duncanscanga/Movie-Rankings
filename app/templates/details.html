@@ -33,6 +33,10 @@
               onclick="location.href = '/ranking-details/{{movie.id}}'" />
           </div>
           <div class="btn-wrapper">
+            <input class="btn" type="button" value="Ranking Details (For Stars)"
+              onclick="location.href = '/ranking-details-by-stars/{{movie.id}}'" />
+          </div>
+          <div class="btn-wrapper">
             <input class="btn" type="button" value="Ranking Upsets"
               onclick="location.href = '/ranking-upsets/{{movie.id}}'" />
           </div>
@@ -62,6 +66,7 @@
   <span id="handshake-icon" style="cursor:pointer; {{ 'display: none;' if movie.liked == 2 else '' }}" onclick="updateMovieLiked({{movie.id}}, 2)">&#129309;</span> <!-- Handshake -->
   <span id="trash-icon" style="cursor:pointer; {{ 'display: none;' if movie.liked == 3 else '' }}" onclick="updateMovieLiked({{movie.id}}, 3)">&#128078;</span> <!-- Trash can -->
 {% endif %}
+{% if movie.onComputer %} 🖥️ {% endif %}
 <script>
   function updateMovieLiked(movieId, likedValue) {
     fetch(`/update-movie-liked/${movieId}/${likedValue}`)
@@ -273,7 +278,7 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
         
-           {% endif %}</td>
+           {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
               <td>{{ movie.genres }}</td>
               <td style="{% if movie.stars is none or movie.stars is string and movie.stars.isdigit() == False %}color:white;
                     {% elif movie.stars|string|int >= 8 %}color:green;
@@ -298,7 +303,7 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
         
-           {% endif %}</td>
+           {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
               <td style="background-color: beige;">{{ movie.genres }}</td>
               <td style=" background-color: beige; {% if movie.stars is none or movie.stars is string and movie.stars.isdigit() == False %}color:white;
           {% elif movie.stars|string|int >= 8 %}color:green;
@@ -323,7 +328,7 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
         
-           {% endif %}</td>
+           {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
               <td>{{ movie.genres }}</td>
               <td style="{% if movie.stars is none or movie.stars is string and movie.stars.isdigit() == False %}color:white;
                     {% elif movie.stars|string|int >= 8 %}color:green;

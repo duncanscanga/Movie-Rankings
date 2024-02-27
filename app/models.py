@@ -59,6 +59,7 @@ class Movie(db.Model):
     liked = db.Column(db.Integer, nullable=True)
     winnerUpsetCount = db.Column(db.Integer, nullable=True)
     loserUpsetCount = db.Column(db.Integer, nullable=True)
+    onComputer = db.Column(db.Boolean, nullable=True)
 
     def __repr__(self):
         return "<Movie %r>" % self.title
@@ -118,6 +119,8 @@ class Ranking(db.Model):
     likeUpset = db.Column(db.Boolean, nullable=True)
     winnerLiked = db.Column(db.Integer, nullable=True)
     loserLiked = db.Column(db.Integer, nullable=True)
+    winnerStars = db.Column(db.Integer, nullable=True)
+    loserStars = db.Column(db.Integer, nullable=True)
 
 
     def __repr__(self):
@@ -2369,6 +2372,47 @@ def getRankings(id):
 
     return result
 
+
+def getRankingForStars(id):
+    result = []
+    # Join the Movie table and filter where Ranking.winnerMovieId's Movie.stars is a number
+    winners = Ranking.query.join(Movie, Ranking.winnerMovieId == Movie.id)\
+                        .filter(and_(Ranking.winnerMovieId == id, 
+                                        Movie.stars.isnot(None),
+                                        text('overwriteRankingId IS NULL')))\
+                        .order_by(desc(Ranking.modifiedDate)).all()
+
+    # Do the same for loserMovieId
+    losers = Ranking.query.join(Movie, Ranking.loserMovieId == Movie.id)\
+                        .filter(and_(Ranking.loserMovieId == id, 
+                                    Movie.stars.isnot(None),
+                                    Movie.stars == 'None',
+                                    text('overwriteRankingId IS NULL')))\
+                        .order_by(desc(Ranking.modifiedDate)).all()
+
+    for x in winners:
+        winnerMovie = Movie.query.filter(Movie.id == x.loserMovieId).first()
+        if winnerMovie:
+            x.winnerTitle = winnerMovie.title
+            x.winnerPoster = winnerMovie.poster
+            x.winnerLiked = winnerMovie.liked
+            x.winner = winnerMovie.stars
+
+    for x in losers:
+        loserMovie = Movie.query.filter(Movie.id == x.winnerMovieId).first()
+        if loserMovie:
+            x.loserTitle = loserMovie.title
+            x.loserPoster = loserMovie.poster
+            x.loserLiked = loserMovie.liked
+            x.loserStars = loserMovie.stars
+
+            
+
+    result.append(winners)
+    result.append(losers)
+
+    return result
+
 def getUpsets(id):
     result = []
     winners = Ranking.query.filter(and_(Ranking.winnerMovieId == id, text('overwriteRankingId IS NULL'), Ranking.likeUpset == 1)).order_by(desc(Ranking.modifiedDate)).all()
@@ -2881,7 +2925,7 @@ def update_log(movie_id, location, newPeople, newNotes, date, faveQuote, recomme
     return log.movieId
 
 
-def update_movie(movie_id, new_title, new_year, unwatched, rewatched, new_poster, new_firstGenre, new_secondGenre, new_director, new_runtime, notes, stars, recommend, date, location, faveQuote, liked):
+def update_movie(movie_id, new_title, new_year, unwatched, rewatched, new_poster, new_firstGenre, new_secondGenre, new_director, new_runtime, notes, stars, recommend, date, location, faveQuote, liked, onComputer):
     movie = Movie.query.filter(Movie.id == movie_id).all()[0]
     movie.title = new_title
     movie.year = new_year
@@ -2894,6 +2938,10 @@ def update_movie(movie_id, new_title, new_year, unwatched, rewatched, new_poster
     movie.recommend = recommend
     movie.faveQuote = faveQuote
     movie.liked = liked
+    movie.onComputer = onComputer
+    if movie.onComputer == 1:
+        addMovieToList(27, movie.id)
+
     if date is not None and date != '' and date != "" and len(date) > 4:
         movie.lastWatchedDate = datetime.strptime(date, '%Y-%m-%d')
     movie.location = location 

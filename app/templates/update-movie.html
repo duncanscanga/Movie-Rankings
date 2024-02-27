@@ -96,6 +96,15 @@
             id="faveQuote"
             value="{{movie.faveQuote}}"
           />
+          <label for="rewatch">Downloaded?</label>
+          <input
+            type="checkbox"
+            class="form-control"
+            name="onComputer"
+            id="onComputer"
+            value="{{ movie.onComputer }}"
+            {{'checked="checked"' if movie.onComputer else ""}}
+          />
           <label for="rewatch">Do you seen want to rewatch this?</label>
           <input
             type="checkbox"
