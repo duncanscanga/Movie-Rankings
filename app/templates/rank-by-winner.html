@@ -160,10 +160,10 @@
 
           <div class="row">
             <div class="col-lg-6">
-              <a href=/details/{{winner.id}}> <img src="/static/images/movieposters/{{ winner.poster }}" alt="Poster Not Available."></a> 
+              <a href=/details/{{winner.id}}> <img src="{{ winner.title|get_poster }}" alt="Poster Not Available."></a> 
             </div>
             <div class="col-lg-6">
-              <a href=/details/{{loser.id}}> <img  src="/static/images/movieposters/{{ loser.poster }}" alt="Poster Not Available."></a>
+              <a href=/details/{{loser.id}}> <img  src="{{ loser.title|get_poster }}" alt="Poster Not Available."></a>
             </div>
           </div>
 

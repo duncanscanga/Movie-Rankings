@@ -161,8 +161,8 @@
         {% for movie in movies %}
         <tr>
           <td style=" text-align: center;
-          vertical-align: middle; width: 10%;"><a href='/details/{{movie.movieId}}'><img src="/static/images/movieposters/{{ movie.moviePoster }}" alt="Poster Not Available.">  </a></td>
-          <!-- <td style="width: 10%;"> <img src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available."> </td> -->
+          vertical-align: middle; width: 10%;"><a href='/details/{{movie.movieId}}'><img src="{{ movie.movieTitle|get_poster }}" alt="Poster Not Available.">  </a></td>
+          <!-- <td style="width: 10%;"> <img src="{{ movie.title|get_poster }}" alt="Poster Not Available."> </td> -->
           <td><a href='http://www.google.com/search?q={{movie.movieTitle}}' target="_blank"> {{ movie.movieTitle }}</a> {% if movie.movieLiked == 1 %}
             <span style="color: red;">&#128077;</span> <!-- Red heart -->
           {% elif movie.movieLiked == 2 %}
