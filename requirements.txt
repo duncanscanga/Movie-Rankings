@@ -4,3 +4,7 @@ pytest
 flake8
 validate_email
 datetime
+selenium
+seleniumbase
+pymysql
+requests

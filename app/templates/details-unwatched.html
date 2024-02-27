@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
-<h1>{% block title %}Duncan's Movies | {{movie.title}}{% endblock %}</h1>
+<h1>{% block title %} {{movie.title}}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -26,6 +26,7 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
             {% endif %}
+            {% if movie.onComputer %} 🖥️ {% endif %}
       </h4>
 
       <div class="row">
@@ -123,7 +124,7 @@
               {% for movie in similarDirector %}
               <tr>
                 <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img
-                      src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available."> </a></td>
+                      src="{{ winner.title|get_poster }}" alt="Poster Not Available."> </a></td>
                 <td><a style="color: brown;" style="color: brown;"
                     href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' title="{{ movie.year }}"  target="_blank"> <u> 
                       {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
@@ -133,7 +134,7 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
         
-           {% endif %}</td>
+           {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
                 <td><a href='/all-movies/{{movie.year}}'>{{ movie.year }}</a></td>
                 <td><a href='/all-movies/{{movie.director}}'>{{ movie.director }}</a></td>
                 <td>{{ movie.genres }}</td>
@@ -142,7 +143,7 @@
               {% for movie in relatedMovies %}
               <tr>
                 <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img
-                      src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available."> </a></td>
+                      src="{{ winner.title|get_poster }}" alt="Poster Not Available."> </a></td>
                 <td><a style="color: brown;" style="color: brown;"
                     href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' title="{{ movie.year }}"  target="_blank"> <u>
                       {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
@@ -152,7 +153,7 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
         
-           {% endif %}</td>
+           {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
                 <td><a href='/all-movies/{{movie.year}}'>{{ movie.year }}</a></td>
                 <td><a href='/all-movies/{{movie.director}}'>{{ movie.director }}</a></td>
                 <td>{{ movie.genres }}</td>
@@ -178,7 +179,7 @@
                         </tr>
                         {% for movie in relatedMovies %}
                         <tr>
-                          <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available.">  </a></td>
+                          <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img src="{{ movie.title|get_poster }}" alt="Poster Not Available.">  </a></td>
                           <td><a style="color: brown;" style="color: brown;" href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' target="_blank"> <u> {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
             <span style="color: red;">&#128077;</span> <!-- Red heart -->
           <!-- {% elif movie.liked == 2 %}

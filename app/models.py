@@ -59,6 +59,7 @@ class Movie(db.Model):
     liked = db.Column(db.Integer, nullable=True)
     winnerUpsetCount = db.Column(db.Integer, nullable=True)
     loserUpsetCount = db.Column(db.Integer, nullable=True)
+    onComputer = db.Column(db.Boolean, nullable=True)
 
     def __repr__(self):
         return "<Movie %r>" % self.title
@@ -118,6 +119,8 @@ class Ranking(db.Model):
     likeUpset = db.Column(db.Boolean, nullable=True)
     winnerLiked = db.Column(db.Integer, nullable=True)
     loserLiked = db.Column(db.Integer, nullable=True)
+    winnerStars = db.Column(db.Integer, nullable=True)
+    loserStars = db.Column(db.Integer, nullable=True)
 
 
     def __repr__(self):
@@ -175,6 +178,7 @@ class MovieWatch(db.Model):
     movieOverallNotes = db.Column(db.String(1000), nullable=True)
     firstWatch = db.Column(db.Boolean, nullable=True)
     movieLiked = db.Column(db.Integer, nullable=True)
+    confirmedStars = db.Column(db.Boolean, nullable=True)
 
     def __repr__(self):
         return "<Movie_Watch %r>" % self.movieId
@@ -232,7 +236,6 @@ def getListDetailsFromNAme(name, title):
 
     for x in records:
         movie = Movie.query.filter(Movie.id == x.movieId).all()[0]
-        x.moviePoster = movie.poster
         x.movieTitle = movie.title
         x.movieLiked = movie.liked
         x.movieRecommendation = movie.recommend
@@ -311,7 +314,7 @@ def getPerson(name):
     
 
 def getAllLists():
-    list = List.query.filter(text("id <> 20 and id <> 21 and id <> 22 and id <> 23 and id <> 24 and id <> 25 and id <> 16 and id <> 28")).order_by(List.name).all()
+    list = List.query.filter(text("id <> 20 and id <> 21 and id <> 22 and id <> 23 and id <> 24 and id <> 25 and id <> 16 and id <> 28 and id <> 32")).order_by(List.name).all()
     
     return list
 
@@ -320,7 +323,7 @@ def getListsOfPeople():
    return list
 
 def getListOfYears():
-    list = List.query.filter(text("id = 16 or id = 28")).order_by(List.name).all()
+    list = List.query.filter(text("id = 16 or id = 28 or id = 32")).order_by(List.name).all()
     return list
 
 def getUnwatchedMoviesFromList(listId):
@@ -759,6 +762,7 @@ def getOverallRanks(movies):
         for y in ranked:
             if y.id == x.id:
                 x.rank = y.rank
+    db.session.commit()
 
     return movies
 
@@ -1014,7 +1018,6 @@ def find_filtered_movies_first_logged(location, people, notes, start, end, title
 
     for x in logs:
             movie = Movie.query.filter(Movie.id == x.movieId).all()[0]
-            x.moviePoster = movie.poster
             x.movieTitle = movie.title
             x.movieLiked = movie.liked
             x.movieRecommendation = movie.recommend
@@ -1075,7 +1078,6 @@ def find_filtered_movies_logged(location, people, notes, start, end, title):
 
     for x in logs:
             movie = Movie.query.filter(Movie.id == x.movieId).all()[0]
-            x.moviePoster = movie.poster
             x.movieTitle = movie.title
             x.movieLiked = movie.liked
             x.movieRecommendation = movie.recommend
@@ -1090,6 +1092,27 @@ def find_filtered_movies_logged(location, people, notes, start, end, title):
                 results.append(x) 
         return results 
         
+    return logs
+
+
+def uncofnrimtedLogs():
+    logs = []
+
+    logs = MovieWatch.query.filter(and_(
+                                        MovieWatch.confirmedStars != 1
+                                        )).order_by(text("watchDate desc, id desc")).all()
+
+    for x in logs:
+            movie = Movie.query.filter(Movie.id == x.movieId).all()[0]
+            x.movieTitle = movie.title
+            x.movieLiked = movie.liked
+            x.movieRecommendation = movie.recommend
+            x.movieStars = movie.stars
+            x.movieOverallNotes = movie.notes     
+            x.movieYear = movie.year 
+            x.movieRank = movie.rank
+            x.movieRecommendStars = getRankingForStars(x.movieId)[4]
+             
     return logs
 
 def find_filtered_unwatched_movies(title, director, year, min, max, recommendation, genreInput):
@@ -1469,14 +1492,16 @@ def filterRecentWatched(start, end):
     return movies
 
 def getRandomMovie():
-    size = Movie.query.count()
-    while(True):
-        index = random.randint(1, size)
-        movie = Movie.query.filter(Movie.id == index).all()
-        if len(movie) > 0:
-            if movie[0].unwatched != 1:
-                break
-    return movie[0]
+    movies = Movie.query.filter(and_(Movie.unwatched != 1, Movie.rewatch != 1)).order_by(func.random()).all()
+    # size = Movie.query.count()
+    # while(True):
+    #     index = random.randint(1, size)
+    #     movie = Movie.query.filter(Movie.id == index).all()
+    #     if len(movie) > 0:
+    #         if movie[0].unwatched != 1 and movie[0].rewatch != 1:
+    #             break
+    # return movie[0]
+    return movies[0]
 
 def getRandomRankdeMovie(movieId):
     rankings = Ranking.query.filter(and_(or_(Ranking.winnerMovieId == movieId, Ranking.loserMovieId == movieId),  text("overwriteRankingId is null"))).all()
@@ -1523,7 +1548,7 @@ def getRecommendedMovies(movieId):
     title = regex.sub("", movie.title)
     words = title.split(" ")
     for word in words:
-        if not( word.lower() == "of" or word == "is" or word == "X" or word == "F" or word == "with" or word=="Movie" or word=="La" or word=="Book" or word == "My"  or word =="From" or word =="from"  or  word == "to" or word == "II" or word == "III" or word == "On" or word == "on" or word == "Her" or word == "One" or word == "New" or word == "new" or word == "her" or word == "king" or word == "of" or word.lower() == "and" or word == "The" or  word.lower() == "the" or  word.lower() == "in" or  word.lower() == "for" or  word.lower() == "a" or  word.lower() == "an" ):
+        if not( word.lower() == "of" or word == "Is" or word == "is" or word == "X" or word == "F" or word == "with" or word=="Movie" or word=="La" or word=="Book" or word == "My"  or word =="From" or word =="from"  or  word == "to" or word == "II" or word == "III" or word == "On" or word == "on" or word == "Her" or word == "One" or word == "New" or word == "new" or word == "her" or word == "king" or word == "of" or word.lower() == "and" or word == "The" or  word.lower() == "the" or  word.lower() == "in" or  word.lower() == "for" or  word.lower() == "a" or  word.lower() == "an" ):
             sortedWords.append(word)  
 
     movieIdString = "("
@@ -1643,8 +1668,8 @@ def autoRankLikedCertain (movieId):
 
         # Check if these two movies have been ranked against each other
         existing_ranking = Ranking.query.filter(
-            (Ranking.winnerMovieId == movieId) & (Ranking.loserMovieId == movie.id) & (Ranking.generated != True )|
-            (Ranking.winnerMovieId == movie.id) & (Ranking.loserMovieId == movieId) & (Ranking.generated != True )
+            (Ranking.winnerMovieId == movieId) & (Ranking.loserMovieId == movie.id)  |
+            (Ranking.winnerMovieId == movie.id) & (Ranking.loserMovieId == movieId) 
         ).first()
 
         # If not ranked, update rankings
@@ -1668,8 +1693,8 @@ def autoRankMidCertain (movieId):
 
         # Check if these two movies have been ranked against each other
         existing_ranking = Ranking.query.filter(
-            (Ranking.winnerMovieId == movieId) & (Ranking.loserMovieId == movie.id) & (Ranking.generated != True )|
-            (Ranking.winnerMovieId == movie.id) & (Ranking.loserMovieId == movieId) & (Ranking.generated != True )
+            (Ranking.winnerMovieId == movieId) & (Ranking.loserMovieId == movie.id) |
+            (Ranking.winnerMovieId == movie.id) & (Ranking.loserMovieId == movieId)
         ).first()
 
         # If not ranked, update rankings
@@ -1693,8 +1718,8 @@ def autoRankDisLikedCertain(movieId):
 
         # Check if these two movies have been ranked against each other
         existing_ranking = Ranking.query.filter(
-            (Ranking.winnerMovieId == movieId) & (Ranking.loserMovieId == movie.id) & (Ranking.generated != True ) |
-            (Ranking.winnerMovieId == movie.id) & (Ranking.loserMovieId == movieId) & (Ranking.generated != True )
+            (Ranking.winnerMovieId == movieId) & (Ranking.loserMovieId == movie.id)  |
+            (Ranking.winnerMovieId == movie.id) & (Ranking.loserMovieId == movieId) 
         ).first()
 
         # If not ranked, update rankings
@@ -1724,8 +1749,8 @@ def autoRankLikes(movieId):
 
         # Check if these two movies have been ranked against each other
         existing_ranking = Ranking.query.filter(
-            (Ranking.winnerMovieId == movieId) & (Ranking.loserMovieId == movie.id) & (Ranking.generated != True )|
-            (Ranking.winnerMovieId == movie.id) & (Ranking.loserMovieId == movieId) & (Ranking.generated != True )
+            (Ranking.winnerMovieId == movieId) & (Ranking.loserMovieId == movie.id) |
+            (Ranking.winnerMovieId == movie.id) & (Ranking.loserMovieId == movieId) 
         ).first()
 
         # If not ranked, update rankings
@@ -1749,8 +1774,8 @@ def autoRankLikes1(movieId):
 
         # Check if these two movies have been ranked against each other
         existing_ranking = Ranking.query.filter(
-            (Ranking.winnerMovieId == movieId) & (Ranking.loserMovieId == movie.id) & (Ranking.generated != True ) |
-            (Ranking.winnerMovieId == movie.id) & (Ranking.loserMovieId == movieId) & (Ranking.generated != True )
+            (Ranking.winnerMovieId == movieId) & (Ranking.loserMovieId == movie.id)  |
+            (Ranking.winnerMovieId == movie.id) & (Ranking.loserMovieId == movieId)
         ).first()
 
         # If not ranked, update rankings
@@ -1773,8 +1798,8 @@ def autoRankStars1(movieId):
 
         # Check if these two movies have been ranked against each other
         existing_ranking = Ranking.query.filter(
-            (Ranking.winnerMovieId == movieId) & (Ranking.loserMovieId == movie.id) & (Ranking.generated != True ) |
-            (Ranking.winnerMovieId == movie.id) & (Ranking.loserMovieId == movieId) & (Ranking.generated != True )
+            (Ranking.winnerMovieId == movieId) & (Ranking.loserMovieId == movie.id)  |
+            (Ranking.winnerMovieId == movie.id) & (Ranking.loserMovieId == movieId) 
         ).first()
 
         if not existing_ranking:
@@ -1805,8 +1830,8 @@ def autoRankStars2(movieId):
 
         # Check if these two movies have been ranked against each other
         existing_ranking = Ranking.query.filter(
-            (Ranking.winnerMovieId == movieId) & (Ranking.loserMovieId == movie.id) & (Ranking.generated != True ) |
-            (Ranking.winnerMovieId == movie.id) & (Ranking.loserMovieId == movieId) & (Ranking.generated != True )
+            (Ranking.winnerMovieId == movieId) & (Ranking.loserMovieId == movie.id)  |
+            (Ranking.winnerMovieId == movie.id) & (Ranking.loserMovieId == movieId) 
         ).first()
 
         if not existing_ranking:
@@ -1840,9 +1865,12 @@ def getUpsets(movieId):
 
 
 def updateRankings(winnerId, loserId, autoGenerated):
+    #print("find movies")
     winner = Movie.query.filter(Movie.id == winnerId).all()[0]
     loser = Movie.query.filter(Movie.id == loserId).all()[0]
+    #print("found movies")
 
+    #print("getting probability")
     Pb =  Probability(winner.rewatchScore, loser.rewatchScore)
     Pa =  Probability(loser.rewatchScore, winner.rewatchScore)
     Ra = int(winner.rewatchScore + 50 * (1 - Pa))
@@ -1850,11 +1878,18 @@ def updateRankings(winnerId, loserId, autoGenerated):
 
     isUniqueRanking = True
     isReversedRanking = False
+    #print("finding all rankings")
+    # allRankings = Ranking.query.order_by(desc(Ranking.modifiedDate)).all()
 
+    # lastRanked = allRankings[0]
+    lastRanked = Ranking.query.order_by(desc(Ranking.modifiedDate)).first()
+
+    #print("mkaing query")
     text1 = 'overwriteRankingId is NULL AND ((winnerMovieId = ' + str(winnerId) + ' and loserMovieId = ' + str(loserId) + ') OR (winnerMovieId = ' + str(loserId) + ' AND loserMovieId = ' + str(winnerId) + ' ) ' + ')'
     rankings = Ranking.query.filter(text(text1)).all()
     if len(rankings) > 0:
         isUniqueRanking = False
+    #print("starting loop")
     for r in rankings:
         if (r.winnerMovieId == winnerId and r.loserMovieId == loserId):
             r.confirmed = func.now()
@@ -1862,8 +1897,9 @@ def updateRankings(winnerId, loserId, autoGenerated):
             r.reversed = True
             isReversedRanking = True
         if ((r.winnerMovieId == winnerId and r.loserMovieId == loserId) or (r.winnerMovieId == loserId and r.loserMovieId == winnerId))and r.overwriteRankingId is None:
-            r.overwriteRankingId = len(rankings) + 1
+            r.overwriteRankingId = lastRanked.id + 1
 
+    #print("hpdating rankinugs")
     ranking = Ranking(winnerMovieId=winner.id, loserMovieId=loser.id, modifiedDate=func.now(), winnerStartingPoints=winner.rewatchScore, loserStartingPoints=loser.rewatchScore, 
                       winnerPointsGained=50 * (1 - Pa), loserPointsLossed=50 * (1 - Pb), winnerEndingPoints=Ra, losserEndingPoints=Rb, winnerCount=winner.rewatchCount, loserCount=loser.rewatchCount, generated=autoGenerated)
     
@@ -1871,6 +1907,7 @@ def updateRankings(winnerId, loserId, autoGenerated):
     # 1) unique ranking, increase the win count and rewatch Count for winner, only increase rewatch Count for loser
     # 2) reverse of past Ranking, increase the win count for winner, decrease win Count for loser
     # 3) confirming of past Ranking, change nothing
+    #print("checking is unique")
     if isUniqueRanking:
         winner.rankingWinCount = len(Ranking.query.filter(and_(Ranking.winnerMovieId == winner.id, text('overwriteRankingId is NULL'))).all()) + 1
         winner.rewatchCount = len(Ranking.query.filter(and_(or_(Ranking.winnerMovieId == winner.id, Ranking.loserMovieId == winner.id), text('overwriteRankingId IS NULL'))).all()) + 1
@@ -1899,10 +1936,11 @@ def updateRankings(winnerId, loserId, autoGenerated):
             loser.rankingPercentage = 0
     winner.rewatchScore = Ra
     loser.rewatchScore = Rb
+    #print("checking flag")
     ranking = checkFlag(winner, loser, ranking)
-
+    #print("flag checked")
     ranking = checkLikedUpset(winner, loser, ranking)
-
+    #print("checked upsets")
     db.session.add(ranking)
     db.session.commit()
 
@@ -2184,7 +2222,6 @@ def getRecentRankings():
 def getMovieLog(id):
     log = MovieWatch.query.filter(MovieWatch.id == id).all()[0]
     movie = Movie.query.filter(Movie.id == log.movieId).all()[0]
-    log.moviePoster = movie.poster
     log.movieTitle = movie.title
     log.movieLiked = movie.liked
     return log
@@ -2301,10 +2338,6 @@ def predictStars(movieId):
                 else:
                     moviesLost.append(movie.stars)
 
-    print(moviesBeat)
-    print(moviesLost)
-
-
 def predict_stars(movie_id):
     winners, losers = get_rankings(movie_id)
 
@@ -2369,6 +2402,173 @@ def getRankings(id):
 
     return result
 
+
+def getRankingForStars(id):
+    result = []
+    # Join the Movie table and filter where Ranking.winnerMovieId's Movie.stars is a number
+    winners = Ranking.query.join(Movie, Ranking.loserMovieId == Movie.id)\
+                        .filter(and_(Ranking.winnerMovieId == id, 
+                                        Movie.stars.isnot(None),
+                                         Movie.stars != 'None',
+                                         Movie.stars != '',
+                                        text('overwriteRankingId IS NULL')))\
+                        .order_by(desc(Ranking.modifiedDate)).all()
+
+    # Do the same for loserMovieId
+    losers = Ranking.query.join(Movie, Ranking.winnerMovieId == Movie.id)\
+                        .filter(and_(Ranking.loserMovieId == id, 
+                                    Movie.stars.isnot(None),
+                                    Movie.stars != 'None',
+                                    Movie.stars != '',
+                                    text('overwriteRankingId IS NULL')))\
+                        .order_by(desc(Ranking.modifiedDate)).all()
+
+    for x in winners:
+        winnerMovie = Movie.query.filter(Movie.id == x.loserMovieId).first()
+        if winnerMovie:
+            x.winnerTitle = winnerMovie.title
+            x.winnerPoster = winnerMovie.poster
+            x.winnerLiked = winnerMovie.liked
+            x.winnerStars = winnerMovie.stars
+
+    for x in losers:
+        loserMovie = Movie.query.filter(Movie.id == x.winnerMovieId).first()
+        if loserMovie:
+            x.loserTitle = loserMovie.title
+            x.loserPoster = loserMovie.poster
+            x.loserLiked = loserMovie.liked
+            x.loserStars = loserMovie.stars
+
+    winner_stars_set = set(x.loserStars for x in losers)
+    loser_stars_set = set(x.winnerStars for x in winners)
+
+    # Sort the sets in descending order for lower_bound and ascending order for upper_bound
+    sorted_winner_stars = sorted(winner_stars_set, reverse=True)
+    sorted_loser_stars = sorted(loser_stars_set)
+
+    # Determine the lower bound
+    # Start with the highest value in loserStars that is not in winnerStars
+    lower_bound = None
+    for star in sorted_loser_stars[::-1]:  # Iterate in reverse order (highest to lowest)
+        if star not in winner_stars_set:
+            lower_bound = star
+            break
+
+    upper_bound = None
+    for star in sorted_winner_stars[::-1]:  # Iterate in reverse order (lowest to highest)
+        if star not in sorted_loser_stars:
+            upper_bound = star
+            break
+    
+    suggestedStar = 0
+    explainString = ""
+    if lower_bound is not None:
+        if upper_bound is None:
+            upper_bound = 9.5
+        if lower_bound > upper_bound:
+            lower_bound = upper_bound - 2
+        values = []
+        tempLower = lower_bound
+        tempUpper = upper_bound
+        while tempLower < tempUpper:
+            if 0.5 + tempLower < tempUpper:
+                tempLower = tempLower + 0.5
+                values.append(tempLower)
+            else:
+                break
+        counts = []
+        winCounts = []
+        lossCounts = []
+        if len(values) < 1:
+            values.append(lower_bound + 0.5 - 0.5)
+            suggestedStar = lower_bound
+
+        if len(values) == 1:
+                suggestedStar = values[0]
+                values.insert(0, values[0] - 0.5)
+                values.append(values[1] + 0.5)
+                for val in values:
+                    sqlTextWin = text(" \
+        overwriteRankingId is NULL \
+    and winnerMovieId = " + str(id) + " and loserMovieId IN (SELECT id from movie where movie.stars = " + str(val) + ") \
+    ")
+                    sqlTextLoss = text("""
+        overwriteRankingId is NULL
+    and loserMovieId = """ + str(id) + """ and winnerMovieId IN (SELECT id from movie where movie.stars = """ + str(val) + """)
+    """)
+                    wins = Ranking.query.filter((sqlTextWin)).all()
+                    losses = Ranking.query.filter((sqlTextLoss)).all()
+
+                    if len(wins) + len(losses) == 0:
+                        counts.append(0)
+                    else:
+                        counts.append(round(100 * len(wins) / (len(wins) + len(losses)), 2) )
+
+                    winCounts.append(len(wins))
+                    lossCounts.append(len(losses))
+                index = 0
+                while len(values) > index:
+                    if counts[index] > 60:
+                        index = index + 1
+                    else:
+                        break
+                for i in range(0, len(values)):
+                    if i != 0:
+                        explainString = explainString + "\n" +  str(values[i]) + "/10: " + str(counts[i]) + "% win rate (" + str(winCounts[i]) + "/" + str(winCounts[i] + lossCounts[i]) +  ")"
+                    else:
+                        explainString = explainString + "" +  str(values[i]) + "/10: " + str(counts[i]) + "% win rate (" + str(winCounts[i]) + "/" + str(winCounts[i] + lossCounts[i]) +  ")"
+
+        else:
+            for val in values:
+                sqlTextWin = text(" \
+    overwriteRankingId is NULL \
+and winnerMovieId = " + str(id) + " and loserMovieId IN (SELECT id from movie where movie.stars = " + str(val) + ") \
+")
+                sqlTextLoss = text("""
+    overwriteRankingId is NULL
+and loserMovieId = """ + str(id) + """ and winnerMovieId IN (SELECT id from movie where movie.stars = """ + str(val) + """)
+""")
+                wins = Ranking.query.filter((sqlTextWin)).all()
+                losses = Ranking.query.filter((sqlTextLoss)).all()
+
+                if len(wins) + len(losses) == 0:
+                    counts.append(0)
+                else:
+                    counts.append(round(100 * len(wins) / (len(wins) + len(losses)), 2) )
+                winCounts.append(len(wins))
+                lossCounts.append(len(losses))
+            index = 0
+            while len(values) > index:
+                if counts[index] > 60:
+                    if index + 1 == len(values):
+                        break
+                    index = index + 1
+                else:
+                    break
+            suggestedStar = values[index]
+            
+            for i in range(0, len(values)):
+                if i != 0:
+                        explainString = explainString + "\n" +  str(values[i]) + "/10: " + str(counts[i]) + "% win rate (" + str(winCounts[i]) + "/" + str(winCounts[i] + lossCounts[i]) +  ")"
+                else:
+                    explainString = explainString + "" +  str(values[i]) + "/10: " + str(counts[i]) + "% win rate (" + str(winCounts[i]) + "/" + str(winCounts[i] + lossCounts[i]) +  ")"
+
+            
+    # Sorting (existing code)
+    winners.sort(key=lambda x: x.winnerStars, reverse=True)
+    losers.sort(key=lambda x: x.loserStars)
+
+    # Append results
+    result.append(winners)
+    result.append(losers)
+    result.append(upper_bound)
+    result.append(lower_bound)
+    result.append(suggestedStar)
+    result.append(explainString)
+
+
+    return result
+
 def getUpsets(id):
     result = []
     winners = Ranking.query.filter(and_(Ranking.winnerMovieId == id, text('overwriteRankingId IS NULL'), Ranking.likeUpset == 1)).order_by(desc(Ranking.modifiedDate)).all()
@@ -2406,6 +2606,38 @@ def getFlaggedRankings():
         flaggedRanking.loserLiked = loserMovie[0].liked
         flaggedRanking.rankingDate = format_datetime(flaggedRanking.modifiedDate - timedelta(hours=5), locale='en')
 
+        sql = text("WITH RankedMovies AS ( \
+                SELECT id, \
+                    ROW_NUMBER() OVER (ORDER BY rewatchScore DESC) AS rank \
+                FROM movie \
+                WHERE movie.unwatched <> 1 \
+            ) \
+            SELECT  a.rank as winnerRank, b.rank as loserRank, a.rank - b.rank AS rank_difference \
+            FROM RankedMovies a, RankedMovies b \
+            WHERE a.id = " + str(winner[0].id) + " AND b.id = " + str(loserMovie[0].id))
+    
+        ranks = db.engine.execute(sql)
+
+        difference = 0
+
+        for row in ranks:
+            winnerRankNum = row[0] #winnerRank
+            loserRankNum = row[1]  #loserRank 
+            difference = row[2] #difference 
+
+        flaggedRanking.winnerRank = winnerRankNum
+        flaggedRanking.loserRank = loserRankNum
+        flaggedRanking.winnerYear = winner[0].year
+        flaggedRanking.loserYear = loserMovie[0].year
+        flaggedRanking.rankingDifference = flaggedRanking.winnerRank - flaggedRanking.loserRank
+
+        flagChecker = get_or_calculate_average_value()
+        if flagChecker is None or int(flagChecker) < 100:
+            flagChecker = 100
+        if difference > flagChecker and (winner[0].rewatchCount > 3 and loserMovie[0].rewatchCount > 3):
+            flaggedRanking.flagged = True
+        else:
+            flaggedRanking.flagged = False
 
     return flaggedRankings
 
@@ -2520,6 +2752,7 @@ def getMovieDetails(id):
     movie = Movie.query.filter(Movie.id == id).all()[0]
     count = MovieWatch.query.filter(MovieWatch.movieId == movie.id).all()
     movie.timesWatched = len(count)
+    movie.movieRecommendStars = getRankingForStars(movie.id)[4]
     movie.genres = getMovieGenreNames(movie.id)
 
     return movie
@@ -2621,6 +2854,50 @@ def getRandomMovieByList(id):
             movie = []
             break
     return movie
+
+def movieForMovieFromList(id, movieId):
+    movies = []
+    sql = text("SELECT * \
+            FROM movie m1 \
+            WHERE	\
+                         m1.unwatched <> 1 AND   m1.id IN (SELECT movieId FROM list_movie lm1 where lm1.listId = " + str(id) + ") AND\
+                                (SELECT COUNT(*) \
+                                FROM ranking \
+                                WHERE  ranking.overwriteRankingId is NULL and (\
+                                                (winnerMovieId = m1.id and  loserMovieId IN (SELECT movieId FROM list_movie lm1 where lm1.listId = " + str(id) + ")) \
+                                        or (loserMovieId = m1.id and  winnerMovieId IN (SELECT movieId FROM list_movie lm1 where lm1.listId = " + str(id) + "))) \
+                                        ) < (SELECT COUNT(*) FROM list_movie lm2 WHERE listId = " + str(id) + " and movieId IN (SELECT id FROM movie WHERE lm2.movieId = movie.id and movie.unwatched <> 1)) - 1")
+
+    rankings = db.engine.execute(sql)
+    names = []
+    for row in rankings:
+        names.append(row[0]) #ids
+    movies = findMoviesByIdList(names)
+    if(len(movies)) < 2:
+        return []
+
+    found_movie = None
+    for movie in movies:
+        if movie.id == int(movieId):
+            found_movie = movie
+            break
+    if found_movie is None:
+        return []
+    firstMovie = found_movie
+
+    while True:
+        secondMovie = random.choice(movies)
+        if firstMovie.id != secondMovie.id: 
+            ranking = Ranking.query.filter(or_
+                                           (and_(Ranking.loserMovieId == firstMovie.id, Ranking.winnerMovieId == secondMovie.id), 
+                                            and_(Ranking.loserMovieId == secondMovie.id, Ranking.winnerMovieId == firstMovie.id
+                                                 )
+                                            )
+                                           ).all()
+            if len(ranking) < 1:
+                break
+    return secondMovie
+
 
 def getRandomRecentMovie():
     logs = getRankOfRecentMovies(15)
@@ -2813,6 +3090,15 @@ def rewatchMovie(movieId):
     movie.rewatch = 1
     db.session.commit()
 
+def confirmLog(logId):
+    log = MovieWatch.query.filter(and_(MovieWatch.id == logId)).all()
+    if len(log) > 0:
+        movieId = log[0].movieId
+        logs = MovieWatch.query.filter(and_(MovieWatch.movieId == movieId, MovieWatch.confirmedStars != 1)).all()
+        for log in logs:
+            log.confirmedStars = 1
+        db.session.commit()
+
 def addMovieToList(listId, movieId):
     lists = ListMovie.query.filter(and_(ListMovie.listId == listId, ListMovie.movieId == movieId)).all()
     if len(lists) > 0:
@@ -2862,6 +3148,7 @@ def update_log(movie_id, location, newPeople, newNotes, date, faveQuote, recomme
     if date is not None:
         if date.year == datetime.now().year:
             addMovieToList(28, log.movieId)
+            addMovieToList(32, log.movieId)
 
     if "Isabella" in newPeople:
         addMovieToList(20, log.movieId)
@@ -2881,7 +3168,7 @@ def update_log(movie_id, location, newPeople, newNotes, date, faveQuote, recomme
     return log.movieId
 
 
-def update_movie(movie_id, new_title, new_year, unwatched, rewatched, new_poster, new_firstGenre, new_secondGenre, new_director, new_runtime, notes, stars, recommend, date, location, faveQuote, liked):
+def update_movie(movie_id, new_title, new_year, unwatched, rewatched, new_poster, new_firstGenre, new_secondGenre, new_director, new_runtime, notes, stars, recommend, date, location, faveQuote, liked, onComputer):
     movie = Movie.query.filter(Movie.id == movie_id).all()[0]
     movie.title = new_title
     movie.year = new_year
@@ -2894,6 +3181,10 @@ def update_movie(movie_id, new_title, new_year, unwatched, rewatched, new_poster
     movie.recommend = recommend
     movie.faveQuote = faveQuote
     movie.liked = liked
+    movie.onComputer = onComputer
+    if movie.onComputer == 1:
+        addMovieToList(27, movie.id)
+
     if date is not None and date != '' and date != "" and len(date) > 4:
         movie.lastWatchedDate = datetime.strptime(date, '%Y-%m-%d')
     movie.location = location 
@@ -2951,6 +3242,7 @@ def getMoviesRankedInSession():
     return rankings
 
 def getTopMoviesInRankingSession():
+    daterange  = 0
     sql = text('SELECT movie.id, movie.title, \
                 (SELECT COUNT(winnerMovieId) as Wins FROM ranking WHERE ranking.winnerMovieId = movie.id and julianday(\'now\') - julianday(ranking.modifiedDate) < ' + str(daterange) + ') as Wins, \
                 (SELECT COUNT(loserMovieId) as Losess FROM ranking WHERE ranking.loserMovieId = movie.id and julianday(\'now\') - julianday(ranking.modifiedDate) < ' + str(daterange) + ') as loseses, \
@@ -3035,14 +3327,21 @@ def log_movie(movie_id, notes, stars, recommend, faveQuote, newLocation, newPeop
                         isFirstWatch = False
                     else:
                         firstWatched.firstWatch = False
+    
+    confirmStars = isFirstWatch
+    if not confirmStars:
+        movies = Movie.query.filter(text("id = " + str(movie_id) + " AND (stars = 'None' OR LENGTH(stars) < 1)")).all()
+        if len(movies) > 0:
+            #the movie does not have stars 
+            confirmStars = True
 
-
-    movieWatch = MovieWatch(movieId=movie_id, location=newLocation, people=newPeople, notes=newNotes, watchDate=NewnewDate, firstWatch=isFirstWatch)
+    movieWatch = MovieWatch(movieId=movie_id, location=newLocation, people=newPeople, notes=newNotes, watchDate=NewnewDate, firstWatch=isFirstWatch, confirmedStars=confirmStars)
     db.session.add(movieWatch)
 
     if NewnewDate is not None and isFirstWatch:
         if NewnewDate.year == datetime.now().year:
             addMovieToList(28, movie_id)
+            addMovieToList(32, movie_id)
 
     if "Isabella" in newPeople:
         addMovieToList(20, movie_id)
@@ -3123,7 +3422,9 @@ def getUniqueMovies():
     movies = []
     while True:  
         firstMovie = getRandomMovie()
-        secondMovie = getRandomRankdeMovie()
+        secondMovie = getRandomMovie()
+        if firstMovie.rewatch == 1 or secondMovie.rewatch == 1:
+            continue
         if firstMovie.id != secondMovie.id:
                 ranking = Ranking.query.filter(or_(and_(Ranking.loserMovieId == firstMovie.id, Ranking.winnerMovieId == secondMovie.id), and_(Ranking.loserMovieId == secondMovie.id, Ranking.winnerMovieId == firstMovie.id))).all()
                 if len(ranking) < 1:
@@ -3144,42 +3445,42 @@ def getUniqueMoviesReank(movieId):
     return movies
 
 def getUniqueMoviesFromList(listId):
-    movies = []
-    sql = text("SELECT * \
-            FROM movie m1 \
-            WHERE	\
-                         m1.unwatched <> 1 AND   m1.id IN (SELECT movieId FROM list_movie lm1 where lm1.listId = " + str(listId) + ") AND\
-                                (SELECT COUNT(*) \
-                                FROM ranking \
-                                WHERE  ranking.overwriteRankingId is NULL and (\
-                                                (winnerMovieId = m1.id and  loserMovieId IN (SELECT movieId FROM list_movie lm1 where lm1.listId = " + str(listId) + ")) \
-                                        or (loserMovieId = m1.id and  winnerMovieId IN (SELECT movieId FROM list_movie lm1 where lm1.listId = " + str(listId) + "))) \
-                                        ) < (SELECT COUNT(*) FROM list_movie lm2 WHERE listId = " + str(listId) + " and movieId IN (SELECT id FROM movie WHERE lm2.movieId = movie.id and movie.unwatched <> 1)) - 1")
+    #print("query")
+    # SQL to find pairs of movies from the same list without a ranking relation
+    # and considering only rankings where Ranking.overwriteRankingId is NULL
+    sql = text("""
+SELECT DISTINCT m1.id AS movie1_id, m2.id AS movie2_id
+FROM movie m1
+JOIN list_movie lm1 ON m1.id = lm1.movieId AND lm1.listId = :listId
+JOIN movie m2 ON m1.id < m2.id
+JOIN list_movie lm2 ON m2.id = lm2.movieId AND lm2.listId = :listId
+WHERE m1.unwatched <> 1 AND m2.unwatched <> 1
+AND NOT EXISTS (
+    SELECT 1 FROM ranking r
+    WHERE ((r.winnerMovieId = m1.id AND r.loserMovieId = m2.id) OR (r.winnerMovieId = m2.id AND r.loserMovieId = m1.id))
+    AND r.overwriteRankingId IS NULL
+)
+LIMIT 1;
+""")
 
-    rankings = db.engine.execute(sql)
-    names = []
-    for row in rankings:
-        names.append(row[0]) #ids
-    movies = findMoviesByIdList(names)
-    if(len(movies)) < 2:
+
+    #print("query created")
+    
+    # Execute the SQL query
+    result = db.engine.execute(sql, listId=listId).fetchone()
+
+    #print("query ran")
+    
+    # If a result is found, retrieve the movie details
+    if result:
+        #print("finding movies")
+        movies = findMoviesByIdList([result['movie1_id'], result['movie2_id']])
+        #print("movies found")
+        return movies
+    else:
+        # No valid pairs found
         return []
-    firstMovie = random.choice(movies)
-    while True:
-        secondMovie = random.choice(movies)
-        if firstMovie.id != secondMovie.id: 
-            ranking = Ranking.query.filter(or_
-                                           (and_(Ranking.loserMovieId == firstMovie.id, Ranking.winnerMovieId == secondMovie.id), 
-                                            and_(Ranking.loserMovieId == secondMovie.id, Ranking.winnerMovieId == firstMovie.id
-                                                 )
-                                            )
-                                           ).all()
-            if len(ranking) < 1:
-                break
 
-    result = []
-    result.append(firstMovie)
-    result.append(secondMovie)
-    return result
 
 def getUniqueRankingForMovie(movieId):
     movies = []
@@ -3198,6 +3499,70 @@ def getUniqueRankingForMovie(movieId):
         return []
     secondMovie = random.choice(movies)
     return secondMovie
+
+def getUniqueRankingStarForMovie(movieId):
+    movies = []
+    sql =  text("SELECT * FROM movie m1 \
+                WHERE  \
+                m1.unwatched <> 1  \
+                and m1.stars <> 'None' and m1.stars is not NULL and m1.stars <> '' \
+                and m1.id <> " + str(movieId) + "")
+    rankings = db.engine.execute(sql)
+    names = []
+    for row in rankings:
+        names.append(row[0]) #ids
+    movies = findMoviesByIdList(names)
+    if(len(movies)) < 1:
+        return []
+    secondMovie = random.choice(movies)
+    return secondMovie
+
+def getUniqueRankingStarForStarSpecificMovie(movieId, stars):
+    movies = []
+    sql =  text("SELECT * FROM movie m1 \
+                WHERE  \
+                m1.unwatched <> 1  \
+                and m1.stars = " + str(stars) + " \
+                and m1.id <> " + str(movieId) + "")
+    rankings = db.engine.execute(sql)
+    names = []
+    for row in rankings:
+        names.append(row[0]) #ids
+    movies = findMoviesByIdList(names)
+    if(len(movies)) < 1:
+        return []
+    secondMovie = random.choice(movies)
+    return secondMovie
+
+def getUniqueRankingStarForStarRangeSpecificMovie(movieId, stars):
+    movies = []
+    stars = float(stars)
+    sql =  text("SELECT * FROM movie m1 \
+                WHERE  \
+                m1.unwatched <> 1  \
+                and  (m1.stars = " + str(stars) +  " or m1.stars = " + str(stars - 0.5) + " or m1.stars = " + str(stars + 0.5) + ") \
+                and m1.id <> " + str(movieId) + "")
+    rankings = db.engine.execute(sql)
+    names = []
+    for row in rankings:
+        names.append(row[0]) #ids
+    movies = findMoviesByIdList(names)
+    if(len(movies)) < 1:
+        return []
+
+    while len(movies) > 2:
+        second = random.choice(movies)
+
+        existing_ranking = Ranking.query.filter(
+                (Ranking.winnerMovieId == movieId) & (Ranking.loserMovieId == second.id)|
+                (Ranking.winnerMovieId == second.id) & (Ranking.loserMovieId == movieId)
+            ).first()
+        
+        if not existing_ranking:
+            return second
+        else:
+            movies.remove(second)
+    return []
 
 def getUniquieProximity(movieId):
     movie = Movie.query.filter(Movie.id == movieId).all()[0]
@@ -3345,7 +3710,8 @@ WHERE  \
         (m1.recommend = 'None' OR LENGTH(m1.recommend) < 1) \
         OR \
         (m1.stars = 'None' OR LENGTH(m1.stars) < 1) \
-    ) \
+                    OR (m1.liked <> 1 AND m1.liked <> 2 and m1.liked <> 3)      \
+    ) and m1.rewatch <> 1 and m1.unwatched <> 1 \
 ORDER BY mw.watchDate DESC \
 ")
     movies = db.engine.execute(sqlText)
@@ -3354,6 +3720,13 @@ ORDER BY mw.watchDate DESC \
         names.append(row[0])
 
     return len(names)
+
+def findNumOfMoviesToConfriM():
+    logs = MovieWatch.query.filter(
+                                        MovieWatch.confirmedStars != 1
+                                        ).order_by(text("watchDate desc, id desc")).all()
+    
+    return len(logs)
 
 
 def findmoviesToRecommend():
@@ -3365,7 +3738,8 @@ WHERE  \
         (m1.recommend = 'None' OR LENGTH(m1.recommend) < 1) \
         OR \
         (m1.stars = 'None' OR LENGTH(m1.stars) < 1) \
-    ) \
+              OR (m1.liked <> 1 AND m1.liked <> 2 and m1.liked <> 3)      \
+    ) AND m1.rewatch <> 1 and m1.unwatched <> 1 \
 ORDER BY mw.watchDate DESC \
 ")
     movies = db.engine.execute(sqlText)
@@ -3376,6 +3750,7 @@ ORDER BY mw.watchDate DESC \
     result = findMoviesByIdList(names)
 
     return result 
+
 
 
 def findUniqueMovieRankings():
@@ -3564,7 +3939,7 @@ def getProximityMovie():
     return result
 
 def getLikedMovies():
-    movies = Movie.query.filter(and_(Movie.unwatched != 1, Movie.liked == 1)).all()
+    movies = Movie.query.filter(and_(Movie.unwatched != 1, Movie.rewatch != 1, Movie.liked == 1)).all()
     result = []
     if len(movies) < 2:
         return []
@@ -3604,9 +3979,10 @@ def getmidMovies():
 
 
 def getLastRanking():
-    rankings = Ranking.query.order_by(desc(Ranking.modifiedDate)).all()
+    # rankings = Ranking.query.order_by(desc(Ranking.modifiedDate)).all()
 
-    lastRanked = rankings[0]
+    # lastRanked = rankings[0]
+    lastRanked = Ranking.query.order_by(desc(Ranking.modifiedDate)).first()
 
     winner = Movie.query.filter(Movie.id == lastRanked.winnerMovieId).all()[0]
     loser = Movie.query.filter(Movie.id == lastRanked.loserMovieId).all()[0]

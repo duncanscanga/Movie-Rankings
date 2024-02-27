@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
-<h1>{% block title %}Duncan's Movies | ReRank{% endblock %}</h1>
+<h1>{% block title %} ReRank{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -62,7 +62,7 @@
             <input class="btn" type="button" type="submit" value="Rather Watch"
               onclick="location.href = '/update-rerank-rankings/{{firstMovie.id}}/{{secondMovie.id}}/{{firstMovie.id}}'" />
           </div>
-          <a href=/details/{{firstMovie.id}}> <img src="{{ first }}" alt="Poster Not Available."></a>
+          <a href=/details/{{firstMovie.id}}> <img src="{{ <img src="{{ firstMovie.title|get_poster }}" alt="Movie Poster"> }}" alt="Poster Not Available."></a>
           {% if firstMovie.rewatch != 1 %}
           <div class="btn-wrapper">
             <input
@@ -128,7 +128,7 @@
             <input class="btn" type="button" type="submit" value="Rather Watch"
               onclick="location.href = '/update-rerank-rankings/{{secondMovie.id}}/{{firstMovie.id}}/{{firstMovie.id}}'" />
           </div>
-          <a href=/details/{{secondMovie.id}}> <img src="{{ second }}" alt="Poster Not Available."></a>
+          <a href=/details/{{secondMovie.id}}> <img src="{{ secondMovie.title|get_poster  }}" alt="Poster Not Available."></a>
           {% if secondMovie.rewatch != 1 %}
           <div class="btn-wrapper">
             <input

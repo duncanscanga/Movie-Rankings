@@ -18,11 +18,13 @@
           <th>Stars</th>
           <th>Notes</th>
           <th></th>
+          <th></th>
+          <th></th>
         </tr>
         {% for movie in movies %}
         <tr>
           <td style=" text-align: center;
-          vertical-align: middle; width: 10%;"><a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img src="/static/images/movieposters/{{ movie.poster }}" alt="Poster Not Available.">  </a></td>
+          vertical-align: middle; width: 10%;"><a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img src="{{ movie.title|get_poster }}" alt="Poster Not Available.">  </a></td>
           <td><a style="color: brown;" style="color: brown;"
             href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' target="_blank"> <u> 
               {{ movie.title }} ({{movie.year}})   </u></a> {% if movie.liked == 1 %}
@@ -32,7 +34,7 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
         
-           {% endif %}</td>
+           {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
               <td style="{% if movie.stars is none or movie.stars is string and movie.stars.isdigit() == False %}color:white;
               {% elif movie.stars|string|int >= 8 %}color:green;
               {% elif movie.stars|string|int >= 6 %}color:orange;
@@ -46,7 +48,10 @@
 <td style="{{ 'color:white;' if movie.notes is none or movie.notes == 'None' else 'color:green;' if movie.notes == 'Would recommned' else 'color:darkorange;' if movie.notes == 'If you have time' else 'color:black' }}">
   {{ movie.notes }}
 </td>
+
+<td><a href='/ranking-details-by-stars/{{movie.id}}' target="_blank">Check Stars</a></td>
           <td><a href='/log-movie/{{movie.id}}' target="_blank">Log</a></td>
+          <td><a href='/rewatch/{{movie.id}}'>Rewatch</a></td>
         </tr>
         {% endfor %}
       </table>

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Confirm Stars {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<h3>Confirm Stars ({{ movies|length }}):</h3>
+
+<div id="movies">
+    <table style="width: 100%;">
+        <tr>
+          <th></th>
+          <th>Movie</th>
+          <th>Stars</th>
+          <th>Recommendation</th>
+          <th>Notes</th>
+          <th></th>
+          <th>Recommended Stars</th>
+          <th></th>
+          <th></th>
+        </tr>
+        {% for movie in movies %}
+        <tr>
+          <td style=" text-align: center; vertical-align: middle; width: 10%;">
+            <a href='/details/{{movie.movieId}}' title="#{{movie.movieRank}}">
+              <img src="{{ movie.movieTitle|get_poster }}" alt="Poster Not Available.">
+            </a>
+          </td>
+          <td>
+            <a style="color: brown;" href='http://www.google.com/search?q={{movie.movieTitle}} ({{movie.movieYear}})' target="_blank">
+              <u>{{ movie.movieTitle }} ({{movie.movieYear}})</u>
+            </a>
+            {% if movie.movieLiked == 1 %}
+              <span style="color: red;">&#128077;</span> <!-- Red heart -->
+            {% elif movie.movieLiked == 2 %}
+              <span>&#129309;</span> <!-- Handshake -->
+            {% elif movie.movieLiked == 3 %}
+              <span>&#128078;</span> <!-- Trash can -->
+            {% endif %}
+            {% if movie.onComputer %} 🖥️ {% endif %}
+          </td>
+          <td style="{% if movie.movieStars is none or movie.movieStars is string and movie.movieStars.isdigit() == False %}color:white;
+          {% elif movie.movieStars|string|int >= 8 %}color:green;
+          {% elif movie.movieStars|string|int >= 6 %}color:orange;
+          {% else %}color:red;
+          {% endif %}">
+            {{ movie.movieStars }}/10
+          </td>
+          <td style="{{ 'color:white;' if movie.movieRecommendation is none or movie.movieRecommendation == 'None' else 'color:green;' if movie.movieRecommendation == 'Would recommend' else 'color:darkorange;' if movie.movieRecommendation == 'If you have time' else 'color:red;' }}">
+            {{ movie.movieRecommendation }}
+          </td>
+          <td style="{{ 'color:white;' if movie.movieOverallNotes is none or movie.movieOverallNotes == 'None' else 'color:green;' if movie.movieOverallNotes == 'Would recommend' else 'color:darkorange;' if movie.movieOverallNotes == 'If you have time' else 'color:black;' }}">
+            {{ movie.movieOverallNotes }}
+          </td>
+          <td><a href='/ranking-details-by-stars/{{movie.movieId}}' target="_blank">Check Stars</a></td>
+          <td style="{% if movie.movieRecommendStars|string|int > movie.movieStars|string|int %}color:green;
+          {% elif movie.movieRecommendStars|string|int == movie.movieStars|string|int %}color:gold;
+          {% elif movie.movieRecommendStars|string|int < movie.movieStars|string|int %}color:red;
+          {% else %}color:white;
+          {% endif %}">
+            {{ movie.movieRecommendStars }}/10
+            {% if movie.movieRecommendStars|string|int > movie.movieStars|string|int %}&#x2191; <!-- Up arrow -->
+            {% elif movie.movieRecommendStars|string|int == movie.movieStars|string|int %}=&#xfe0e; <!-- Equal sign -->
+            {% elif movie.movieRecommendStars|string|int < movie.movieStars|string|int %}&#x2193; <!-- Down arrow -->
+            {% endif %}
+          </td>
+          <td><a href='/confirm-log/{{movie.id}}'>Confirm</a></td>
+          <td><a href='/rewatch/{{movie.movieId}}'>Rewatch</a></td>
+        </tr>
+        {% endfor %}
+      </table>
+</div>
+
+{% endblock %}
