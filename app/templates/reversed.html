@@ -34,7 +34,7 @@
                     </div>
                     <div class="col-12">
                       <a href='/details/{{ranking.winnerMovieId}}'>
-                        <img src="/static/images/movieposters/{{ ranking.winnerPoster }}" alt="Poster Not Available."> 
+                        <img src="{{ ranking.winnerTitle|get_poster(winnerYear) }}" alt="Poster Not Available."> 
                       </a>
                     </div>
                   </div>
@@ -48,7 +48,7 @@
                     </div>
                     <div class="col-12">
                       <a href='/details/{{ranking.loserMovieId}}'>
-                        <img src="/static/images/movieposters/{{ ranking.loserPoster }}" alt="Poster Not Available."> 
+                        <img src="{{ ranking.loserTitle|get_poster(loserYear) }}" alt="Poster Not Available."> 
                       </a>
                     </div>
                   </div>

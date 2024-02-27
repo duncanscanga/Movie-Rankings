@@ -10,109 +10,87 @@
 <h3>Types of Rankings:</h3>
 <div style="padding-bottom: 1%;">
   <input
-  class="btn"
-              type="button"
-  type="delete"
-  value="All Movies"
-  onclick="location.href = '/rank-all'"
-/>
+    class="btn"
+    type="button"
+    value="All Movies"
+    onclick="window.open('/rank-all', '_blank')"
+  />
 </div>
 <div style="padding-bottom: 1%;">
   <input
-  class="btn"
-              type="button"
-  type="delete"
-  value="Similar Rankings"
-  onclick="location.href = '/rank-by-proximity'"
-/>
-</div>
-
-<div style="padding-bottom: 1%;">
-  <input
-  class="btn"
-              type="button"
-  type="delete"
-  value="👍 Rankings"
-  onclick="location.href = '/rank-by-liked'"
-/>
-</div>
-
-
-<div style="padding-bottom: 1%;">
-  <input
-  class="btn"
-              type="button"
-  type="delete"
-  value="🤝 Rankings"
-  onclick="location.href = '/rank-by-mid'"
-/>
+    class="btn"
+    type="button"
+    value="Similar Rankings"
+    onclick="window.open('/rank-by-proximity', '_blank')"
+  />
 </div>
 
 <div style="padding-bottom: 1%;">
   <input
-  class="btn"
-              type="button"
-  type="delete"
-  value="👎 Rankings"
-  onclick="location.href = '/rank-by-unliked'"
-/>
-</div>
-<div style="padding-bottom: 1%;">
-
-  <input
-  class="btn"
-              type="button"
-  type="delete"
-  value="Winner Stays"
-  onclick="location.href = '/rank-by-winner/0'"
-/>
-
-</div>
-<div style="padding-bottom: 1%;">
-  <input
-  class="btn"
-              type="button"
-  type="delete"
-  value="Loser Stays"
-  onclick="location.href = '/rank-by-loser/0'"
-/>
-</div>
-<div style="padding-bottom: 1%;">
-
-  <input
-  class="btn"
-              type="button"
-  type="delete"
-  value="Recently Watched"
-  onclick="location.href = '/rank-by-recent'"
-/>
-</div>
-<div style="padding-bottom: 1%;">
-
-  <input
-  class="btn"
-              type="button"
-  type="delete"
-  value="Least Ranked"
-  onclick="location.href = '/rank-by-unranked'"
-/>
+    class="btn"
+    type="button"
+    value="👍 Rankings"
+    onclick="window.open('/rank-by-liked', '_blank')"
+  />
 </div>
 
 <div style="padding-bottom: 1%;">
-
   <input
-  class="btn"
-              type="button"
-  type="delete"
-  value="Unique Rankings"
-  onclick="location.href = '/rank-by-unique'"
-/>
+    class="btn"
+    type="button"
+    value="🤝 Rankings"
+    onclick="window.open('/rank-by-mid', '_blank')"
+  />
 </div>
 
+<div style="padding-bottom: 1%;">
+  <input
+    class="btn"
+    type="button"
+    value="👎 Rankings"
+    onclick="window.open('/rank-by-unliked', '_blank')"
+  />
+</div>
+<div style="padding-bottom: 1%;">
+  <input
+    class="btn"
+    type="button"
+    value="Winner Stays"
+    onclick="window.open('/rank-by-winner/0', '_blank')"
+  />
+</div>
+<div style="padding-bottom: 1%;">
+  <input
+    class="btn"
+    type="button"
+    value="Loser Stays"
+    onclick="window.open('/rank-by-loser/0', '_blank')"
+  />
+</div>
+<div style="padding-bottom: 1%;">
+  <input
+    class="btn"
+    type="button"
+    value="Recently Watched"
+    onclick="window.open('/rank-by-recent', '_blank')"
+  />
+</div>
+<div style="padding-bottom: 1%;">
+  <input
+    class="btn"
+    type="button"
+    value="Least Ranked"
+    onclick="window.open('/rank-by-unranked', '_blank')"
+  />
+</div>
 
-
-
-
-
+<div style="padding-bottom: 1%;">
+  <input
+    class="btn"
+    type="button"
+    value="Unique Rankings"
+    onclick="window.open('/rank-by-unique', '_blank')"
+  />
+</div>
 
 {% endblock %}

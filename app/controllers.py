@@ -470,15 +470,6 @@ def rank_by_mclose_unique(movie_id):
     return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
                            secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
 
-
-
-
-@app.route('/all-movies-without-posters')
-def all_movies():
-    movies = find_all_watched_movies()
-    unwatchedMovies = find_all_unwatched_movies()
-    return render_template('all-movies.html', movies = movies, unwatchedMovies=unwatchedMovies, originalTitle="", originalDirector="", originalYear="", originalMinimum=0, originalMaximum=0, originalRecommendation="")
-
 @app.route('/all-movies/<string:director>', methods=['GET'])
 def all_movies_director(director):
     movies = find_all_watched_filtered_movies("", director, "", 0, 0, "", "")
@@ -517,20 +508,6 @@ def all_movies_year_post(year):
     unwatchedMovies = find_all_unwatched_filtered_movies(title, director, year, min, max, recommendation, genres)
     return render_template('all-movies-with-posters.html', genres=genres, unwatchedMovies=unwatchedMovies, movies = movies, originalTitle=title, originalDirector=director, originalYear=year, originalMinimum=min, originalMaximum=max, originalRecommendation=recommendation)
 
-
-
-@app.route('/all-movies-without-posters', methods=['POST'])
-def all_movies_post():
-    title = request.form.get('title').strip()
-    director = request.form.get('director').strip()
-    year = request.form.get('year').strip()
-    min = request.form.get('start')
-    max = request.form.get('end')
-    recommendation = request.form.get('recommendation').strip()
-    genres = request.form.get('genres').strip()
-    movies = find_all_watched_filtered_movies(title, director, year, min, max, recommendation, genres)
-    unwatchedMovies = find_all_unwatched_filtered_movies(title, director, year, min, max, recommendation, genres)
-    return render_template('all-movies.html', unwatchedMovies=unwatchedMovies, genres=genres, movies = movies, originalTitle=title, originalDirector=director, originalYear=year, originalMinimum=min, originalMaximum=max, originalRecommendation=recommendation)
 
 @app.route('/all-movies', methods=['POST'])
 def all_movies_with_posters_post():
@@ -598,26 +575,6 @@ def finder_movies_with_posters():
     #movies = find_all_movies()
     return render_template('movie-finder.html', movies = [], genres="", originalTitle="", originalDirector="", originalYear="", originalMinimum=0, originalMaximum=0, originalRecommendation="")
 
-
-
-
-@app.route('/unwatched-without-posters')
-def unwatched():
-    movies = find_unwatched_movies()
-    return render_template('unwatched.html', movies = movies, originalTitle="", originalDirector="", originalYear="", originalMinimum=0, originalMaximum=0, originalRecommendation="")
-
-
-@app.route('/unwatched-without-posters', methods=['POST'])
-def unwatched_movies_post():
-    title = request.form.get('title').strip()
-    director = request.form.get('director').strip()
-    year = request.form.get('year').strip()
-    min = request.form.get('start')
-    max = request.form.get('end')
-    # recommendation = request.form.get('recommendation').strip()
-    movies = find_filtered_unwatched_movies(title, director, year, min, max, "", "")
-    return render_template('unwatched.html', movies = movies, originalTitle=title, originalDirector=director, originalYear=year, originalMinimum=min, originalMaximum=max, originalRecommendation="")
-
 @app.route('/unwatched', methods=['POST'])
 def unwatched_poster_movies_post():
     title = request.form.get('title').strip()
@@ -629,11 +586,6 @@ def unwatched_poster_movies_post():
     genres = request.form.get('genres').strip()
     movies = find_filtered_unwatched_movies(title, director, year, min, max, "", genres)
     return render_template('unwatched-with-poster.html', genres=genres, movies = movies, originalTitle=title, originalDirector=director, originalYear=year, originalMinimum=min, originalMaximum=max, originalRecommendation="")
-
-@app.route('/rewatch-without-posters')
-def rewatch():
-    movies = find_rewatch_movies()
-    return render_template('rewatch.html', movies = movies , originalTitle="", originalDirector="", originalYear="", originalMinimum=0, originalMaximum=0, originalRecommendation="")
 
 @app.route('/rewatch')
 def rewatch_with_posters():
@@ -671,43 +623,11 @@ def rewatched_poster_movies_post():
     return render_template('rewatch-with-posters.html', genres=genres, movies = movies, originalTitle=title, originalDirector=director, originalYear=year, originalMinimum=min, originalMaximum=max, originalRecommendation=recommendation)
 
 
-@app.route('/rewatch-without-posters', methods=['POST'])
-def rewatched_movies_post():
-    title = request.form.get('title').strip()
-    director = request.form.get('director').strip()
-    year = request.form.get('year').strip()
-    min = request.form.get('start')
-    max = request.form.get('end')
-    recommendation = request.form.get('recommendation').strip()
-    movies = find_filtered_rewatched_movies(title, director, year, min, max, recommendation, genres)
-    return render_template('rewatch.html', movies = movies, originalTitle=title, originalDirector=director, originalYear=year, originalMinimum=min, originalMaximum=max, originalRecommendation=recommendation)
-
-
-
-
-
 @app.route('/unwatched')
 def unwatched_with_poster():
     movies = find_unwatched_movies()
     return render_template('unwatched-with-poster.html', genres="", movies = movies, originalTitle="", originalDirector="", originalYear="", originalMinimum=0, originalMaximum=0, originalRecommendation="")
 
-
-
-@app.route('/rankings-without-posters')
-def movies():
-    movies = find_top_movies(0)
-    return render_template('rankings.html', movies = movies, originalTitle="", originalDirector="", originalYear="", originalMinimum=0, originalMaximum=0, originalRecommendation="")
-
-@app.route('/rankings-without-posters', methods=['POST'])
-def movies_post():
-    title = request.form.get('title').strip()
-    director = request.form.get('director').strip()
-    year = request.form.get('year').strip()
-    min = request.form.get('start')
-    max = request.form.get('end')
-    recommendation = request.form.get('recommendation').strip()
-    movies = find_filtered_movies(title, director, year, min, max, recommendation, "")
-    return render_template('rankings.html', movies = movies, originalTitle=title, originalDirector=director, originalYear=year, originalMinimum=min, originalMaximum=max, originalRecommendation=recommendation)
 
 @app.route('/first-logs', methods=['POST'])
 def logforsts_post():
@@ -855,11 +775,6 @@ def logs_end_start_days(days, end):
     return render_template('logs.html', movies = movies, location="", people="", notes="", originalStart=date.today() - timedelta(days=days), originalEnd=date.today() - timedelta(days=end), title="")
 
 
-# @app.route('/rankings')
-# def movies_with_posters():
-#     movies = find_filtered_movies_forRanking("", "", "", 0, 0, "", "")
-#     return render_template('rankings-with-posters.html', movies = movies, originalTitle="", originalDirector="", originalYear="", originalMinimum=0, originalMaximum=0, originalRecommendation="")
-
 @app.route('/rankings')
 @app.route('/rankings/<int:scroll_to_id>')
 def movies_with_posters(scroll_to_id=None):
@@ -867,87 +782,6 @@ def movies_with_posters(scroll_to_id=None):
     return render_template('rankings-with-posters.html', movies=movies, scroll_to_id=scroll_to_id, originalTitle="", originalDirector="", originalYear="", originalMinimum=0, originalMaximum=0, originalRecommendation="")
 
 
-
-@app.route('/recently-watched-without-posters')
-def recently_watched_movies():
-    movies = find_recently_watched()
-    for x in movies:
-        if x.lastWatchedDate is not None:
-            x.lastWatchedDate = format_date(x.lastWatchedDate, locale='en')
-    return render_template('recentlywatched.html', movies = movies, originalStart=None, originalEnd=None, originalRecommendation="", originalLocation="")
-
-@app.route('/recently-watched')
-def recently_watched_movies_with_posters():
-    movies = find_recently_watched()
-    for x in movies:
-        if x.lastWatchedDate is not None:
-            x.notes = format_date(x.lastWatchedDate, locale='en')
-    return render_template('recentlywatched-with-posters.html', movies = movies, originalStart=None, originalEnd=None, originalRecommendation="", originalLocation="")
-
-
-@app.route('/recently-watched-without-posters', methods=['POST'])
-def recently_watched_movies_post():
-    start = request.form.get('start')
-    end = request.form.get('end')
-    movies = filterRecentWatched(start, end)
-    # for x in range(0, len(movies)):
-    #     if movies[x].lastWatchedDate is not None:
-    #         movies[x].lastWatchedDate = format_date(movies[x].lastWatchedDate, locale='en')
-    return render_template('recentlywatched.html', movies = movies, originalStart=start, originalEnd=end)
-
-
-@app.route('/recently-watched/<int:days>')
-def recently_watched_movies_with_posters_range(days):
-    movies = find_recently_watched_days(days)
-    for x in movies:
-        if x.lastWatchedDate is not None:
-            x.notes = format_date(x.lastWatchedDate, locale='en')
-    return render_template('recentlywatched-with-posters.html', movies = movies, originalStart=date.today() - timedelta(days=days), originalEnd=date.today(), originalRecommendation="", originalLocation="")
-
-@app.route('/recently-watched/<int:days>', methods=['POST'])
-def recently_watched_movies_with_posters_post_days(days):
-    start = request.form.get('start')
-    end = request.form.get('end')
-    movies = filterRecentWatched(start, end)
-    for x in movies:
-        if x.lastWatchedDate is not None:
-            x.notes = format_date(x.lastWatchedDate, locale='en')
-    return render_template('recentlywatched-with-posters.html', movies = movies, originalStart=start, originalEnd=end)
-
-
-
-@app.route('/recently-watched', methods=['POST'])
-def recently_watched_movies_with_posters_post():
-    start = request.form.get('start')
-    end = request.form.get('end')
-    movies = filterRecentWatched(start, end)
-    for x in movies:
-        if x.lastWatchedDate is not None:
-            x.notes = format_date(x.lastWatchedDate, locale='en')
-    return render_template('recentlywatched-with-posters.html', movies = movies, originalStart=start, originalEnd=end)
-
-
-
-
-@app.route('/rankings-by-stars-without-posters')
-def ranking_by_star_movies():
-    movies = find_best_movies()
-    for x in movies:
-        if x.lastWatchedDate is not None:
-            x.lastWatchedDate = format_date(x.lastWatchedDate, locale='en')
-    return render_template('ranking-by-stars.html', movies = movies, originalTitle="", originalDirector="", originalYear="", originalMinimum=0, originalMaximum=0, originalRecommendation="")
-
-
-@app.route('/rankings-by-stars-without-posters', methods=['POST'])
-def ranking_by_star_movies_post():
-    title = request.form.get('title').strip()
-    director = request.form.get('director').strip()
-    year = request.form.get('year').strip()
-    min = request.form.get('start')
-    max = request.form.get('end')
-    recommendation = request.form.get('recommendation').strip()
-    movies = find_filtered_movies_by_stars(title, director, year, min, max, recommendation)
-    return render_template('ranking-by-stars.html', movies = movies, originalTitle=title, originalDirector=director, originalYear=year, originalMinimum=min, originalMaximum=max, originalRecommendation=recommendation)
 
 @app.route('/stars', methods=['POST'])
 def ranking_by_star_movies_with_poster_post():
@@ -1768,27 +1602,17 @@ def detailsSimilarGet(movie_id):
     
     return render_template('details-with-similar.html', lists=lists, recommendedMovies=recommendedMovies[0], unwatchedRecommended=recommendedMovies[1], similarDirector=recommendedMovies[2], similarRanking=recommendedMovies[3], relatedMovies=recommendedMovies[4], movie = movie,  similar1=similar1, similar2=similar2, actualMovie=actualMovie)
 
-# Cache dictionary
-poster_cache = {}
 
 @app.template_filter('get_poster')
-def get_movie_poster(title, year):
-    # Check if the poster URL is already in the cache
-    cache_key = f"{title}_{year}"  # Use both title and year as the cache key
-    if cache_key in poster_cache:
-        return poster_cache[cache_key]
-    
+def get_movie_poster(title, year):    
     api_key = '60dd74c6'
     title_encoded = title.replace(" ", "+")  # URL encode the title
     title_encoded = title_encoded.replace("&", " ")  # URL encode the title
-    print(title_encoded)
     # Include the year in the API request
     response = requests.get(f"http://www.omdbapi.com/?t={title_encoded}&y={year}&apikey={api_key}")
     data = response.json()
     poster_url = data.get('Poster', '/path/to/default/poster.jpg')
     
-    # Store in cache and return
-    poster_cache[cache_key] = poster_url
     return poster_url
 
 

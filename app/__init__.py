@@ -15,6 +15,7 @@ templates = os.path.join(
 
 app = Flask(__name__)
 
+
 db_string = os.getenv('db_string')
 if db_string:
     app.config['SQLALCHEMY_DATABASE_URI'] = db_string

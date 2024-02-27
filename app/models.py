@@ -1957,10 +1957,10 @@ def getClosestRankings():
     for flaggedRanking in flaggedRankings:
         winner = Movie.query.filter(and_(Movie.id == flaggedRanking.winnerMovieId)).all()
         flaggedRanking.winnerTitle = winner[0].title
-        flaggedRanking.winnerPoster = winner[0].poster
+        
         loserMovie = Movie.query.filter(Movie.id == flaggedRanking.loserMovieId).all()
         flaggedRanking.loserTitle = loserMovie[0].title
-        flaggedRanking.loserPoster = loserMovie[0].poster
+        
         flaggedRanking.rankingDifference = abs(flaggedRanking.rankingDifference)
         flaggedRanking.rankingDate = format_datetime(flaggedRanking.modifiedDate - timedelta(hours=5), locale='en')
 
@@ -1971,10 +1971,10 @@ def getBiggestUpsets():
     for flaggedRanking in flaggedRankings:
         winner = Movie.query.filter(and_(Movie.id == flaggedRanking.winnerMovieId)).all()
         flaggedRanking.winnerTitle = winner[0].title
-        flaggedRanking.winnerPoster = winner[0].poster
+        
         loserMovie = Movie.query.filter(Movie.id == flaggedRanking.loserMovieId).all()
         flaggedRanking.loserTitle = loserMovie[0].title
-        flaggedRanking.loserPoster = loserMovie[0].poster
+        
         flaggedRanking.rankingDate = format_datetime(flaggedRanking.modifiedDate - timedelta(hours=5), locale='en')
 
 
@@ -2207,14 +2207,14 @@ def getMovieById(id):
     return movie[0]
 
 def getRecentRankings():
-    flaggedRankings = Ranking.query.filter(and_(text('overwriteRankingId IS NULL'), text('confirmed is NULL'))).order_by(desc(Ranking.modifiedDate)).limit(100).all()
+    flaggedRankings = Ranking.query.filter(and_(text('overwriteRankingId IS NULL'), text('confirmed is NULL'))).order_by(desc(Ranking.modifiedDate)).limit(25).all()
     for flaggedRanking in flaggedRankings:
         winner = Movie.query.filter(and_(Movie.id == flaggedRanking.winnerMovieId)).all()
         flaggedRanking.winnerTitle = winner[0].title
-        flaggedRanking.winnerPoster = winner[0].poster
+        
         loserMovie = Movie.query.filter(Movie.id == flaggedRanking.loserMovieId).all()
         flaggedRanking.loserTitle = loserMovie[0].title
-        flaggedRanking.loserPoster = loserMovie[0].poster
+        
         flaggedRanking.rankingDate = format_datetime(flaggedRanking.modifiedDate - timedelta(hours=5), locale='en')
 
 
@@ -2599,11 +2599,11 @@ def getFlaggedRankings():
     for flaggedRanking in flaggedRankings:
         winner = Movie.query.filter(and_(Movie.id == flaggedRanking.winnerMovieId)).all()
         flaggedRanking.winnerTitle = winner[0].title
-        flaggedRanking.winnerPoster = winner[0].poster
+        
         flaggedRanking.winnerLiked = winner[0].liked
         loserMovie = Movie.query.filter(Movie.id == flaggedRanking.loserMovieId).all()
         flaggedRanking.loserTitle = loserMovie[0].title
-        flaggedRanking.loserPoster = loserMovie[0].poster
+        
         flaggedRanking.loserLiked = loserMovie[0].liked
         flaggedRanking.rankingDate = format_datetime(flaggedRanking.modifiedDate - timedelta(hours=5), locale='en')
 
@@ -2647,11 +2647,11 @@ def getUpsetsRankings():
     for flaggedRanking in flaggedRankings:
         winner = Movie.query.filter(and_(Movie.id == flaggedRanking.winnerMovieId)).all()
         flaggedRanking.winnerTitle = winner[0].title
-        flaggedRanking.winnerPoster = winner[0].poster
+        
         flaggedRanking.winnerLiked = winner[0].liked
         loserMovie = Movie.query.filter(Movie.id == flaggedRanking.loserMovieId).all()
         flaggedRanking.loserTitle = loserMovie[0].title
-        flaggedRanking.loserPoster = loserMovie[0].poster
+        
         flaggedRanking.loserLiked = loserMovie[0].liked
         flaggedRanking.rankingDate = format_datetime(flaggedRanking.modifiedDate - timedelta(hours=5), locale='en')
 
@@ -2663,10 +2663,9 @@ def getSharedRankings():
     for flaggedRanking in flaggedRankings:
         winner = Movie.query.filter(and_(Movie.id == flaggedRanking.winnerMovieId)).all()
         flaggedRanking.winnerTitle = winner[0].title
-        flaggedRanking.winnerPoster = winner[0].poster
         loserMovie = Movie.query.filter(Movie.id == flaggedRanking.loserMovieId).all()
         flaggedRanking.loserTitle = loserMovie[0].title
-        flaggedRanking.loserPoster = loserMovie[0].poster
+        
         flaggedRanking.rankingDate = format_datetime(flaggedRanking.modifiedDate - timedelta(hours=5), locale='en')
 
     return flaggedRankings
