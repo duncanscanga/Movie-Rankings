@@ -13,7 +13,7 @@
     <div class="col-3">
       <div class="row">
         <div class="col-12">
-          <img src="{{ movie.title|get_poster (movie.year)}}" alt="Poster Not Available.">
+          <img src="{{ movie.id|get_poster(movie.title, movie.year, movie.poster)}}" alt="Poster Not Available.">
         </div>
       </div>
     </div>
@@ -124,7 +124,7 @@
               {% for movie in similarDirector %}
               <tr>
                 <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img
-                      src="{{ movie.title|get_poster (movie.year)}}" alt="Poster Not Available."> </a></td>
+                      src="{{ movie.id|get_poster(movie.title, movie.year, movie.poster)}}" alt="Poster Not Available."> </a></td>
                 <td><a style="color: brown;" style="color: brown;"
                     href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' title="{{ movie.year }}"  target="_blank"> <u> 
                       {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
@@ -143,7 +143,7 @@
               {% for movie in relatedMovies %}
               <tr>
                 <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img
-                      src="{{ movie.title|get_poster (movie.year)}}" alt="Poster Not Available."> </a></td>
+                      src="{{ movie.id|get_poster(movie.title, movie.year, movie.poster)}}" alt="Poster Not Available."> </a></td>
                 <td><a style="color: brown;" style="color: brown;"
                     href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' title="{{ movie.year }}"  target="_blank"> <u>
                       {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
@@ -179,7 +179,7 @@
                         </tr>
                         {% for movie in relatedMovies %}
                         <tr>
-                          <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img src="{{ movie.title|get_poster (movie.year)}}" alt="Poster Not Available.">  </a></td>
+                          <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img src="{{ movie.id|get_poster(movie.title, movie.year, movie.poster)}}" alt="Poster Not Available.">  </a></td>
                           <td><a style="color: brown;" style="color: brown;" href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' target="_blank"> <u> {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
             <span style="color: red;">&#128077;</span> <!-- Red heart -->
           <!-- {% elif movie.liked == 2 %}

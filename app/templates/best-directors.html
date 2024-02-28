@@ -37,9 +37,9 @@
                             {{ bad_counts }}  <span>&#128078;</span> 
                             {% endif %}
                         </td>
-                        <td style="text-align: center; vertical-align: middle; width: 10%;"><a href='/details/{{firsts}}'><img src="/static/images/movieposters/{{ firsts1 }}" alt=""></a> </td>
-                        <td style="text-align: center; vertical-align: middle; width: 10%;"><a href='/details/{{seconds}}'><img src="/static/images/movieposters/{{ seconds1 }}" alt=""></a> </td>
-                        <td style="text-align: center; vertical-align: middle; width: 10%;"><a href='/details/{{thirds}}'><img src="/static/images/movieposters/{{ thirds1 }}" alt=""></a> </td>
+                        <td style="text-align: center; vertical-align: middle; width: 10%;"><a href='/details/{{firsts}}'><img src="{{ firsts|get_poster }}" alt=""></a> </td>
+                        <td style="text-align: center; vertical-align: middle; width: 10%;"><a href='/details/{{seconds}}'><img src="{{ seconds|get_poster }}" alt=""></a> </td>
+                        <td style="text-align: center; vertical-align: middle; width: 10%;"><a href='/details/{{thirds}}'><img src="{{ thirds|get_poster }}" alt=""></a> </td>
                     </tr>
                     {% endfor %}
                 </table>

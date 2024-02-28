@@ -13,7 +13,7 @@
       <a href='/details/{{movie.id}}' title="#{{movie.rank}}"> <img style="display: block;
       margin-left: auto;
       margin-right: auto;
-      " width="25%" src="{{ movie.title|get_poster (movie.year)}}" alt="Poster Not Available."> </a>
+      " width="25%" src="{{ movie.id|get_poster(movie.title, movie.year, movie.poster)}}" alt="Poster Not Available."> </a>
     </div>
   </div>
   <div class="row">
@@ -43,7 +43,7 @@
       
           {% endif %}
           <a href='/rank-by-specific/{{movie.id}}/{{winner.loserMovieId}}'><img width="50%"
-              src="/static/images/movieposters/{{ winner.winnerPoster }}" alt="Poster Not Available."> </a>
+              src="{{winner.loserMovieId|get_poster(winner.winnerTitle, winner.winnerYear, winner.winnerPoster)}}" alt="Poster Not Available."> </a>
         </div>
         {% endfor %}
       </div>
@@ -75,7 +75,7 @@
       
           {% endif %}
           <a href='/rank-by-specific/{{movie.id}}/{{loser.winnerMovieId}}'><img width="50%"
-              src="/static/images/movieposters/{{ loser.loserPoster }}" alt="Poster Not Available."> </a>
+              src="{{loser.winnerMovieId|get_poster(loser.loserTitle, loser.loserYear, loser.loserPoster)}}" alt="Poster Not Available."> </a>
         </div>
 
         {% endfor %}

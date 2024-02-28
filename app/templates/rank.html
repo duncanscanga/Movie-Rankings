@@ -62,10 +62,10 @@
           href='http://www.google.com/search?q={{firstMovie.title}} ({{firstMovie.year}})' target="_blank">{{
           firstMovie.title }} ({{ firstMovie.year }})</a></div>
       <div class="poster-wrapper" style="margin-top: 10px;"><a href="{{firstMovieLink}}"><img
-            src="{{ firstMovie.title|get_poster(firstMovie.year) }}" alt="Movie Poster" style="width: 100%;">
+            src="{{ firstMovie.id|get_poster(firstMovie.title, firstMovie.year, firstMovie.poster) }}" alt="Movie Poster" style="width: 100%;">
           <div class="hover-text">Rather Watch</div>
         </a></div>
-      <div style="margin-top: 10px;">Director: <span style="font-weight: bold;">{{ firstMovie.director }}</span></div>
+      <div style="margin-top: 10px;">Director:<a href='/all-movies/{{firstMovie.director}}' target="_blank"> <span style="font-weight: bold;">{{ firstMovie.director }}</span></a></div>
       <div>Rating: <span style="font-weight: bold;">{{ firstMovie.stars }}/10</span> {% if firstMovie.liked == 1 %}<span style="color: red;">&#128077;</span>{% elif firstMovie.liked == 2 %}
         <span>&#129309;</span>{% elif firstMovie.liked == 3 %}<span>&#128078;</span>{% endif %}</div>
       <div class="btn-wrapper">
@@ -84,11 +84,11 @@
           href='http://www.google.com/search?q={{secondMovie.title}} ({{secondMovie.year}})' target="_blank">{{
           secondMovie.title }} ({{ secondMovie.year }})</a></div>
       <div class="poster-wrapper" style="margin-top: 10px;"><a href="{{secondMovieLink}}" alt="Movie Poster"
-          style="width: 100%;"><img src="{{ secondMovie.title|get_poster(secondMovie.year) }}" alt="Movie Poster"
+          style="width: 100%;"><img src="{{ secondMovie.id|get_poster(secondMovie.title, secondMovie.year, secondMovie.poster)}}" alt="Movie Poster"
             style="width: 100%;">
           <div class="hover-text">Rather Watch</div>
         </a></div>
-      <div style="margin-top: 10px;">Director: <span style="font-weight: bold;">{{ secondMovie.director }}</span></div>
+      <div style="margin-top: 10px;">Director: <a href='/all-movies/{{secondMovie.director}}' target="_blank"> <span style="font-weight: bold;">{{ secondMovie.director }}</span></a></div>
       <div>Rating: <span style="font-weight: bold;">{{ secondMovie.stars }}/10</span> {% if secondMovie.liked == 1
         %}<span style="color: red;">&#128077;</span>{% elif secondMovie.liked == 2 %}
         <span>&#129309;</span>{% elif secondMovie.liked == 3 %}<span>&#128078;</span>{% endif %}
@@ -120,17 +120,17 @@
 
       <div class="row">
         <div class="col-lg-6">
-          <a href=/details/{{winner.id}}> <img src="{{ winner.title|get_poster(winner.year) }}"
+          <a href=/details/{{winner.id}} target="_blank"> <img src="{{ winner.id|get_poster(winner.title, winner.year, winner.poster) }}"
               alt="Poster Not Available."></a>
         </div>
         <div class="col-lg-6">
-          <a href=/details/{{loser.id}}> <img src="{{ loser.title|get_poster(loser.year) }}"
+          <a href=/details/{{loser.id}} target="_blank"> <img src="{{ loser.id|get_poster(loser.title, loser.year, loser.poster) }}"
               alt="Poster Not Available."></a>
         </div>
       </div>
 
       <div class="row">
-        <input class="btn" type="submit" value="Reverse" onclick="window.open('/reverse-last-rank')" />
+        <input class="btn" type="submit" value="Reverse" onclick="location.href='/reverse-last-rank'" />
       </div>
 
       <div class="row">

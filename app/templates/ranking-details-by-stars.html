@@ -22,7 +22,7 @@
           <div style="display: inline-block;">
             <!-- Anchor tag directly wrapping the image -->
             <a href='/details/{{movie.id}}' title="#{{movie.rank}}">
-              <img style="width: 30%; margin-left: auto; margin-right: auto;" src="{{ movie.title|get_poster (movie.year)}}" alt="Poster Not Available.">
+              <img style="width: 30%; margin-left: auto; margin-right: auto;" src="{{ movie.id|get_poster(movie.title, movie.year, movie.poster)}}" alt="Poster Not Available.">
             </a>
           </div>
   
@@ -82,8 +82,8 @@
       
           {% endif %}
           {{winner.winnerStars}}/10
-          <a href='/rank-by-specific/{{movie.id}}/{{winner.loserMovieId}}'><img width="50%"
-              src="/static/images/movieposters/{{ winner.winnerPoster }}" alt="Poster Not Available."> </a>
+          <a href='/rank-by-specific/{{movie.id}}/{{winner.loserMovieId}}' target="_blank"><img width="50%"
+              src="{{winner.loserMovieId|get_poster(winner.winnerTitle, winner.winnerYear, winner.winnerPoster)}}" alt="Poster Not Available."> </a>
         </div>
         {% endfor %}
       </div>
@@ -110,8 +110,8 @@
           <span>&#128078;</span> <!-- Trash can -->
       
           {% endif %} {{loser.loserStars}}/10
-          <a href='/rank-by-specific/{{movie.id}}/{{loser.winnerMovieId}}'><img width="50%"
-              src="/static/images/movieposters/{{ loser.loserPoster }}" alt="Poster Not Available."> </a>
+          <a href='/rank-by-specific/{{movie.id}}/{{loser.winnerMovieId}}'target="_blank"><img width="50%"
+              src="{{loser.winnerMovieId|get_poster(loser.loserTitle, loser.loserYear, loser.loserPoster)}}" alt="Poster Not Available."> </a>
         </div>
 
         {% endfor %}

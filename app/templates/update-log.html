@@ -13,7 +13,7 @@
     <div class="form-group">
       <div class="row">
         <div class="col-4">
-          <a href='/details/{{movie.movieId}}'><img src="{{ movie.movieTitle|get_poster }}" alt="Poster Not Available.">  </a>
+          <a href='/details/{{movie.movieId}}'><img src="{{ movie.movieId|get_poster (movie.movieTitle, movie.movieYear, movie.moviePoster)}}}}" alt="Poster Not Available.">  </a>
         </div>
         <div class="col-8">
           <label for="newLocation">Location</label>

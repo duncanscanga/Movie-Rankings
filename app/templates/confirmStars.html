@@ -26,7 +26,7 @@
         <tr>
           <td style=" text-align: center; vertical-align: middle; width: 10%;">
             <a href='/details/{{movie.movieId}}' title="#{{movie.movieRank}}">
-              <img src="{{ movie.movieTitle|get_poster }}" alt="Poster Not Available.">
+              <img src="{{ movie.movieId|get_poster (movie.movieTitle, movie.movieYear, movie.moviePoster)}}}}" alt="Poster Not Available.">
             </a>
           </td>
           <td>

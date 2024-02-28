@@ -1,12 +1,14 @@
+import json
 from flask import render_template, redirect, request, session, url_for
 import os
-from app.models import addMoviesToListRandom, autoRank, autoRankCertain, autoRankList, checkNotLastRanked, confirmLog, createListWithRandomMovies, currentWatchStreak, currentlyWatching, deleteList, duplicateList, find_all_movies_to_watch, find_all_unwatched_filtered_movies, find_all_unwatched_movies, find_all_watched_filtered_movies, find_all_watched_movies, find_best_movies_by_win_percentage, find_current_watch_movies, find_filtered_currently_movies, find_filtered_movies_by_win_percentage, find_filtered_movies_first_logged, find_filtered_movies_forRanking, find_movies_by_genre_filter, find_recently_watched_days, findHourCountAll, findHourCountThisYear, findMoviesForMonth, findMoviesWithHighestWinPercentage, findNumOfCurrentWatch, findNumOfFirstWatchedMovies, findNumOfFlaggedRankings, findNumOfMoviesInMonth, findNumOfMoviesInWeek, findNumOfMoviesToConfriM, findNumOfMoviesToRecommend, findNumOfMoviesWeek, findNumOfReversedMovies, findNumOfSkippedRankings, findNumOfupset, findUniqueMovieRankings, findmoviesToRecommend, getBestOfEachYear, getBiggestUpsets, getClosestRankings, getFlaggedRankings, getLatestSession, getLikedMovies, getListOfYears, getListsForMovie, getListsOfPeople, getMoviesRankedInSession, getRankOfRecentMovies, getRankingForStars, getRankingStartDate, getRankingsInList, getRecentRankings, getRecommendedMovies, getSharedRankings, getTimesRankedString, getTimesWatched, getTopMoviesInRankingSession, getUniqueMovies, getUniqueMoviesFromList, getUniqueMoviesReank, getUniqueRankingForMovie, getUniqueRankingStarForMovie, getUniqueRankingStarForStarRangeSpecificMovie, getUniqueRankingStarForStarSpecificMovie, getUniquieProximity, getUnwatchedMoviesFromList, getUpsets, getUpsetsRankings, getmidMovies, getunlikedMovies, isOpenSession, longestWatchStreak, misLikedUosetLoserss, misLikedUosets, movieForMovieFromList, predictStars, removeCurrentWatch, removeFlagFromRanking, removeSharedMovie, reverseFlaggedRanking, saveForLater, saveRanking, removeSavedRanking,  add_list, addMovieToList, find_all_filtered_movies_without, find_all_movies_without, find_filtered_movies_logged, find_list_by_id, getAllLists, getListDetails, getListDetailsFromNAme, getListPeople, getMovieLog, getMovieWatches, getMoviesFromList, getPerson, getRandomMovieByList, log_movie, findNumOfRewatchedMovies, removeMovieFromList, reverseLastRank, getLastRanking,  getRankings, getPlusMinusMovies,  getMovieDetails, findMoviesWithMostPointsGained, findMoviesWithHighestWins, findNumOfWatchedMovies, findNumOfUnwatchedMovies, findNumOfMovies, findNumOfRanking, find_filtered_rewatched_movies, find_filtered_unwatched_movies, find_all_movies,  find_filtered_movies_by_stars, find_filtered_movies, filterRecentWatched, getRandomUnrankedMovie, getRandomRecentMovie, find_best_movies,  find_recently_watched, getMovieGenres, find_top_movies, getProximityMovie, deleteMovie, startedSession, top_directors, top_movie_from_year, top_movie_from_year_ordered, uncofnrimtedLogs, unloggedMovies, update_list, update_log, update_movie, find_unwatched_movies, unRewatchMovie, rewatchMovie, getRandomMovie, updateLiked, updateRankings, getMovieById, find_rewatch_movies, find_genres, find_movies_by_genre, updateMovie, find_genres_by_id, getRandomMovieByGenre, add_movie
+from app.models import addMoviesToListRandom, autoRank, autoRankCertain, autoRankList, checkNotLastRanked, confirmLog, createListWithRandomMovies, currentWatchStreak, currentlyWatching, deleteList, duplicateList, find_all_movies_to_watch, find_all_unwatched_filtered_movies, find_all_unwatched_movies, find_all_watched_filtered_movies, find_all_watched_movies, find_best_movies_by_win_percentage, find_current_watch_movies, find_filtered_currently_movies, find_filtered_movies_by_win_percentage, find_filtered_movies_first_logged, find_filtered_movies_forRanking, find_movies_by_genre_filter, find_recently_watched_days, findHourCountAll, findHourCountThisYear, findMoviesForMonth, findMoviesWithHighestWinPercentage, findNumOfCurrentWatch, findNumOfFirstWatchedMovies, findNumOfFlaggedRankings, findNumOfMoviesInMonth, findNumOfMoviesInWeek, findNumOfMoviesToConfriM, findNumOfMoviesToRecommend, findNumOfMoviesWeek, findNumOfReversedMovies, findNumOfSkippedRankings, findNumOfupset, findUniqueMovieRankings, findmoviesToRecommend, getBestOfEachYear, getBiggestUpsets, getClosestRankings, getFlaggedRankings, getLatestSession, getLikedMovies, getListOfYears, getListsForMovie, getListsOfPeople, getMovie, getMoviesRankedInSession, getRankOfRecentMovies, getRankingForStars, getRankingStartDate, getRankingsInList, getRecentRankings, getRecommendedMovies, getSharedRankings, getTimesRankedString, getTimesWatched, getTopMoviesInRankingSession, getUniqueMovies, getUniqueMoviesFromList, getUniqueMoviesReank, getUniqueRankingForMovie, getUniqueRankingStarForMovie, getUniqueRankingStarForStarRangeSpecificMovie, getUniqueRankingStarForStarSpecificMovie, getUniquieProximity, getUnwatchedMoviesFromList, getUpsets, getUpsetsRankings, getmidMovies, getunlikedMovies, isOpenSession, longestWatchStreak, misLikedUosetLoserss, misLikedUosets, movieForMovieFromList, predictStars, removeCurrentWatch, removeFlagFromRanking, removeSharedMovie, reverseFlaggedRanking, saveForLater, saveRanking, removeSavedRanking,  add_list, addMovieToList, find_all_filtered_movies_without, find_all_movies_without, find_filtered_movies_logged, find_list_by_id, getAllLists, getListDetails, getListDetailsFromNAme, getListPeople, getMovieLog, getMovieWatches, getMoviesFromList, getPerson, getRandomMovieByList, log_movie, findNumOfRewatchedMovies, removeMovieFromList, reverseLastRank, getLastRanking,  getRankings, getPlusMinusMovies,  getMovieDetails, findMoviesWithMostPointsGained, findMoviesWithHighestWins, findNumOfWatchedMovies, findNumOfUnwatchedMovies, findNumOfMovies, findNumOfRanking, find_filtered_rewatched_movies, find_filtered_unwatched_movies, find_all_movies,  find_filtered_movies_by_stars, find_filtered_movies, filterRecentWatched, getRandomUnrankedMovie, getRandomRecentMovie, find_best_movies,  find_recently_watched, getMovieGenres, find_top_movies, getProximityMovie, deleteMovie, startedSession, top_directors, top_movie_from_year, top_movie_from_year_ordered, uncofnrimtedLogs, unloggedMovies, update_list, update_log, update_movie, find_unwatched_movies, unRewatchMovie, rewatchMovie, getRandomMovie, updateLiked, updatePoster, updateRankings, getMovieById, find_rewatch_movies, find_genres, find_movies_by_genre, updateMovie, find_genres_by_id, getRandomMovieByGenre, add_movie
 from babel.dates import format_date, format_datetime, format_time
 from app import app
 import random
 from datetime import date, datetime, timedelta
 from flask import jsonify
 import requests
+from urllib.parse import quote_plus
 
 @app.route('/trending')
 def trending():
@@ -177,36 +179,61 @@ def reverseeFlagNiot(ranking_id):
 @app.route('/')
 def home():
     movies = []
+    #print("1")
     rankingCountMonth = findNumOfRanking(30)
+    #print("2")
     rankingCountTotal = findNumOfRanking(0)
+    #print("3")
     rankingCountToday = findNumOfRanking(1)
+    #print("4")
     # movies watched this week
     weeklySubtraction = date.today().weekday()
+    #print("5")
     moviesWatchedInWeek = findNumOfMovies(weeklySubtraction)
+    #print("6")
     # movies watched this month
     monthlySubtraction = date.today().day - 1
+    #print("7")
     moviesWatchedInMonth = findNumOfMovies(monthlySubtraction)
+    #print("89")
     # movies watched this year
     yearlySubtraction = date.today().timetuple().tm_yday - 1
+    #print("0")
     moviesWatchedInYear = findNumOfMovies(yearlySubtraction)
+    #print("q")
     # first watches this year
     firstmoviesWatchedInYear = findNumOfFirstWatchedMovies(yearlySubtraction)
+    #print("d")
     moviesWatched = findNumOfWatchedMovies()
+    #print("g")
     rewatched = findNumOfRewatchedMovies()
+    #print("b")
     unwatched = findNumOfUnwatchedMovies()
+    #print("eh")
     unrated = findNumOfMoviesToRecommend()
+    #print("fs")
     confirm = findNumOfMoviesToConfriM()
+    #print("sg")
     currentWatch = findNumOfCurrentWatch()
+    #print("k7")
     flaggedRankings = findNumOfFlaggedRankings()
+    #print("y")
     skippedRankings =  findNumOfSkippedRankings()
+    #print("r")
     longestWatchStreakResult = longestWatchStreak()
+    #print("eth")
     currentWatchStreakResult = currentWatchStreak()
+    #print("et")
     listOfYears = getListOfYears()
+    #print("tth")
     #totalMinutes = findHourCountAll()
     totalMinutes = findHourCountThisYear(yearlySubtraction)
+    #print("ethwwr")
     #months = int(totalMinutes / 43200)
     if totalMinutes is None:
+        #print("hee")
         totalMinutes = 0
+    #print("ethte")
     days = int(totalMinutes / 1440)
     hours = int(totalMinutes % 1440 / 60)
     minutes = int(totalMinutes % 1440 % 60)
@@ -216,7 +243,9 @@ def home():
     averageCount = int (uniqueCount/moviesWatched)
     moviesToRank = int((moviesWatched-1)*moviesWatched)
     percentDone = int( uniqueCount / moviesToRank * 100 ) 
+    #print("sfgs")
     rankingStartDate = getRankingStartDate()
+    #print("dhth")
     daysRanked = (datetime.today() - rankingStartDate.modifiedDate).days
     averageRankingPerDay = int(uniqueCount/daysRanked)
     daysUntilEquilibirum = int((moviesToRank- uniqueCount)/averageRankingPerDay)
@@ -225,8 +254,9 @@ def home():
         howOftenIWatch = 0
     else:
         howOftenIWatch = int(moviesWatchedInYear / (yearlySubtraction / 7))
+    #print("qtw")
     reversedRankings = findNumOfReversedMovies()
-
+    #print("wrtwrt")
     return render_template('index.html', listOfYears=listOfYears,confirm=confirm,currentWatchStreak=currentWatchStreakResult[0], currentWatchStreakResultEnd=currentWatchStreakResult[1], currentWatchStreakResultDays=currentWatchStreakResult[2], longestWatchStreak=longestWatchStreakResult[0], longestWatchStreakEnd=longestWatchStreakResult[1],longestWatchStreakDays=longestWatchStreakResult[2] , unrated=unrated, firstmoviesWatchedInYear=firstmoviesWatchedInYear, monthlySubtraction=monthlySubtraction, yearlySubtraction=yearlySubtraction, weeklySubtraction=weeklySubtraction, skippedRankings=skippedRankings, reversedRankings=f'{reversedRankings:,}', daysRanked=daysRanked, flaggedRankings=flaggedRankings, howOftenIWatch=howOftenIWatch, end_date=end_date, percentDone=percentDone, averageRankingPerDay=averageRankingPerDay, averageCount=averageCount, hourCount1=hourCount1, uniqueCount=uniqueCount, creationDate=creationDate, rankingCountToday=f'{rankingCountToday:,}', currentWatch=currentWatch, movies = movies, rewatched= rewatched, rankingCountTotal = f'{rankingCountTotal:,}', rankingCountMonth = f'{rankingCountMonth:,}', moviesWatchedInWeek = moviesWatchedInWeek, moviesWatchedInMonth = moviesWatchedInMonth, moviesWatchedInYear = moviesWatchedInYear, moviesWatched = moviesWatched, unwatched = unwatched )
 
 
@@ -864,8 +894,7 @@ def rank_by_specific_movie_post(winner_id, loser_id, movie_id):
         secondMovie = getRandomMovie()
         if firstMovie.title != secondMovie.title:
             break
-    urlString = '/ranking-details/' + str(movie_id)
-    return redirect(urlString)
+    return ('',204)
 
 
 @app.route('/rank-by-winner/<int:movie_id>', methods=['GET'])
@@ -1091,25 +1120,25 @@ def rank_by_unranked_post(winner_id, loser_id):
 
 @app.route('/rank-by-recent')
 def rank_by_recent():
-    #print("in rank_by_recent")
+    ##print("in rank_by_recent")
     while True:
-        #print("finding first movie")
+        ##print("finding first movie")
         firstMovie = getRandomRecentMovie()
-        #print("finding second movie")
+        ##print("finding second movie")
         secondMovie = getRandomMovie()
-        #print("checking if movies are empty")
+        ##print("checking if movies are empty")
         if firstMovie == [] or secondMovie == []:
             return redirect ('/')
-        #print("checking if movies are the same")
+        ##print("checking if movies are the same")
         if firstMovie.title != secondMovie.title:
-            #print("checking last ranked")
+            ##print("checking last ranked")
             if checkNotLastRanked(firstMovie.id, secondMovie.id):
                 break
-    #print("loading page")
+    ##print("loading page")
     
-    #print("get last rank")
+    ##print("get last rank")
     lastRanked = getLastRanking()
-    #print("found last ranked")
+    ##print("found last ranked")
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
@@ -1131,9 +1160,9 @@ def rank_by_recent():
 
 @app.route('/update-rank-by-recent/<int:winner_id>/<int:loser_id>', methods=['GET'])
 def rank_by_recent_post(winner_id, loser_id):
-    #print("updating rankings")
+    ##print("updating rankings")
     updateRankings(winner_id, loser_id, False)
-    #print("rankings are updated")
+    ##print("rankings are updated")
     return redirect('/rank-by-recent')
 
 
@@ -1216,21 +1245,28 @@ def rank_by_list(list_id):
 
 @app.route('/rank-by-list-unique/<int:list_id>')
 def rank_by_unique_list(list_id):
+    print("1")
     list = find_list_by_id(list_id)
+    print("1ewg")
     if(list.count < 2):
         str_reditct = '/list/' + str(list_id)
         return redirect (str_reditct)
+    print("1gwewegg")
     movies = getUniqueMoviesFromList(list_id)
+    print("1wwwwwwwwww")
     if len(movies) < 1:
         str_reditct = '/list/' + str(list_id)
         return redirect (str_reditct)
+    print("1ww")
     firstMovie = movies[0]
     secondMovie = movies[1]
     lastRanked = getLastRanking()
+    print("1wwwwwwwww")
     flagged = ""
     if lastRanked[2] == 1:
         flagged = "Flagged"
     
+    print("1gwwrgr")
     firstMovieLink="/update-rankings-by-list-unique/" + str(firstMovie.id) + "/" + str(secondMovie.id) + "/" + str(list.id)
     secondMovieLink="/update-rankings-by-list-unique/" + str(secondMovie.id) + "/" + str(firstMovie.id) + "/" + str(list.id)
 
@@ -1238,7 +1274,7 @@ def rank_by_unique_list(list_id):
     buttonValue = "/list/" + str(list.id)
 
     title = "Rank By List"
-    
+   #print("93")
     return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
                            secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
 
@@ -1604,15 +1640,44 @@ def detailsSimilarGet(movie_id):
 
 
 @app.template_filter('get_poster')
-def get_movie_poster(title, year):    
-    api_key = '60dd74c6'
-    title_encoded = title.replace(" ", "+")  # URL encode the title
-    title_encoded = title_encoded.replace("&", " ")  # URL encode the title
-    # Include the year in the API request
+def get_movie_poster(id, title, year, poster):   
+
+   #print(title)
+    #print(poster)
+    #if movie.poster is a link to a poster then return it
+    if poster is not None and len(str(poster)) > 2 and (poster.startswith("http://") or poster.startswith("https://")):
+        return poster
+    # else do the below
+
+   #print(title)
+
+    #api_key = '60dd74c6'
+    #api_key = 'b2359fa'
+    api_key = 'edd4e9ef'
+    title_encoded = quote_plus(str(title))
+
     response = requests.get(f"http://www.omdbapi.com/?t={title_encoded}&y={year}&apikey={api_key}")
-    data = response.json()
-    poster_url = data.get('Poster', '/path/to/default/poster.jpg')
+
+    if response.status_code == 200:
+        try:
+            data = response.json()
+            # Proceed with using the data
+        except json.decoder.JSONDecodeError:
+            # Handle JSON decode error (e.g., log the error, use a default value, etc.)
+           #print("Failed to decode JSON from response")
+            data = {}  # Use a default empty dict or handle accordingly
+    else:
+        # Handle HTTP request error (e.g., log it, retry the request, etc.)
+       #print(f"Request failed with status code: {response.status_code}")
+        data = {}  # Use a default empty dict or handle accordingly
+
+    # if the data is success and there is a poster returned, then return it
+    # if not, then return blank string
+    poster_url = data.get('Poster', '')
     
+    if len(poster_url) > 4 and (poster_url.startswith("http://") or poster_url.startswith("https://")):
+        updatePoster(int(id), poster_url)
+
     return poster_url
 
 
@@ -1692,16 +1757,8 @@ def rankingDetailsGet(movie_id):
 
 @app.route('/ranking-details-by-stars/<int:movie_id>', methods=['GET'])
 def rankingDetailsStarsGet(movie_id):
-
     movie = getMovieDetails(movie_id)
-
     rankings = getRankingForStars(movie_id)
-    
-
-    
-    
-
-
     return render_template('ranking-details-by-stars.html', movie = movie, star = rankings[4],  winners=rankings[0],  losers=rankings[1],loserScore=rankings[2],  winnerScore=rankings[3], suggestedStar = rankings[4], explainSt = rankings[5])
 
 

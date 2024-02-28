@@ -343,12 +343,12 @@ def getUnwatchedMoviesFromList(listId):
     return movies
 
 def checkNotLastRanked(first, second):
-    rankings = Ranking.query.filter(or_
+    rankings = Ranking.query.filter(and_(text('overwriteRankingId IS NULL') , or_
                                     (and_
                                      (Ranking.winnerMovieId == first, Ranking.loserMovieId == second), 
                                      and_
                                      (Ranking.winnerMovieId == second, Ranking.loserMovieId == first)
-                                )).order_by(desc(Ranking.modifiedDate)).limit(1).all()
+                                ))).order_by(desc(Ranking.modifiedDate)).limit(1).all()
     if len(rankings) < 1:
         return True
     
@@ -470,7 +470,7 @@ def top_directors():
         GROUP BY director
     ),
     TopMovies AS (
-        SELECT director, id, poster, rewatchScore,
+        SELECT director, id, title, rewatchScore,
                ROW_NUMBER() OVER (PARTITION BY director ORDER BY rewatchScore DESC) as rn
         FROM movie
         WHERE unwatched <> 1
@@ -489,11 +489,11 @@ def top_directors():
         dmc2.decent_movies_count as decent_movie_count,
         bmc.bad_movies_count as bad_movie_count,
         MAX(CASE WHEN tm.rn = 1 THEN tm.id END) as top_movie_id_1, 
-        MAX(CASE WHEN tm.rn = 1 THEN tm.poster END) as top_movie_poster_1,
+        MAX(CASE WHEN tm.rn = 1 THEN tm.title END) as top_movie_poster_1,
         MAX(CASE WHEN tm.rn = 2 THEN tm.id END) as top_movie_id_2, 
-        MAX(CASE WHEN tm.rn = 2 THEN tm.poster END) as top_movie_poster_2,
+        MAX(CASE WHEN tm.rn = 2 THEN tm.title END) as top_movie_poster_2,
         MAX(CASE WHEN tm.rn = 3 THEN tm.id END) as top_movie_id_3, 
-        MAX(CASE WHEN tm.rn = 3 THEN tm.poster END) as top_movie_poster_3
+        MAX(CASE WHEN tm.rn = 3 THEN tm.title END) as top_movie_poster_3
     FROM TopMovies tm
     JOIN DirectorMovieCount dmc ON tm.director = dmc.director
     LEFT JOIN LikedMoviesCount lmc ON tm.director = lmc.director
@@ -502,7 +502,8 @@ def top_directors():
     WHERE tm.rn <= 3
     GROUP BY tm.director, dmc.total_movies, lmc.liked_movies_count, dmc2.decent_movies_count, bmc.bad_movies_count
     HAVING movie_count > 2
-    ORDER BY lmc.liked_movies_count DESC, (lmc.liked_movies_count / dmc.total_movies) DESC, dmc2.decent_movies_count DESC, bmc.bad_movies_count ASC, average_rewatchScore DESC;
+    ORDER BY lmc.liked_movies_count DESC, (lmc.liked_movies_count / dmc.total_movies) DESC, dmc2.decent_movies_count DESC, bmc.bad_movies_count ASC, average_rewatchScore DESC
+                   LIMIT 10;
     """)
     movies = db.engine.execute(sqlText)
     names = []
@@ -568,7 +569,7 @@ BadMoviesCount AS (
     GROUP BY m.year
 ),
     TopMovies AS (
-        SELECT year, id, poster, rewatchScore,
+        SELECT year, id, title, rewatchScore,
                ROW_NUMBER() OVER (PARTITION BY year ORDER BY rewatchScore DESC) as rn
         FROM movie
         WHERE unwatched <> 1
@@ -587,11 +588,11 @@ BadMoviesCount AS (
         dmc2.decent_movies_count as decent_movie_count,
         bmc.bad_movies_count as bad_movie_count,
         MAX(CASE WHEN tm.rn = 1 THEN tm.id END) as top_movie_id_1, 
-        MAX(CASE WHEN tm.rn = 1 THEN tm.poster END) as top_movie_poster_1,
+        MAX(CASE WHEN tm.rn = 1 THEN tm.title END) as top_movie_poster_1,
         MAX(CASE WHEN tm.rn = 2 THEN tm.id END) as top_movie_id_2, 
-        MAX(CASE WHEN tm.rn = 2 THEN tm.poster END) as top_movie_poster_2,
+        MAX(CASE WHEN tm.rn = 2 THEN tm.title END) as top_movie_poster_2,
         MAX(CASE WHEN tm.rn = 3 THEN tm.id END) as top_movie_id_3, 
-        MAX(CASE WHEN tm.rn = 3 THEN tm.poster END) as top_movie_poster_3
+        MAX(CASE WHEN tm.rn = 3 THEN tm.title END) as top_movie_poster_3
     FROM TopMovies tm
     JOIN DirectorMovieCount dmc ON tm.year = dmc.year
     LEFT JOIN LikedMoviesCount lmc ON tm.year = lmc.year
@@ -645,6 +646,14 @@ BadMoviesCount AS (
     result.append(thirdPosters)
     return result
 
+def updatePoster(id, poster):
+    movie = getMovie(id)
+    movie.poster = poster
+    db.session.commit()
+
+def getMovie(id):
+    movie = Movie.query.filter(Movie.id == id).first()
+    return movie
 
 def top_movie_from_year_ordered():
     sqlText = text("""
@@ -667,7 +676,7 @@ BadMoviesCount AS (
     GROUP BY m.year
 ),
     TopMovies AS (
-        SELECT year, id, poster, rewatchScore,
+        SELECT year, id, title, rewatchScore,
                ROW_NUMBER() OVER (PARTITION BY year ORDER BY rewatchScore DESC) as rn
         FROM movie
         WHERE unwatched <> 1
@@ -686,11 +695,11 @@ BadMoviesCount AS (
         dmc2.decent_movies_count as decent_movie_count,
         bmc.bad_movies_count as bad_movie_count,
         MAX(CASE WHEN tm.rn = 1 THEN tm.id END) as top_movie_id_1, 
-        MAX(CASE WHEN tm.rn = 1 THEN tm.poster END) as top_movie_poster_1,
+        MAX(CASE WHEN tm.rn = 1 THEN tm.title END) as top_movie_poster_1,
         MAX(CASE WHEN tm.rn = 2 THEN tm.id END) as top_movie_id_2, 
-        MAX(CASE WHEN tm.rn = 2 THEN tm.poster END) as top_movie_poster_2,
+        MAX(CASE WHEN tm.rn = 2 THEN tm.title END) as top_movie_poster_2,
         MAX(CASE WHEN tm.rn = 3 THEN tm.id END) as top_movie_id_3, 
-        MAX(CASE WHEN tm.rn = 3 THEN tm.poster END) as top_movie_poster_3
+        MAX(CASE WHEN tm.rn = 3 THEN tm.title END) as top_movie_poster_3
     FROM TopMovies tm
     JOIN DirectorMovieCount dmc ON tm.year = dmc.year
     LEFT JOIN LikedMoviesCount lmc ON tm.year = lmc.year
@@ -1866,12 +1875,12 @@ def getUpsets(movieId):
 
 
 def updateRankings(winnerId, loserId, autoGenerated):
-    #print("find movies")
+    ##print("find movies")
     winner = Movie.query.filter(Movie.id == winnerId).all()[0]
     loser = Movie.query.filter(Movie.id == loserId).all()[0]
-    #print("found movies")
+    ##print("found movies")
 
-    #print("getting probability")
+    ##print("getting probability")
     Pb =  Probability(winner.rewatchScore, loser.rewatchScore)
     Pa =  Probability(loser.rewatchScore, winner.rewatchScore)
     Ra = int(winner.rewatchScore + 50 * (1 - Pa))
@@ -1879,18 +1888,18 @@ def updateRankings(winnerId, loserId, autoGenerated):
 
     isUniqueRanking = True
     isReversedRanking = False
-    #print("finding all rankings")
+    ##print("finding all rankings")
     # allRankings = Ranking.query.order_by(desc(Ranking.modifiedDate)).all()
 
     # lastRanked = allRankings[0]
     lastRanked = Ranking.query.order_by(desc(Ranking.modifiedDate)).first()
 
-    #print("mkaing query")
+    ##print("mkaing query")
     text1 = 'overwriteRankingId is NULL AND ((winnerMovieId = ' + str(winnerId) + ' and loserMovieId = ' + str(loserId) + ') OR (winnerMovieId = ' + str(loserId) + ' AND loserMovieId = ' + str(winnerId) + ' ) ' + ')'
     rankings = Ranking.query.filter(text(text1)).all()
     if len(rankings) > 0:
         isUniqueRanking = False
-    #print("starting loop")
+    ##print("starting loop")
     for r in rankings:
         if (r.winnerMovieId == winnerId and r.loserMovieId == loserId):
             r.confirmed = func.now()
@@ -1900,7 +1909,7 @@ def updateRankings(winnerId, loserId, autoGenerated):
         if ((r.winnerMovieId == winnerId and r.loserMovieId == loserId) or (r.winnerMovieId == loserId and r.loserMovieId == winnerId))and r.overwriteRankingId is None:
             r.overwriteRankingId = lastRanked.id + 1
 
-    #print("hpdating rankinugs")
+    ##print("hpdating rankinugs")
     ranking = Ranking(winnerMovieId=winner.id, loserMovieId=loser.id, modifiedDate=func.now(), winnerStartingPoints=winner.rewatchScore, loserStartingPoints=loser.rewatchScore, 
                       winnerPointsGained=50 * (1 - Pa), loserPointsLossed=50 * (1 - Pb), winnerEndingPoints=Ra, losserEndingPoints=Rb, winnerCount=winner.rewatchCount, loserCount=loser.rewatchCount, generated=autoGenerated)
     
@@ -1908,7 +1917,7 @@ def updateRankings(winnerId, loserId, autoGenerated):
     # 1) unique ranking, increase the win count and rewatch Count for winner, only increase rewatch Count for loser
     # 2) reverse of past Ranking, increase the win count for winner, decrease win Count for loser
     # 3) confirming of past Ranking, change nothing
-    #print("checking is unique")
+    ##print("checking is unique")
     if isUniqueRanking:
         winner.rankingWinCount = len(Ranking.query.filter(and_(Ranking.winnerMovieId == winner.id, text('overwriteRankingId is NULL'))).all()) + 1
         winner.rewatchCount = len(Ranking.query.filter(and_(or_(Ranking.winnerMovieId == winner.id, Ranking.loserMovieId == winner.id), text('overwriteRankingId IS NULL'))).all()) + 1
@@ -1937,11 +1946,11 @@ def updateRankings(winnerId, loserId, autoGenerated):
             loser.rankingPercentage = 0
     winner.rewatchScore = Ra
     loser.rewatchScore = Rb
-    #print("checking flag")
+    ##print("checking flag")
     ranking = checkFlag(winner, loser, ranking)
-    #print("flag checked")
+    ##print("flag checked")
     ranking = checkLikedUpset(winner, loser, ranking)
-    #print("checked upsets")
+    ##print("checked upsets")
     db.session.add(ranking)
     db.session.commit()
 
@@ -2356,7 +2365,7 @@ def predict_stars(movie_id):
                 total_weight += 1.5
             except ValueError:
                 # Handle the case where conversion to float fails
-                print(f"Warning: Invalid star rating for movie ID {opponent_movie.id}")
+               print(f"Warning: Invalid star rating for movie ID {opponent_movie.id}")
 
 
     # Process losers - losses against low-rated movies are more significant
@@ -2368,7 +2377,7 @@ def predict_stars(movie_id):
                 weighted_sum += stars * 0.5
                 total_weight += 0.5
             except ValueError:
-                print(f"Warning: Invalid star rating for movie ID {opponent_movie.id}")
+               print(f"Warning: Invalid star rating for movie ID {opponent_movie.id}")
 
 
     # Calculate the weighted average star rating
@@ -3444,7 +3453,7 @@ def getUniqueMoviesReank(movieId):
     return movies
 
 def getUniqueMoviesFromList(listId):
-    #print("query")
+   #print("query")
     # SQL to find pairs of movies from the same list without a ranking relation
     # and considering only rankings where Ranking.overwriteRankingId is NULL
     sql = text("""
@@ -3463,18 +3472,18 @@ LIMIT 1;
 """)
 
 
-    #print("query created")
+   #print("query created")
     
     # Execute the SQL query
     result = db.engine.execute(sql, listId=listId).fetchone()
 
-    #print("query ran")
+   #print("query ran")
     
     # If a result is found, retrieve the movie details
     if result:
-        #print("finding movies")
+        ##print("finding movies")
         movies = findMoviesByIdList([result['movie1_id'], result['movie2_id']])
-        #print("movies found")
+        ##print("movies found")
         return movies
     else:
         # No valid pairs found
@@ -3633,16 +3642,16 @@ def deleteList(listId):
 
 def findNumOfRanking(daterange):
     if daterange == 0:
-        rankings = Ranking.query.filter(text('ranking.overwriteRankingId IS NULL')).all()
-        return len(rankings)
+        rankings = Ranking.query.filter(text('ranking.overwriteRankingId IS NULL')).count()
+        return rankings
     
     if daterange == 1:
-        rankings = Ranking.query.filter(and_(Ranking.modifiedDate >= date.today(), text('ranking.overwriteRankingId IS NULL'))).all()
-        return len(rankings)
+        rankings = Ranking.query.filter(and_(Ranking.modifiedDate >= date.today(), text('ranking.overwriteRankingId IS NULL'))).count()
+        return rankings
 
 
-    rankings = Ranking.query.filter(and_(Ranking.modifiedDate >= date.today() - timedelta(days=daterange), text('ranking.overwriteRankingId IS NULL'))).all()
-    return len(rankings)
+    rankings = Ranking.query.filter(and_(Ranking.modifiedDate >= date.today() - timedelta(days=daterange), text('ranking.overwriteRankingId IS NULL'))).count()
+    return rankings
     
 
 def findNumOfMovies(daterange):
@@ -3852,8 +3861,8 @@ def getListsForMovie(movieId):
     return lists
 
 def getRankingStartDate():
-    ranking = Ranking.query.filter().order_by(Ranking.modifiedDate).all()
-    return ranking[0]
+    ranking = Ranking.query.filter().order_by(Ranking.modifiedDate).first()
+    return ranking
 
 
 def findMoviesForMonth(daterange):
