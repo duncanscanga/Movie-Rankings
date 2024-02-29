@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base-home.html' %}
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
@@ -118,7 +118,7 @@
     
             <div class="row">
               <h5 class="col-lg-3" style="color: black; "> Watch Date: </h5>
-              <h5 class="col-lg-9" style="color: red; "> {{ movie.watchDate }} {% if movie.firstWatch == 1 %}
+              <h5 class="col-lg-9" style="color: red; "> {{ movie.watchDateString }} {% if movie.firstWatch == 1 %}
                 <span style="color: black;"> (First Watch)</span>
               {% endif %} </h5>
               

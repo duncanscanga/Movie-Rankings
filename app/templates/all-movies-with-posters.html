@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base-home.html' %}
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
@@ -142,9 +142,9 @@
            {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}
            </td>
           <td><a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></td>
-          <td><a href='/all-movies/{{movie.director}}'> {{ movie.director }} </a></td>
+          <td><a href='/all-movies/{{movie.DirectorString}}'> {{ movie.DirectorString }} </a></td>
           <td>{{ movie.runtime }}</td>
-          <td>{{ movie.genres }}</td>
+          <td>{{ movie.Genre }}</td>
           <td>{{ movie.rankingWinCount }} / {{movie.rewatchCount}} ({{ movie.rankingPercentage }}%)</td>
           <td>{{ movie.rewatchScore }}</td>
           <td style="{% if movie.stars is none or movie.stars is string and movie.stars.isdigit() == False %}color:white;
@@ -194,10 +194,10 @@
         
            {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
         <td><a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></td>
-        <td><a href='/all-movies/{{movie.director}}'> {{ movie.director }} </a></td>
+        <td><a href='/all-movies/{{movie.DirectorString}}'> {{ movie.DirectorString }} </a></td>
         <td>{{ movie.runtime }}</td>
         <td>{{ movie.notes }}</td>
-        <td>{{ movie.genres }}</td>
+        <td>{{ movie.Genre }}</td>
         <!-- <td><a href='/update-movie/{{movie.id}}'>Update </a></td> -->
         <td><a href='/log-movie/{{movie.id}}'>Watched</a></td>
       </tr>

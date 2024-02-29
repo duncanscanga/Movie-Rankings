@@ -14,6 +14,7 @@ from datetime import datetime, timedelta
 from sqlalchemy.sql import column
 from babel.dates import format_date, format_datetime, format_time
 import statistics
+from validate_email import validate_email
 import math
 import re
 import json
@@ -23,6 +24,21 @@ This file defines data models and related business logics
 '''
 
 db = SQLAlchemy(app)
+
+class User(db.Model):
+    """A class to represent the User Entity."""
+
+    # Stores the id
+    id = db.Column(db.Integer, primary_key=True)
+    # Stores the username
+    username = db.Column(db.String(80), nullable=False)
+    # Stores the email
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    # Stores the password
+    password = db.Column(db.String(80), nullable=False)
+
+    def __repr__(self):
+        return "<User %r>" % self.id
 
 class Movie(db.Model):
     """A class to represent a movie."""
@@ -60,6 +76,15 @@ class Movie(db.Model):
     winnerUpsetCount = db.Column(db.Integer, nullable=True)
     loserUpsetCount = db.Column(db.Integer, nullable=True)
     onComputer = db.Column(db.Boolean, nullable=True)
+    RuntimeString = db.Column(db.String(800), nullable=True)
+    Writer = db.Column(db.String(800), nullable=True)
+    DirectorString = db.Column(db.String(800), nullable=True)
+    Actors = db.Column(db.String(800), nullable=True)
+    Plot = db.Column(db.String(800), nullable=True)
+    imdbId = db.Column(db.String(800), nullable=True)
+    Genre = db.Column(db.String(800), nullable=True)
+    imdbRating = db.Column(db.String(800), nullable=True)
+    dataUpdateDate = db.Column(db.DateTime, nullable=True)
 
     def __repr__(self):
         return "<Movie %r>" % self.title
@@ -122,6 +147,7 @@ class Ranking(db.Model):
     winnerStars = db.Column(db.Integer, nullable=True)
     loserStars = db.Column(db.Integer, nullable=True)
     listId = db.Column(db.Integer, nullable=True)
+    userId = db.Column(db.Integer, nullable=True)
 
 
     def __repr__(self):
@@ -159,6 +185,7 @@ class SharedRanking(db.Model):
     rankingDifference = db.Column(db.Integer, nullable=True)
     reversed = db.Column(db.Boolean, nullable=True)
     newColumn = db.Column(db.Boolean, nullable=True)
+    userId = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
         return "<Ranking %r>" % self.id
@@ -170,6 +197,7 @@ class MovieWatch(db.Model):
     movieId = db.Column(db.Integer, nullable=False)
     location = db.Column(db.String(500), nullable=True)
     watchDate = db.Column(db.Date, nullable=True)
+    watchDateString = db.Column(db.String(500), nullable=True)
     people = db.Column(db.String(500), nullable=True)
     moviePoster = db.Column(db.String(500), nullable=True)
     movieTitle = db.Column(db.String(500), nullable=True)
@@ -228,6 +256,198 @@ class Session(db.Model):
 
 # create all tables
 db.create_all()
+
+def not_empty(word):
+    '''
+    Checks R1-1 if the email
+    or password is empty
+    '''
+    if len(word) == 0:
+        return False
+    return True
+
+def register(name, email, password):
+    '''
+    Register a new user
+      Parameters:
+        name (string):     user name
+        email (string):    user email
+        password (string): user password
+      Returns:
+        True if registration succeeded otherwise False
+    '''
+    # Check that the email has to follow addr-spec defined in RFC 5322
+    if not email_check(email):
+        return False
+
+    # check if the email has been used:
+    existed = User.query.filter_by(email=email).all()
+    if len(existed) > 0:
+        return False
+
+    # check if the email and password are not empty:
+    if not not_empty(email) and not not_empty(password):
+        return False
+
+    # Check that the password has to meet the required complexity:
+    # minimum length 6, at least one upper case, at least one lower
+    # case, and at least one special character.
+    if not pw_check(password):
+        return False
+
+
+    # Check that user name is longer than 2 but less than 20
+    if not length_check(name, 3, 20):
+        return False
+
+    # create a new user
+    user = User(username=name, email=email,
+                password=password)
+    # add it to the current database session
+    db.session.add(user)
+    # actually save the user object
+    db.session.commit()
+
+    return True
+
+def length_check(str, min, max):
+    '''
+    Check if the length of the string is valid
+    Parameters:
+        str (string):         string to be checked
+        min (int):            minimum bound
+        max (int):            maximum bound
+    Returns:
+        True if the requirements are meant, otherwise False
+    '''
+    if len(str) <= max and len(str) >= min:
+        return True
+    return False
+
+def login(email, password):
+    '''
+    Check login information:
+      First, email and password inputs needs to meet the same email/
+      password requiremnts in the email_check and pw_check functions
+
+      Parameters:
+        email (string):    user email
+        password (string): user password
+      Returns:
+        The user object if login succeeded otherwise None
+    '''
+    # The email and password inputs need to meet the requirements
+    # specified in email_check and pw_check
+    if email_check(email) and pw_check(password) is True:
+        # compare email/password with the originally registered email/password
+        valids = User.query.filter_by(email=email, password=password).all()
+        if len(valids) != 1:
+            return None
+        return valids[0]
+    else:
+        return False
+    
+def alphanumeric_check(title):
+    '''
+    Check if the given title satisfies:
+    R4-1: The title of the product has to be alphanumeric-only,
+    and space allowed only if it is not as prefix and suffix.
+    Parameters:
+        title (string):       title of the listing
+    Returns:
+        True if the requirements are meant, otherwise False
+    '''
+    if title[0] == " " or title[-1] == " ":
+        return False
+    for element in range(0, len(title)):
+        if not (title[element].isalnum() or title[element] == " "):
+            return False
+    return True
+
+    
+def update_user(curr_name, new_name, new_email, new_pw):
+    '''
+    R3-1, R3-4: Allow user to update username, password, email,
+    billing addr, and postal code.
+    Parameters:
+        curr_name   (String):     current username
+        new_name    (String):     updated username
+        new_email   (String):     updated email
+        new_addr    (String):     updated billing address
+        new_postal  (String):     updated postal code
+        new_pw      (String):     updated password
+    Returns:
+        True if the transaction is successful, False otherwise
+    '''
+    # If the current user exists
+    valid = User.query.filter_by(username=curr_name).all()
+    if len(valid) == 1:
+        # We check if the new information is of a valid format
+        if (
+            email_check(new_email) and
+            alphanumeric_check(new_name) and
+            length_check(new_name, 3, 19) and
+            pw_check(new_pw)
+        ):
+
+            # We then check if the new username and email are unique:
+            # If the user didn't update their existing names/passwords,
+            # the query will return 1, which is ok (it's their record),
+            # so ensure that the name and email have indeed been updated.
+            if (
+                ((len(User.query.filter_by(username=new_name).all()) > 0)
+                    and valid[0].username != new_name) or
+                ((len(User.query.filter_by(email=new_email).all()) > 0)
+                    and valid[0].email != new_email)
+            ):
+                return False
+            # If they're unique, update all the fields
+            else:
+                valid[0].username = new_name
+                valid[0].email = new_email
+                valid[0].password = new_pw
+                db.session.commit()
+                return True
+        else:
+            # If any of the fields are not formatted properly, return False
+            return False
+    else:
+        # If the current user does not exist, return False right away
+        return False
+
+
+def pw_check(password):
+    '''
+    Ensure the password is valid
+      Parameters:
+        password (string):     user password
+      Returns:
+        True if password is valid otherwise False
+    '''
+    # # Needs to be at least 6 characters
+    # if len(password) < 6:
+    #     return False
+
+    # has_upper = False
+    # has_lower = False
+    # has_special = False
+
+    # # For each character, update upper, lower,
+    # # and special flags if char matches the requirement
+    # for c in password:
+    #     if c.isupper():
+    #         has_upper = True
+    #     elif c.islower():
+    #         has_lower = True
+    #     elif not c.isalnum():
+    #         has_special = True
+
+    # # Only return true if all the flags got set to True at least once
+    # return has_upper and has_lower and has_special
+    return True
+
+def email_check(email):
+    return validate_email(email)
 
 def getListDetailsFromNAme(name, title):
     if len(name) < 1: 
@@ -303,7 +523,7 @@ def getPerson(name):
     movies = []
     for log in records: 
         movie = Movie.query.filter(Movie.id == log.movieId).all()[0]
-        movie.genres = getMovieGenreNames(movie.id)
+        #movie.genres = getMovieGenreNames(movie.id)
         found = False
         for mov in movies:
             if mov.id == movie.id:
@@ -334,13 +554,60 @@ def getUnwatchedMoviesFromList(listId):
         movie = Movie.query.filter(and_(Movie.id == x.movieId, Movie.unwatched == 1)).all()
         if len(movie) > 0:
             movie = movie[0]
-            movie.genres = getMovieGenreNames(movie.id)
+            #movie.genres = getMovieGenreNames(movie.id)
             movies.append(movie)
 
     movies.sort(key=lambda x: x.title, reverse=False)
     
     # return getOverallRanks(movies)
     return movies
+
+def checkNotEmpty(text):
+    if len(text) < 1 or text == "N/A" or text == '':
+        return False
+    return True
+
+def updateData(id, data):
+    movie = Movie.query.filter(Movie.id == id).all()[0]
+
+    oneUpdated = False
+
+    # Update fields only if checkNotEmpty returns True
+    if checkNotEmpty(data.get('Poster', '')):
+        oneUpdated = True
+        movie.poster = data.get('Poster', '')
+    if checkNotEmpty(data.get('Writer', '')):
+        oneUpdated = True
+        movie.Writer = data.get('Writer', '')
+    if checkNotEmpty(data.get('Director', '')):
+        oneUpdated = True
+        movie.DirectorString = data.get('Director', '')
+    if checkNotEmpty(data.get('Actors', '')):
+        oneUpdated = True
+        movie.Actors = data.get('Actors', '')
+    if checkNotEmpty(data.get('Plot', '')):
+        oneUpdated = True
+        movie.Plot = data.get('Plot', '')
+    if checkNotEmpty(data.get('imdbID', '')):  # Ensure this is the correct key; might be 'imdbID'
+        movie.imdbId = data.get('imdbID', '')
+        oneUpdated = True
+    if checkNotEmpty(data.get('imdbRating', '')):  # Ensure this is the correct key; might be 'imdbID'
+        movie.imdbRating = data.get('imdbRating', '')
+        oneUpdated = True
+    if checkNotEmpty(data.get('Genre', '')):
+        oneUpdated = True
+        movie.Genre = data.get('Genre', '')
+    if checkNotEmpty(data.get('Runtime', '')):
+        oneUpdated = True
+        movie.RuntimeString = data.get('Runtime', '')
+    if checkNotEmpty(data.get('Poster', '')):
+        oneUpdated = True
+        movie.poster = data.get('Poster', '')
+
+    if oneUpdated:
+        movie.dataUpdateDate = func.now()
+        db.session.commit()
+
 
 def checkNotLastRanked(first, second):
     rankings = Ranking.query.filter(and_(text('overwriteRankingId IS NULL') , or_
@@ -371,7 +638,7 @@ def getMoviesFromList(listId):
         movie = Movie.query.filter(and_(Movie.id == x.movieId, Movie.unwatched != 1)).all()
         if len(movie) > 0:
             movie = movie[0]
-            movie.genres = getMovieGenreNames(movie.id)
+            #movie.genres = getMovieGenreNames(movie.id)
             movie.rankingWinCountList = len(Ranking.query.filter(and_(Ranking.winnerMovieId == movie.id, text('overwriteRankingId IS NULL'), text(textStr1))).all())
             movie.rewatchCountList = len(Ranking.query.filter(and_(or_(Ranking.winnerMovieId == movie.id, Ranking.loserMovieId == movie.id), text(textStr1),text(textStr2), text('overwriteRankingId IS NULL'))).all())
             if movie.rewatchCountList > 0:
@@ -870,7 +1137,7 @@ def find_filtered_movies(title, director, year, min, max, recommendation, genreI
                                 and_(
                                         Movie.unwatched != 1, 
                                      or_(title == "", title is None, Movie.title.ilike('%' + title + '%')), 
-                                     or_(director == "", director is None, Movie.director.ilike('%' + director + '%')), 
+                                     or_(director == "", director is None, Movie.DirectorString.ilike('%' + director + '%')), 
                                      or_(year == "", year is None, Movie.year.ilike('%' + year + '%')), 
                                      or_(recommendation == "", recommendation is None, Movie.recommend.ilike('%' + recommendation + '%')), 
                                      or_(min == 0, min == "", min is None, str(min) == "0", Movie.runtime > min),
@@ -941,7 +1208,7 @@ def find_filtered_movies_forRanking(title, director, year, min, max, recommendat
                                 and_(
                                         Movie.unwatched != 1, 
                                      or_(title == "", title is None, Movie.title.ilike('%' + title + '%')), 
-                                     or_(director == "", director is None, Movie.director.ilike('%' + director + '%')), 
+                                     or_(director == "", director is None, Movie.DirectorString.ilike('%' + director + '%')), 
                                      or_(year == "", year is None, Movie.year.ilike('%' + year + '%')), 
                                      or_(recommendation == "", recommendation is None, Movie.recommend.ilike('%' + recommendation + '%')), 
                                      or_(min == 0, min == "", min is None, str(min) == "0", Movie.runtime > min),
@@ -1133,7 +1400,7 @@ def find_filtered_unwatched_movies(title, director, year, min, max, recommendati
                                 and_(
                                         Movie.unwatched == 1, 
                                      or_(title == "", title is None, Movie.title.ilike('%' + title + '%')), 
-                                     or_(director == "", director is None, Movie.director.ilike('%' + director + '%')), 
+                                     or_(director == "", director is None, Movie.DirectorString.ilike('%' + director + '%')), 
                                      or_(year == "", year is None, Movie.year.ilike('%' + year + '%')), 
                                      or_(recommendation == "", recommendation is None, Movie.recommend.ilike('%' + recommendation + '%')), 
                                      or_(min == 0, min == "", min is None, str(min) == "0", Movie.runtime > min),
@@ -1159,7 +1426,7 @@ def find_filtered_rewatched_movies(title, director, year, min, max, recommendati
                                 and_(
                                         Movie.rewatch == 1, 
                                      or_(title == "", title is None, Movie.title.ilike('%' + title + '%')), 
-                                     or_(director == "", director is None, Movie.director.ilike('%' + director + '%')), 
+                                     or_(director == "", director is None, Movie.DirectorString.ilike('%' + director + '%')), 
                                      or_(year == "", year is None, Movie.year.ilike('%' + year + '%')), 
                                      or_(recommendation == "", recommendation is None, Movie.recommend.ilike('%' + recommendation + '%')), 
                                      or_(min == 0, min == "", min is None, str(min) == "0", Movie.runtime > min),
@@ -1187,7 +1454,7 @@ def find_filtered_currently_movies(title, director, year, min, max, recommendati
                                 and_(
                                         Movie.currentlyWatching == 1, 
                                      or_(title == "", title is None, Movie.title.ilike('%' + title + '%')), 
-                                     or_(director == "", director is None, Movie.director.ilike('%' + director + '%')), 
+                                     or_(director == "", director is None, Movie.DirectorString.ilike('%' + director + '%')), 
                                      or_(year == "", year is None, Movie.year.ilike('%' + year + '%')), 
                                      or_(recommendation == "", recommendation is None, Movie.recommend.ilike('%' + recommendation + '%')), 
                                      or_(min == 0, min == "", min is None, str(min) == "0", Movie.runtime > min),
@@ -1213,7 +1480,7 @@ def find_all_watched_filtered_movies(title, director, year, min, max, recommenda
     movies = Movie.query.filter(
                                 and_(
                                      or_(title == "", title is None, Movie.title.ilike('%' + title + '%')), 
-                                     or_(director == "", director is None, Movie.director.ilike('%' + director + '%')), 
+                                     or_(director == "", director is None, Movie.DirectorString.ilike('%' + director + '%')), 
                                      or_(year == "", year is None, Movie.year.ilike('%' + year + '%')), 
                                      or_(recommendation == "", recommendation is None, Movie.recommend.ilike('%' + recommendation + '%')), 
                                      or_(min == 0, min == "", min is None, str(min) == "0", Movie.runtime > min),
@@ -1240,7 +1507,7 @@ def find_all_filtered_movies(title, director, year, min, max, recommendation, ge
     movies = Movie.query.filter(
                                 and_(
                                      or_(title == "", title is None, Movie.title.ilike('%' + title + '%')), 
-                                     or_(director == "", director is None, Movie.director.ilike('%' + director + '%')), 
+                                     or_(director == "", director is None, Movie.DirectorString.ilike('%' + director + '%')), 
                                      or_(year == "", year is None, Movie.year.ilike('%' + year + '%')), 
                                      or_(recommendation == "", recommendation is None, Movie.recommend.ilike('%' + recommendation + '%')), 
                                      or_(min == 0, min == "", min is None, str(min) == "0", Movie.runtime > min),
@@ -1266,7 +1533,7 @@ def find_all_unwatched_filtered_movies(title, director, year, min, max, recommen
     movies = Movie.query.filter(
                                 and_(
                                      or_(title == "", title is None, Movie.title.ilike('%' + title + '%')), 
-                                     or_(director == "", director is None, Movie.director.ilike('%' + director + '%')), 
+                                     or_(director == "", director is None, Movie.DirectorString.ilike('%' + director + '%')), 
                                      or_(year == "", year is None, Movie.year.ilike('%' + year + '%')), 
                                      or_(recommendation == "", recommendation is None, Movie.recommend.ilike('%' + recommendation + '%')), 
                                      or_(min == 0, min == "", min is None, str(min) == "0", Movie.runtime > min),
@@ -1301,7 +1568,7 @@ def find_all_movies_to_watch(title, director, year, min, max, recommendation, wa
         movies = Movie.query.filter(
                                 and_(
                                      or_(title == "", title is None, Movie.title.ilike('%' + title + '%')), 
-                                     or_(director == "", director is None, Movie.director.ilike('%' + director + '%')), 
+                                     or_(director == "", director is None, Movie.DirectorString.ilike('%' + director + '%')), 
                                      or_(year == "", year is None, Movie.year.ilike('%' + year + '%')), 
                                      or_(recommendation == "", recommendation is None, Movie.recommend.ilike('%' + recommendation + '%')), 
                                      or_(min == 0, min == "", min is None, str(min) == "0", Movie.runtime > min),
@@ -1314,7 +1581,7 @@ def find_all_movies_to_watch(title, director, year, min, max, recommendation, wa
         movies = Movie.query.filter(
                                     and_(
                                         or_(title == "", title is None, Movie.title.ilike('%' + title + '%')), 
-                                        or_(director == "", director is None, Movie.director.ilike('%' + director + '%')), 
+                                        or_(director == "", director is None, Movie.DirectorString.ilike('%' + director + '%')), 
                                         or_(year == "", year is None, Movie.year.ilike('%' + year + '%')), 
                                         or_(recommendation == "", recommendation is None, Movie.recommend.ilike('%' + recommendation + '%')), 
                                         or_(min == 0, min == "", min is None, str(min) == "0", Movie.runtime > min),
@@ -1328,7 +1595,7 @@ def find_all_movies_to_watch(title, director, year, min, max, recommendation, wa
         movies = Movie.query.filter(
                                     and_(
                                         or_(title == "", title is None, Movie.title.ilike('%' + title + '%')), 
-                                        or_(director == "", director is None, Movie.director.ilike('%' + director + '%')), 
+                                        or_(director == "", director is None, Movie.DirectorString.ilike('%' + director + '%')), 
                                         or_(year == "", year is None, Movie.year.ilike('%' + year + '%')), 
                                         or_(recommendation == "", recommendation is None, Movie.recommend.ilike('%' + recommendation + '%')), 
                                         or_(min == 0, min == "", min is None, str(min) == "0", Movie.runtime > min),
@@ -1410,7 +1677,7 @@ def find_filtered_movies_by_stars(title, director, year, min, max, recommendatio
                                 and_(
                                         Movie.unwatched != 1, 
                                      or_(title == "", title is None, Movie.title.ilike('%' + title + '%')), 
-                                     or_(director == "", director is None, Movie.director.ilike('%' + director + '%')), 
+                                     or_(director == "", director is None, Movie.DirectorString.ilike('%' + director + '%')), 
                                      or_(year == "", year is None, Movie.year.ilike('%' + year + '%')), 
                                      or_(recommendation == "", recommendation is None, Movie.recommend.ilike('%' + recommendation + '%')), 
                                      or_(min == 0, min == "", min is None, str(min) == "0", Movie.runtime > min),
@@ -1438,7 +1705,7 @@ def find_filtered_movies_by_win_percentage(title, director, year, min, max, reco
                                 and_(
                                         Movie.unwatched != 1, 
                                      or_(title == "", title is None, Movie.title.ilike('%' + title + '%')), 
-                                     or_(director == "", director is None, Movie.director.ilike('%' + director + '%')), 
+                                     or_(director == "", director is None, Movie.DirectorString.ilike('%' + director + '%')), 
                                      or_(year == "", year is None, Movie.year.ilike('%' + year + '%')), 
                                      or_(recommendation == "", recommendation is None, Movie.recommend.ilike('%' + recommendation + '%')), 
                                      or_(min == 0, min == "", min is None, str(min) == "0", Movie.runtime > min),
@@ -1532,7 +1799,7 @@ def getRankOfRecentMovies(inputSize):
 
 def getRecommendedMovies(movieId):
     movie = Movie.query.filter(Movie.id == movieId).all()[0]
-    moviesFromDirector = Movie.query.filter(and_(Movie.director == movie.director, Movie.id != movieId)).all()
+    moviesFromDirector = Movie.query.filter(and_(Movie.DirectorString == movie.DirectorString, Movie.id != movieId)).all()
 
 
     similarRankingMovies = []
@@ -1542,13 +1809,13 @@ def getRecommendedMovies(movieId):
 
     if hasStars: 
         similarRankingMovies = Movie.query.filter(
-                                                and_(Movie.id != movieId, Movie.director != movie.director, Movie.unwatched != 1,
+                                                and_(Movie.id != movieId, Movie.DirectorString != movie.DirectorString, Movie.unwatched != 1,
                                                      Movie.liked == movie.liked, text("stars is not NULL and stars <> 'None' and stars <> '' "), or_(and_(Movie.stars >= movie.stars, Movie.stars - movie.stars <= 1.5), and_(Movie.stars <= movie.stars, movie.stars - Movie.stars <= 1.5) ) )
                                                 ).order_by(text("ABS(movie.rewatchScore - " + str(movie.rewatchScore) + ") asc, movie.rank asc")).all()
     else:
         similarRankingMovies = Movie.query.filter(and_(text("liked = 1 or liked = 2 or liked = 3"), Movie.liked == movie.liked)).order_by(text("ABS(movie.rewatchScore - " + str(movie.rewatchScore) + ") asc")).all()
     
-    unwatchedMovies = Movie.query.filter(and_(Movie.unwatched == 1, Movie.director != movie.director)
+    unwatchedMovies = Movie.query.filter(and_(Movie.unwatched == 1, Movie.DirectorString != movie.DirectorString)
                                ).all()
     
 
@@ -1558,7 +1825,7 @@ def getRecommendedMovies(movieId):
     title = regex.sub("", movie.title)
     words = title.split(" ")
     for word in words:
-        if not( word.lower() == "of" or word == "Is" or word == "is" or word == "X" or word == "F" or word == "with" or word=="Movie" or word=="La" or word=="Book" or word == "My"  or word =="From" or word =="from"  or  word == "to" or word == "II" or word == "III" or word == "On" or word == "on" or word == "Her" or word == "One" or word == "New" or word == "new" or word == "her" or word == "king" or word == "of" or word.lower() == "and" or word == "The" or  word.lower() == "the" or  word.lower() == "in" or  word.lower() == "for" or  word.lower() == "a" or  word.lower() == "an" ):
+        if not( word.lower() == "of" or word == "We" or word == "Is" or word == "is" or word == "X" or word == "F" or word == "with" or word=="Movie" or word=="La" or word=="Book" or word == "My"  or word =="From" or word =="from"  or  word == "to" or word == "II" or word == "III" or word == "On" or word == "on" or word == "Her" or word == "One" or word == "New" or word == "new" or word == "her" or word == "king" or word == "of" or word.lower() == "and" or word == "The" or  word.lower() == "the" or  word.lower() == "in" or  word.lower() == "for" or  word.lower() == "a" or  word.lower() == "an" ):
             sortedWords.append(word)  
 
     movieIdString = "("
@@ -1576,10 +1843,10 @@ def getRecommendedMovies(movieId):
     similarNames = []
     if movieIdString != "()":
         similarNames = Movie.query.filter(and_(text(movieIdString),
-                                                    Movie.id != movie.id, Movie.director != movie.director)
+                                                    Movie.id != movie.id, Movie.director != movie.DirectorString)
                                     ).order_by(asc(Movie.rewatchScore)).all()
-    for movie in similarNames:
-        movie.genres = getMovieGenreNames(movie.id)
+    #for movie in similarNames:
+        #movie.genres = getMovieGenreNames(movie.id)
     
     
     genres = MovieGenre.query.filter(MovieGenre.movieId == movie.id).all()
@@ -1597,7 +1864,7 @@ def getRecommendedMovies(movieId):
         for genre in genres:
             for movieGenre in movieGenres:
                 if genre.genreId == movieGenre.genreId:
-                    movie.genres = getMovieGenreNames(movie.id)
+                    #movie.genres = getMovieGenreNames(movie.id)
                     similar.append(movie)
                     found2 = True
                     break
@@ -1611,19 +1878,19 @@ def getRecommendedMovies(movieId):
         movieGenres = MovieGenre.query.filter(movie.id == MovieGenre.movieId).all()
         if len(movieGenres) == 2 and len(genres) == 2:
             if (movieGenres[0].genreId == genres[0].genreId and movieGenres[1].genreId == genres[1].genreId) or (movieGenres[1].genreId == genres[0].genreId and movieGenres[0].genreId == genres[1].genreId):
-                movie.genres = getMovieGenreNames(movie.id)
+                #movie.genres = getMovieGenreNames(movie.id)
                 unwatched.append(movie)
         elif len(movieGenres) == 1 and len(genres) == 2:
             if (movieGenres[0].genreId == genres[0].genreId or movieGenres[0].genreId == genres[1].genreId):
-                movie.genres = getMovieGenreNames(movie.id)
+                #movie.genres = getMovieGenreNames(movie.id)
                 unwatched.append(movie)
         elif len(movieGenres) == 2 and len(genres) == 1:
             if (movieGenres[0].genreId == genres[0].genreId or movieGenres[1].genreId == genres[0].genreId):
-                movie.genres = getMovieGenreNames(movie.id)
+                #movie.genres = getMovieGenreNames(movie.id)
                 unwatched.append(movie)
         elif len(movieGenres) == 1 and len(genres) == 1:
             if (movieGenres[0].genreId == genres[0].genreId):
-                movie.genres = getMovieGenreNames(movie.id)
+                #movie.genres = getMovieGenreNames(movie.id)
                 unwatched.append(movie)
     
     results = []
@@ -1684,7 +1951,7 @@ def autoRankLikedCertain (movieId):
 
         # If not ranked, update rankings
         if not existing_ranking:
-            updateRankings(movieId, movie.id, True)
+            updateRankings(movieId, movie.id, 1,  True)
 
 def autoRankMidCertain (movieId):
     ##### ALL mid movies beat all of the disliked movies #######
@@ -1709,7 +1976,7 @@ def autoRankMidCertain (movieId):
 
         # If not ranked, update rankings
         if not existing_ranking:
-            updateRankings(movieId, movie.id, True)
+            updateRankings(movieId, movie.id, 1, True)
 
 def autoRankDisLikedCertain(movieId):
      ##### ALL disliked movies lose to all of the mid movies #######
@@ -1765,7 +2032,7 @@ def autoRankLikes(movieId):
 
         # If not ranked, update rankings
         if not existing_ranking:
-            updateRankings(movieId, movie.id, True)
+            updateRankings(movieId, movie.id, 1, True)
 
 
 def autoRankLikes1(movieId):
@@ -1823,7 +2090,7 @@ def autoRankStars1(movieId):
             # Check if the given movie's stars are greater by 2 or more
             if int(given_movie.stars) >= int(movie.stars) + 2:
                 # Update rankings with the given movie as the winner
-                updateRankings(movieId, movie.id, True)      
+                updateRankings(movieId, movie.id, 1, True)      
 
 def autoRankStars2(movieId):
     # Check if the given movie has a liked value of 2
@@ -1855,7 +2122,7 @@ def autoRankStars2(movieId):
             # Check if the given movie's stars are greater by 2 or more
             if int(given_movie.stars) >= int(movie.stars) + 2:
                 # Update rankings with the given movie as the winner
-                updateRankings(movieId, movie.id, True)      
+                updateRankings(movieId, movie.id, 1, True)      
 
 
 
@@ -1874,7 +2141,7 @@ def getUpsets(movieId):
     return result
 
 
-def updateRankings(winnerId, loserId, autoGenerated):
+def updateRankings(winnerId, loserId, user, autoGenerated):
     ##print("find movies")
     winner = Movie.query.filter(Movie.id == winnerId).all()[0]
     loser = Movie.query.filter(Movie.id == loserId).all()[0]
@@ -1910,8 +2177,13 @@ def updateRankings(winnerId, loserId, autoGenerated):
             r.overwriteRankingId = lastRanked.id + 1
 
     ##print("hpdating rankinugs")
-    ranking = Ranking(winnerMovieId=winner.id, loserMovieId=loser.id, modifiedDate=func.now(), winnerStartingPoints=winner.rewatchScore, loserStartingPoints=loser.rewatchScore, 
-                      winnerPointsGained=50 * (1 - Pa), loserPointsLossed=50 * (1 - Pb), winnerEndingPoints=Ra, losserEndingPoints=Rb, winnerCount=winner.rewatchCount, loserCount=loser.rewatchCount, generated=autoGenerated)
+    if user == 1:
+        ranking = Ranking(winnerMovieId=winner.id, loserMovieId=loser.id, modifiedDate=func.now(), winnerStartingPoints=winner.rewatchScore, loserStartingPoints=loser.rewatchScore, 
+                      winnerPointsGained=50 * (1 - Pa), loserPointsLossed=50 * (1 - Pb), winnerEndingPoints=Ra, losserEndingPoints=Rb, winnerCount=winner.rewatchCount, loserCount=loser.rewatchCount, generated=autoGenerated, userId=1)
+    
+    else:
+        ranking = Ranking(winnerMovieId=winner.id, loserMovieId=loser.id, modifiedDate=func.now(), winnerStartingPoints=winner.rewatchScore, loserStartingPoints=loser.rewatchScore, 
+                      winnerPointsGained=50 * (1 - Pa), loserPointsLossed=50 * (1 - Pb), winnerEndingPoints=Ra, losserEndingPoints=Rb, winnerCount=winner.rewatchCount, loserCount=loser.rewatchCount, generated=autoGenerated, userId=user.id)
     
     # 3 options:
     # 1) unique ranking, increase the win count and rewatch Count for winner, only increase rewatch Count for loser
@@ -2762,7 +3034,7 @@ def getMovieDetails(id):
     count = MovieWatch.query.filter(MovieWatch.movieId == movie.id).all()
     movie.timesWatched = len(count)
     movie.movieRecommendStars = getRankingForStars(movie.id)[4]
-    movie.genres = getMovieGenreNames(movie.id)
+    #movie.genres = getMovieGenreNames(movie.id)
 
     return movie
 
@@ -2801,7 +3073,7 @@ def find_movies_by_genre_filter(genreId, title, director, year, min, max, recomm
     movies = Movie.query.filter(
                                 and_(
                                      or_(title == "", title is None, Movie.title.ilike('%' + title + '%')), 
-                                     or_(director == "", director is None, Movie.director.ilike('%' + director + '%')), 
+                                     or_(director == "", director is None, Movie.DirectorString.ilike('%' + director + '%')), 
                                      or_(year == "", year is None, Movie.year.ilike('%' + year + '%')), 
                                      or_(recommendation == "", recommendation is None, Movie.recommend.ilike('%' + recommendation + '%')), 
                                      or_(min == 0, min == "", min is None, str(min) == "0", Movie.runtime > min),
@@ -2922,6 +3194,32 @@ def getRandomUnrankedMovie():
         if(movie.unwatched != 1):
             break
     return movie
+
+def getSkippedMovies():
+    skipped = SharedRanking.query.filter().order_by(func.random()).limit(1).all()
+    if len(skipped) > 0:
+        ranking = skipped[0]
+        firstMovie = Movie.query.filter(Movie.id == ranking.winnerMovieId).first()
+        secondMovie = Movie.query.filter(Movie.id == ranking.loserMovieId).first()
+        result = []
+        result.append(firstMovie)
+        result.append(secondMovie)
+        return result
+    else:
+        return []
+    
+def getFlaggedMovies():
+    skipped = Ranking.query.filter(and_(Ranking.flagged == 1, text('overwriteRankingId IS NULL'))).order_by(func.random()).limit(1).all()
+    if len(skipped) > 0:
+        ranking = skipped[0]
+        firstMovie = Movie.query.filter(Movie.id == ranking.winnerMovieId).first()
+        secondMovie = Movie.query.filter(Movie.id == ranking.loserMovieId).first()
+        result = []
+        result.append(firstMovie)
+        result.append(secondMovie)
+        return result
+    else:
+        return []
 
 def saveForLater(winnerId, loserId):
     winner = Movie.query.filter(Movie.id == winnerId).all()[0]
@@ -3468,7 +3766,7 @@ AND NOT EXISTS (
     WHERE ((r.winnerMovieId = m1.id AND r.loserMovieId = m2.id) OR (r.winnerMovieId = m2.id AND r.loserMovieId = m1.id))
     AND r.overwriteRankingId IS NULL
 )
-LIMIT 1;
+LIMIT 1 OFFSET ABS(RANDOM()) % (SELECT COUNT(*) FROM list_movie WHERE listId = :listId);
 """)
 
 

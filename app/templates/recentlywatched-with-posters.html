@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base-home.html' %}
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
@@ -87,11 +87,11 @@
           {{ movie.recommend }}
       </td>
           <!-- <td><a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></td> -->
-          <!-- <td>{{ movie.director }}</td>
+          <!-- <td>{{ movie.DirectorString }}</td>
           <td>{{ movie.runtime }}</td> -->
           <!-- <td>{{ movie.rewatchCount }}</td>
           <td>{{ movie.rewatchScore }}</td> -->
-          <!-- <td>{{ movie.genres }}</td> -->
+          <!-- <td>{{ movie.Genre}}</td> -->
           <td style=" text-align: center;
           vertical-align: middle;">{{ movie.notes }}</td>
           <!-- <td style=" text-align: center;

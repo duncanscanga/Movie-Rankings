@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base-home.html' %}
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
@@ -129,11 +129,11 @@
           <td style=" text-align: center;
           vertical-align: middle;"><a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></td>
           <td style=" text-align: center;
-          vertical-align: middle;"><a href='/all-movies/{{movie.director}}'> {{ movie.director }} </a></td>
+          vertical-align: middle;"><a href='/all-movies/{{movie.DirectorString}}'> {{ movie.DirectorString }} </a></td>
           <td style=" text-align: center;
           vertical-align: middle;">{{ movie.runtime }}</td>
           <td style=" text-align: center;
-          vertical-align: middle;">{{ movie.genres }}</td>
+          vertical-align: middle;">{{ movie.Genre }}</td>
           <!-- <td style=" text-align: center;
           vertical-align: middle;"><a href='/update-movie/{{movie.id}}'>Update</a></td> -->
           <td style=" text-align: center;

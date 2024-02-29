@@ -75,7 +75,7 @@
             <span>&#128078;</span> <!-- Trash can -->
         
            {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
-              <td>{{ movie.genres }}</td>
+              <td>{{ movie.Genre }}</td>
               <td>{{ movie.rewatchScore }}</td>
               <!-<td>#{{ movie.rank }}</td> -->
             <!-- </tr>
@@ -118,13 +118,13 @@
           <!-- <td style="width: 10%;"> <img src="{{ movie.id|get_poster(movie.title, movie.year, movie.poster)}}" alt="Poster Not Available."> </td> -->
           <td><a href='http://www.google.com/search?q={{movie.movieTitle}}' target="_blank"> {{ movie.movieTitle }}</a></td>
           <!-- <td><a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></td> -->
-          <!-- <td><a href='/all-movies/{{movie.director}}'> {{ movie.director }} </a></td>
+          <!-- <td><a href='/all-movies/{{movie.DirectorString}}'> {{ movie.DirectorString }} </a></td>
           <td>{{ movie.runtime }}</td> -->
           <!-- <td>{{ movie.rewatchCount }}</td>
           <td>{{ movie.rewatchScore }}</td> -->
-          <!-- <td>{{ movie.genres }}</td> -->
+          <!-- <td>{{ movie.Genre }}</td> -->
           <td>{{ movie.location }}</td>
-          <td>{{ movie.watchDate }}</td>
+          <td>{{ movie.watchDateString }}</td>
           <td>{{ movie.people }}</td>
           <!-- <td>{{ movie.imdbRating }}</td>
           <td>{{ movie.rottenTomatoRating }}</td>

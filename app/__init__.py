@@ -27,4 +27,9 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
 
 # Temporary for testing, add proper secret key in .env file later
 app.config['SECRET_KEY'] = "UhzAQJY9PH"
+
+app.config['SESSION_COOKIE_SECURE'] = True
+
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+
 app.app_context().push()

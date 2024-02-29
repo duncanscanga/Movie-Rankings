@@ -40,13 +40,13 @@
 
       <div class="row">
         <h4 class="col-lg-6" style="color: black; "> Genres: </h4>
-        <h4 class="col-lg-6" style="color: rgb(104, 95, 95); "> {{ movie.genres }}</h4>
+        <h4 class="col-lg-6" style="color: rgb(104, 95, 95); "> {{ movie.Genre }}</h4>
 
       </div>
 
       <div class="row">
         <h4 class="col-lg-6" style="color: black; "> Director: </h4>
-        <h4 class="col-lg-6" style="color: rgb(104, 95, 95); "> <a href='/all-movies/{{movie.director}}'> {{ movie.director }} </a>
+        <h4 class="col-lg-6" style="color: rgb(104, 95, 95); "> <a href='/all-movies/{{movie.DirectorString}}'> {{ movie.DirectorString }} </a>
         </h4>
 
       </div>
@@ -146,7 +146,7 @@
             <span>&#128078;</span> <!-- Trash can -->
         
            {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
-              <td>{{ movie.genres }}</td>
+              <td>{{ movie.Genre }}</td>
               <td style="{% if movie.stars is none or movie.stars is string and movie.stars.isdigit() == False %}color:white;
               {% elif movie.stars|string|int >= 8 %}color:green;
               {% elif movie.stars|string|int >= 6 %}color:orange;
@@ -171,7 +171,7 @@
             <span>&#128078;</span> <!-- Trash can -->
         
            {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
-              <td style="background-color: beige;">{{ movie.genres }}</td>
+              <td style="background-color: beige;">{{ movie.Genre }}</td>
               <td style=" background-color: beige; {% if movie.stars is none or movie.stars is string and movie.stars.isdigit() == False %}color:white;
           {% elif movie.stars|string|int >= 8 %}color:green;
           {% elif movie.stars|string|int >= 6 %}color:orange;
@@ -196,7 +196,7 @@
             <span>&#128078;</span> <!-- Trash can -->
         
            {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
-              <td>{{ movie.genres }}</td>
+              <td>{{ movie.Genre }}</td>
               <td style="{% if movie.stars is none or movie.stars is string and movie.stars.isdigit() == False %}color:white;
                     {% elif movie.stars|string|int >= 8 %}color:green;
                     {% elif movie.stars|string|int >= 6 %}color:orange;
@@ -244,9 +244,9 @@
         
            {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
             <td><a href='/all-movies/{{movie.year}}'>{{ movie.year }}</a></td>
-            <td><a href='/all-movies/{{movie.director}}'>{{ movie.director }}</a></td>
+            <td><a href='/all-movies/{{movie.DirectorString}}'>{{ movie.DirectorString }}</a></td>
             <td>{{ movie.runtime }} minutes</td>
-            <td>{{ movie.genres }}</td>
+            <td>{{ movie.Genre }}</td>
           </tr>
           {% endfor %}
         </table>
@@ -288,9 +288,9 @@
         
            {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
             <td><a href='/all-movies/{{movie.year}}'>{{ movie.year }}</a></td>
-            <td><a href='/all-movies/{{movie.director}}'>{{ movie.director }}</a></td>
+            <td><a href='/all-movies/{{movie.DirectorString}}'>{{ movie.DirectorString }}</a></td>
             <td>{{ movie.runtime }} minutes</td>
-            <td>{{ movie.genres }}</td>
+            <td>{{ movie.Genre }}</td>
           </tr>
           {% endfor %}
         </table>
@@ -330,8 +330,8 @@
         
            {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
               <td><a href='/all-movies/{{movie.year}}'>{{ movie.year }}</a></td>
-              <td><a href='/all-movies/{{movie.director}}'>{{ movie.director }}</a></td>
-              <td>{{ movie.genres }}</td>
+              <td><a href='/all-movies/{{movie.DirectorString}}'>{{ movie.DirectorString }}</a></td>
+              <td>{{ movie.Genre }}</td>
             </tr>
             {% endfor %}
             {% for movie in relatedMovies %}
@@ -349,9 +349,9 @@
         
            {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
               <td><a href='/all-movies/{{movie.year}}'>{{ movie.year }}</a></td>
-              <td><a href='/all-movies/{{movie.director}}'>{{ movie.director }}</a></td>
+              <td><a href='/all-movies/{{movie.DirectorString}}'>{{ movie.DirectorString }}</a></td>
               <td>{{ movie.runtime }} minutes</td>
-              <td>{{ movie.genres }}</td>
+              <td>{{ movie.Genre }}</td>
             </tr>
             {% endfor %}
           </table>

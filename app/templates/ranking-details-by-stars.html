@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base-home.html' %}
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
@@ -55,6 +55,10 @@
 
       <h4 title="{{ explainSt }}" style="text-align: center; color:orange">
         Suggested Rating: {{ suggestedStar }}/10
+       
+      </h4>
+      <h4  style="text-align: center; color:yellowgreen">
+        Imdb Rating: <a href="https://imdb.com/title/{{movie.imdbId}}" target="_blank">{{ movie.imdbRating }}/10</a> 
        
       </h4>
 

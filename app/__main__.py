@@ -1,6 +1,7 @@
 from app import app
 from app.models import *        # noqa: F403,F401
 from app.controllers import *   # noqa: F403,F401
+import os
 """
 The last 2 imports are needed to connect the
 controller routes to the app instance.
@@ -16,6 +17,7 @@ This file runs the server on port 8081
 """
 
 FLASK_PORT = 8081
+port = int(os.environ.get("PORT", 8080))
 
 if __name__ == "__main__":
     app.run(debug=True, port=FLASK_PORT, host='0.0.0.0')

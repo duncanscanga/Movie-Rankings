@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base-home.html' %}
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
@@ -128,9 +128,9 @@
             <span>&#128078;</span> <!-- Trash can -->
         {% endif %}{% if movie.onComputer %} 🖥️ {% endif %}</td>
       <td><a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></td>
-      <td><a href='/all-movies/{{movie.director}}'> {{ movie.director }} </a></td>
+      <td><a href='/all-movies/{{movie.DirectorString}}'> {{ movie.DirectorString }} </a></td>
       <td>{{ movie.runtime }}</td>
-      <td>{{ movie.genres }}</td>
+      <td>{{ movie.Genre }}</td>
       <td><a href='/current/{{movie.id}}'>Start Watching </a></td>
       <td><a href='/log-movie/{{movie.id}}'>Watched </a></td>
       

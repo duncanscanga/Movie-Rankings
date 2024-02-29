@@ -1,0 +1,36 @@
+{% extends 'base-home.html' %}
+<link rel="stylesheet" href="../static/styles/register.css" />
+
+{% block header %}
+<h1>{% block title %}Register{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<style>
+    label {
+    padding-top: 20px;
+}
+
+/* Temporary until we change it in base-home.html */
+body {
+    height: 100%;
+    width: 100%;
+    background-color: #07070A;
+}
+</style>
+<h4 id='message'>{{message}}</h4>
+<form method="post">
+  <div style="color: red;" class="form-group">
+    <label for="email">Email</label>
+    <input style="color: red;" class="form-control" name="email" id="email" required>
+    <label for="name">Username</label>
+    <input style="color: red;" class="form-control" name="name" id="name" required>
+    <label for="password">Password</label>
+    <input style="color: red;" class="form-control" type="password" name="password" id="password" required>
+    <label for="password">Confirm Password</label>
+    <input style="color: red;" class="form-control" type="password" name="password2" id="password2" required>
+    <input class="btn btn-primary" type="submit" value="Register">
+  </div>
+</form>
+{% endblock %}

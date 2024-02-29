@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base-home.html' %}
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
@@ -27,14 +27,13 @@
         name="year" style="color:blue; caret-color: red;"
         id="year"
         value="{{movie.year}}"
-        required
       />
       <label for="director">Director</label>
       <input
         class="form-control"
         name="director" style="color:blue; caret-color: red;"
         id="director"
-        value="{{movie.director}}"
+        value="{{movie.DirectorString}}"
       />
       <label for="runtime">Runtime</label>
       <input

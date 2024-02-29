@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base-home.html' %}
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
@@ -40,40 +40,75 @@
     </h4>
 
     <div class="row">
-      <h4 class="col-lg-6" style="color: black; "> Year: </h4>
-      <h4 class="col-lg-6" style="color: red; "> <a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></h4>
+      <h4 class="col-lg-3" style="color: black; "> Year: </h4>
+      <h4 class="col-lg-9" style="color: red; "> <a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></h4>
       
     </div>
 
-    <div class="row">
-      <h4 class="col-lg-6" style="color: black; "> Genres: </h4>
-      <h4 class="col-lg-6" style="color: red; "> {{ movie.genres }}</h4>
+   <div class="row">
+        <h4 class="col-lg-3" style="color: black; "> Plot: </h4>
+        <h4 class="col-lg-6" style="color: rgb(104, 95, 95); "> {{ movie.Plot }}</h4>
+
+      </div>
+      <div class="row">
+        <h4 class="col-lg-3" style="color: black; "> Starring: </h4>
+        <h4 class="col-lg-9" style="color: rgb(104, 95, 95); "> {{ movie.Actors }}</h4>
+
+      </div>
+
+      <div class="row">
+        <h4 class="col-lg-3" style="color: black; "> Genres: </h4>
+        <h4 class="col-lg-9" style="color: rgb(104, 95, 95); "> {{ movie.Genre }}</h4>
+
+      </div>
+
+      <div class="row">
+        <h4 class="col-lg-3" style="color: black; "> Director: </h4>
+        <h4 class="col-lg-9" style="color:  rgb(104, 95, 95); "> <a href='/all-movies/{{movie.DirectorString}}'> {{ movie.DirectorString }} </a>
+        </h4>
+
+      </div>
+
+      <div class="row">
+        <h4 class="col-lg-3" style="color: black; "> Writer: </h4>
+        <h4 class="col-lg-9" style="color:  rgb(104, 95, 95); "> {{ movie.Writer }} 
+        </h4>
+
+      </div>
+
+      <div class="row">
+        <h4 class="col-lg-3" style="color: black; "> Runtime: </h4>
+        <h4 class="col-lg-9" style="color:  rgb(104, 95, 95); "> {{ movie.RuntimeString }}</h4>
+
+      </div>
+
+      {% if movie.stars is not none and movie.stars != 0 and movie.stars|string|length > 0 and movie.stars != 'None' %}
+
+      <div class="row">
+        <h4 class="col-lg-6" style="color: black; "> Stars: </h4>
+        <h4 class="col-lg-6" style="{% if movie.stars is none or movie.stars is string and movie.stars.isdigit() == False %}color:white;
+        {% elif movie.stars|string|int >= 8 %}color:green;
+        {% elif movie.stars|string|int >= 6 %}color:orange;
+        {% else %}color:red;
+        {% endif %}"> {{ movie.stars }} / 10
+        </h4>
+
+      </div>
       
+
+      {% endif %}
+
+      <div class="row">
+        <h4 class="col-lg-3" style="color: black; "> Imdb Stars: </h4>
+        <h4 class="col-lg-9" > <a href="https://imdb.com/title/{{movie.imdbId}}" target="_blank">{{ movie.imdbRating }}/10</a>  
+
+        </h4>
+
+      </div>
+
     </div>
 
-    <div class="row">
-      <h4 class="col-lg-6" style="color: black; "> Director: </h4>
-      <h4 class="col-lg-6" style="color: red; "> <a href='/all-movies/{{movie.director}}'>  {{ movie.director }} </a> </h4>
-      
-    </div>
-
-    <div class="row">
-      <h4 class="col-lg-6" style="color: black; "> Runtime: </h4>
-      <h4 class="col-lg-6" style="color: red; "> {{ movie.runtime }} minutes</h4>
-      
-    </div>
-
-    <div class="row">
-      <h4 class="col-lg-6" style="color: black; "> Unwatched: </h4>
-      <h4 class="col-lg-6" style="color: red; "> {{ unwatched }}</h4>
-      
-    </div>
-    <div class="row">
-      <h4 class="col-lg-6" style="color: black; "> Rewatch: </h4>
-      <h4 class="col-lg-6" style="color: red; "> {{ rewatch }}</h4>
-      
-    </div>
-
+<!-- 
     <div class="row" style="padding-top: 10%;">
       <div class="col-6">
     
@@ -139,7 +174,7 @@
           
         </div>
       </div>
-    </div>
+    </div> -->
 
   </div>
 

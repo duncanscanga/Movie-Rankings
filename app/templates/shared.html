@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base-home.html' %}
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
@@ -12,6 +12,10 @@
         <div class="col-12"> <h4>
           Skipped Rankings ({{ flagged|length }}):
         </h4></div>
+        <div class="btn-wrapper">
+          <input class="btn" type="button" value="Re-Rank"
+            onclick="window.open('/rank-by-skipped')" />
+        </div>
        
         <div>
           <div id="movies">
@@ -34,7 +38,7 @@
                     </div>
                     <div class="col-12">
                       <a href='/details/{{ranking.winnerMovieId}}'>
-                        <img src="{{ ranking.winnerMovieId|get_poster((ranking.winnerTitle, ranking.winnerYear, ranking.winnerPoster)) }}" alt="Poster Not Available."> 
+                        <img src="{{ ranking.winnerMovieId|get_poster(ranking.winnerTitle, ranking.winnerYear, ranking.winnerPoster) }}" alt="Poster Not Available."> 
                       </a>
                     </div>
                   </div>
@@ -48,7 +52,7 @@
                     </div>
                     <div class="col-12">
                       <a href='/details/{{ranking.loserMovieId}}'>
-                        <img src="{{ ranking.loserMovieId|get_poster((ranking.loserTitle, ranking.loserYear, ranking.loserPoster)) }}" alt="Poster Not Available."> 
+                        <img src="{{ ranking.loserMovieId|get_poster(ranking.loserTitle, ranking.loserYear, ranking.loserPoster) }}" alt="Poster Not Available."> 
                       </a>
                     </div>
                   </div>

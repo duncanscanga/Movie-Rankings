@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base-home.html' %}
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
@@ -12,6 +12,10 @@
         <div class="col-12"> <h4>
           Flagged Rankings ({{ flagged|length }}):
         </h4></div>
+        <div class="btn-wrapper">
+          <input class="btn" type="button" value="Re-Rank"
+            onclick="window.open('/rank-by-flagged')" />
+        </div>
        
         <div>
           <div id="movies">

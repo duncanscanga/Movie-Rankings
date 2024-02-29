@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base-home.html' %}
 <link rel="stylesheet" href="../static/styles/base.css" />
 
 {% block header %}
@@ -146,11 +146,11 @@
         
            {% endif %} {% if movie.onComputer %} 🖥️ {% endif %}</td>
           <!-- <td><a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></td> -->
-          <!-- <td><a href='/all-movies/{{movie.director}}'> {{ movie.director }} </a></td>
+          <!-- <td><a href='/all-movies/{{movie.DirectorString}}'> {{ movie.DirectorString }} </a></td>
           <td>{{ movie.runtime }}</td> -->
           <!-- <td>{{ movie.rewatchCount }}</td>
           <td>{{ movie.rewatchScore }}</td> -->
-          <!-- <td>{{ movie.genres }}</td> -->
+          <!-- <td>{{ movie.Genre }}</td> -->
           <!-- <td style="color: rgba(33, 63, 140, 0.934);">{{ movie.stars }}/10</td> -->
           <td style="{{ 'color:green;' if movie.stars >= 8 else 'color:orange;' if movie.stars >= 6 else 'color:red;' }}">
             {{ movie.stars }}/10

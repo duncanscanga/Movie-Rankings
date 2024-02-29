@@ -146,7 +146,7 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
         {% endif %}{% if movie.onComputer %} 🖥️ {% endif %}</td>
-            <td>{{ movie.genres }}</td>
+            <td>{{ movie.Genre }}</td>
             <td>{{ movie.runtime }}</td>
             <!-- <td>#{{ movie.rank }}</td> -->
             <td><div class="btn-wrapper">
@@ -285,7 +285,7 @@
             <span>&#128078;</span> <!-- Trash can -->
         
             {% endif %}{% if movie.onComputer %} 🖥️ {% endif %}</td>
-                <!-- <td>{{ movie.genres }}</td>
+                <!-- <td>{{ movie.Genre }}</td>
                 <td>{{ movie.rewatchScore }}</td>
                 <td>#{{ movie.rank }}</td> -->
                 <td> <div class="btn-wrapper">
