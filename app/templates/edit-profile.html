@@ -1,0 +1,58 @@
+{% extends 'base-home.html' %}
+<link rel="stylesheet" href="../static/styles/base.css" />
+
+{% block header %}
+<h1>{% block title %}Update User{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <h1 style="padding-top: 2%;">Update User Profile</h1>
+  <form method="post">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-12">
+          <small class="form-text text-muted">{{error}}</small>
+          <label for="username">Username</label>
+          <input
+            class="form-control"
+            name="username"
+            id="username" style="color:blue; caret-color: red;"
+            value="{{ user.username }}"
+            required
+          />
+        </div>
+        <div class="col-12" style="padding-top: 2%;">
+          <label for="newPassword">New Password</label>
+          <input
+            type="password"
+            class="form-control"
+            name="newPassword"
+            id="newPassword" style="color:blue; caret-color: red;"
+          />
+          <small class="form-text text-muted">Leave blank to keep the current password.</small>
+        </div>
+        <div class="col-12" style="padding-top: 2%;">
+          <label for="confirmNewPassword">Confirm New Password</label>
+          <input
+            type="password"
+            class="form-control"
+            name="confirmNewPassword"
+            id="confirmNewPassword" style="color:blue; caret-color: red;"
+          />
+        </div>
+      </div>
+
+      <div style="padding-top: 2%;" class="btn-wrapper">
+        <input
+          class="btn"
+          type="submit"
+          value="Update Profile"
+        />
+      </div>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

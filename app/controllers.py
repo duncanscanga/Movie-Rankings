@@ -1,7 +1,7 @@
 import json
 from flask import render_template, redirect, request, session, url_for, g
 import os
-from app.models import register, login, addMoviesToListRandom, User, autoRank, autoRankCertain, autoRankList, checkNotLastRanked, confirmLog, createListWithRandomMovies, currentWatchStreak, currentlyWatching, deleteList, duplicateList, find_all_movies_to_watch, find_all_unwatched_filtered_movies, find_all_unwatched_movies, find_all_watched_filtered_movies, find_all_watched_movies, find_best_movies_by_win_percentage, find_current_watch_movies, find_filtered_currently_movies, find_filtered_movies_by_win_percentage, find_filtered_movies_first_logged, find_filtered_movies_forRanking, find_movies_by_genre_filter, find_recently_watched_days, findHourCountAll, findHourCountThisYear, findMoviesForMonth, findMoviesWithHighestWinPercentage, findNumOfCurrentWatch, findNumOfFirstWatchedMovies, findNumOfFlaggedRankings, findNumOfMoviesInMonth, findNumOfMoviesInWeek, findNumOfMoviesToConfriM, findNumOfMoviesToRecommend, findNumOfMoviesWeek, findNumOfReversedMovies, findNumOfSkippedRankings, findNumOfupset, findUniqueMovieRankings, findmoviesToRecommend, getBestOfEachYear, getBiggestUpsets, getClosestRankings, getFlaggedMovies, getFlaggedRankings, getLatestSession, getLikedMovies, getListOfYears, getListsForMovie, getListsOfPeople, getMovie, getMoviesRankedInSession, getRankOfRecentMovies, getRankingForStars, getRankingStartDate, getRankingsInList, getRecentRankings, getRecommendedMovies, getSharedRankings, getSkippedMovies, getTimesRankedString, getTimesWatched, getTopMoviesInRankingSession, getUniqueMovies, getUniqueMoviesFromList, getUniqueMoviesReank, getUniqueRankingForMovie, getUniqueRankingStarForMovie, getUniqueRankingStarForStarRangeSpecificMovie, getUniqueRankingStarForStarSpecificMovie, getUniquieProximity, getUnwatchedMoviesFromList, getUpsets, getUpsetsRankings, getmidMovies, getunlikedMovies, isOpenSession, longestWatchStreak, misLikedUosetLoserss, misLikedUosets, movieForMovieFromList, predictStars, removeCurrentWatch, removeFlagFromRanking, removeSharedMovie, reverseFlaggedRanking, saveForLater, saveRanking, removeSavedRanking,  add_list, addMovieToList, find_all_filtered_movies_without, find_all_movies_without, find_filtered_movies_logged, find_list_by_id, getAllLists, getListDetails, getListDetailsFromNAme, getListPeople, getMovieLog, getMovieWatches, getMoviesFromList, getPerson, getRandomMovieByList, log_movie, findNumOfRewatchedMovies, removeMovieFromList, reverseLastRank, getLastRanking,  getRankings, getPlusMinusMovies,  getMovieDetails, findMoviesWithMostPointsGained, findMoviesWithHighestWins, findNumOfWatchedMovies, findNumOfUnwatchedMovies, findNumOfMovies, findNumOfRanking, find_filtered_rewatched_movies, find_filtered_unwatched_movies, find_all_movies,  find_filtered_movies_by_stars, find_filtered_movies, filterRecentWatched, getRandomUnrankedMovie, getRandomRecentMovie, find_best_movies,  find_recently_watched, getMovieGenres, find_top_movies, getProximityMovie, deleteMovie, startedSession, top_directors, top_movie_from_year, top_movie_from_year_ordered, uncofnrimtedLogs, unloggedMovies, update_list, update_log, update_movie, find_unwatched_movies, unRewatchMovie, rewatchMovie, getRandomMovie, updateData, updateLiked, updatePoster, updateRankings, getMovieById, find_rewatch_movies, find_genres, find_movies_by_genre, updateMovie, find_genres_by_id, getRandomMovieByGenre, add_movie
+from app.models import register, login, addMoviesToListRandom, User, autoRank, autoRankCertain, autoRankList, checkNotLastRanked, confirmLog, createListWithRandomMovies, currentWatchStreak, currentlyWatching, deleteList, duplicateList, find_all_movies_to_watch, find_all_unwatched_filtered_movies, find_all_unwatched_movies, find_all_watched_filtered_movies, find_all_watched_movies, find_best_movies_by_win_percentage, find_current_watch_movies, find_filtered_currently_movies, find_filtered_movies_by_win_percentage, find_filtered_movies_first_logged, find_filtered_movies_forRanking, find_movies_by_genre_filter, find_recently_watched_days, findHourCountAll, findHourCountThisYear, findMoviesForMonth, findMoviesWithHighestWinPercentage, findNumOfCurrentWatch, findNumOfFirstWatchedMovies, findNumOfFlaggedRankings, findNumOfMoviesInMonth, findNumOfMoviesInWeek, findNumOfMoviesToConfriM, findNumOfMoviesToRecommend, findNumOfMoviesWeek, findNumOfReversedMovies, findNumOfSkippedRankings, findNumOfupset, findUniqueMovieRankings, findmoviesToRecommend, getBestOfEachYear, getBiggestUpsets, getClosestRankings, getFlaggedMovies, getFlaggedRankings, getLatestSession, getLikedMovies, getListOfYears, getListsForMovie, getListsOfPeople, getMovie, getMoviesRankedInSession, getRankOfRecentMovies, getRankingForStars, getRankingStartDate, getRankingsInList, getRecentRankings, getRecommendedMovies, getSharedRankings, getSkippedMovies, getTimesRankedString, getTimesWatched, getTopMoviesInRankingSession, getUniqueMovies, getUniqueMoviesFromList, getUniqueMoviesReank, getUniqueRankingForMovie, getUniqueRankingStarForMovie, getUniqueRankingStarForStarRangeSpecificMovie, getUniqueRankingStarForStarSpecificMovie, getUniquieProximity, getUnwatchedMoviesFromList, getUpsets, getUpsetsRankings, getmidMovies, getunlikedMovies, isOpenSession, longestWatchStreak, misLikedUosetLoserss, misLikedUosets, movieForMovieFromList, predictStars, removeCurrentWatch, removeFlagFromRanking, removeSharedMovie, reverseFlaggedRanking, saveForLater, saveRanking, removeSavedRanking,  add_list, addMovieToList, find_all_filtered_movies_without, find_all_movies_without, find_filtered_movies_logged, find_list_by_id, getAllLists, getListDetails, getListDetailsFromNAme, getListPeople, getMovieLog, getMovieWatches, getMoviesFromList, getPerson, getRandomMovieByList, log_movie, findNumOfRewatchedMovies, removeMovieFromList, reverseLastRank, getLastRanking,  getRankings, getPlusMinusMovies,  getMovieDetails, findMoviesWithMostPointsGained, findMoviesWithHighestWins, findNumOfWatchedMovies, findNumOfUnwatchedMovies, findNumOfMovies, findNumOfRanking, find_filtered_rewatched_movies, find_filtered_unwatched_movies, find_all_movies,  find_filtered_movies_by_stars, find_filtered_movies, filterRecentWatched, getRandomUnrankedMovie, getRandomRecentMovie, find_best_movies,  find_recently_watched, getMovieGenres, find_top_movies, getProximityMovie, deleteMovie, startedSession, top_directors, top_movie_from_year, top_movie_from_year_ordered, uncofnrimtedLogs, unloggedMovies, update_list, update_log, update_movie, find_unwatched_movies, unRewatchMovie, rewatchMovie, getRandomMovie, update_user_info, updateData, updateLiked, updatePoster, updateRankings, getMovieById, find_rewatch_movies, find_genres, find_movies_by_genre, updateMovie, find_genres_by_id, getRandomMovieByGenre, add_movie
 from babel.dates import format_date, format_datetime, format_time
 from app import app
 import random
@@ -10,7 +10,7 @@ from flask import jsonify
 import requests
 from urllib.parse import quote_plus
 from functools import wraps
-
+from urllib.parse import urlparse, urljoin
 
 def authenticate(f):
     @wraps(f)
@@ -22,44 +22,60 @@ def authenticate(f):
                 if user:
                     g.current_user = user  # Store the user in g
                     return f(*args, **kwargs)
+                else:
+                    print('No user found for email:', email)
             except Exception as e:
-                # Handle exception or log it
-                pass
-        # Redirect to login if the user is not authenticated or an exception occurred
-        return redirect('/login')
+                print('Error during authentication:', e)
+        else:
+            print('No logged_in key in session')
+        
+        next_url = request.url
+        print('Redirecting to login, next_url:', next_url)
+        # Make sure the redirect URL is safe
+        safe_next_url = urljoin(request.host_url, next_url)
+        if is_safe_url(safe_next_url):
+            return redirect(url_for('login_get', next=next_url))
+        else:
+            return redirect(url_for('login_get'))
     return decorated_function
+
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
+
+def get_safe_next_url(request, default='index'):  # Assuming 'home' is the endpoint for your homepage
+    next_page = request.args.get('next', url_for(default))
+    if is_safe_url(next_page):
+        return next_page
+    return url_for(default)
 
 @app.route('/login', methods=['GET'])
 def login_get():
-    return render_template('login.html',
-                           message='Please login to your account')
-
+    # Check if user is already logged in
+    if 'logged_in' in session:
+        # User is already logged in, redirect to next page or home
+        next_page = get_safe_next_url(request)
+        return redirect(next_page)
+    else:
+        # Store the URL the user was trying to access, or default to home page
+        next_page = get_safe_next_url(request, default='home')
+        session['next'] = next_page  # Store in session to use after POST
+        return render_template('login.html', message='Please login to your account')
 
 @app.route('/login', methods=['POST'])
 def login_post():
     email = request.form.get('email')
     password = request.form.get('password')
-    user = login(email, password)
+    user = login(email, password)  # Ensure you have defined or imported the login function appropriately
     if user:
         session['logged_in'] = user.email
-        """
-        Session is an object that contains sharing information
-        between a user's browser and the end server.
-        Typically it is packed and stored in the browser cookies.
-        They will be past along between every request the browser made
-        to this services. Here we store the user object into the
-        session, so we can tell if the client has already login
-        in the following sessions.
-        """
-        # success! go back to the home page
-        # code 303 is to force a 'GET' request
-        #return redirect('/', code=303)
-        return redirect('rank-by-unique')
+        next_page = session.pop('next', url_for('home'))  # Assuming 'index' is the function name of your home page route
+        if not is_safe_url(next_page):
+            next_page = url_for('home')
+        return redirect(next_page, code=303)
     else:
-        return render_template('login.html',
-                               message='Incorrect email or password.')
-
-
+        return render_template('login.html', message='Incorrect email or password.')
 @app.route('/trending')
 @authenticate
 def trending():
@@ -287,7 +303,7 @@ def logout():
 
 @app.route('/')
 @authenticate
-def home():
+def index():
     movies = []
     #print("1")
     rankingCountMonth = findNumOfRanking(30)
@@ -1613,40 +1629,45 @@ def add_list_post():
 @app.route('/add-movie', methods=['GET'])
 @authenticate
 def add_movie_get():
-    genres = find_genres()
-    allGenres = ""
-    for genre in genres:
-        allGenres += genre.name + " , "
-    allGenres = allGenres[:-2]
-    return render_template('add-movie.html', allGenres = allGenres)
+    # genres = find_genres()
+    # allGenres = ""
+    # for genre in genres:
+    #     allGenres += genre.name + " , "
+    # allGenres = allGenres[:-2]
+    return render_template('add-movie.html', allGenres = "")
 
 @app.route('/add-movie', methods=['POST'])
 @authenticate
 def add_movie_post():
     new_title = request.form.get('title').strip()
     new_year = request.form.get('year')
-    new_poster = request.form.get('poster')
-    newFirstGenre = request.form.get('firstGenre')
-    newSecondGenre = request.form.get('secondGenre')
-    new_director = request.form.get('director')
-    new_runtime = request.form.get('runtime')
-    rewatched = request.form.get('rewatched')
-    faveQuote = request.form.get('faveQuote')
-    notes = request.form.get('notes')
-    stars = request.form.get('stars')
-    recommend = request.form.get('recommend')
-    date = request.form.get('date')
-    location = request.form.get('locationOfWatch')
-    people = request.form.get('people')
-    watchNotes = request.form.get('watchNotes')
-    if rewatched == None:
-        rewatched = 0
-    else:
-        rewatched = 1
-    if new_poster is not None and len(new_poster) > 0:
-        if not new_poster.endswith('.jpg'):
-            new_poster = new_poster + '.jpg'
-    success = add_movie(new_title, new_year, people, new_director, new_runtime, rewatched, new_poster, newFirstGenre, newSecondGenre, notes, stars, recommend, date, location, faveQuote, watchNotes)
+    # new_poster = request.form.get('poster')
+    # newFirstGenre = request.form.get('firstGenre')
+    # newSecondGenre = request.form.get('secondGenre')
+    # new_director = request.form.get('director')
+    # new_runtime = request.form.get('runtime')
+    # rewatched = request.form.get('rewatched')
+    # faveQuote = request.form.get('faveQuote')
+    # notes = request.form.get('notes')
+    # stars = request.form.get('stars')
+    # recommend = request.form.get('recommend')
+    # date = request.form.get('date')
+    # location = request.form.get('locationOfWatch')
+    # people = request.form.get('people')
+    # watchNotes = request.form.get('watchNotes')
+    # if rewatched == None:
+    #     rewatched = 0
+    # else:
+    #     rewatched = 1
+    # if new_poster is not None and len(new_poster) > 0:
+    #     if not new_poster.endswith('.jpg'):
+    #         new_poster = new_poster + '.jpg'
+    
+    if g.current_user.id == 1:
+        #search titles of similar movies and then confirm add.
+        x = 1
+    success = add_movie(new_title, new_year, g.current_user)
+    #success = add_movie(new_title, new_year, "", "", "", rewatched, new_poster, "", "", "", stars, recommend, date, location, faveQuote, watchNotes, g.current_user)
     if success > 0:
         return redirect('/details/' + str(success))
     return render_template('add-movie.html')
@@ -2133,10 +2154,6 @@ def rankingDetailsGet(movie_id):
     rankings = getRankings(movie_id)
     
 
-    
-    
-
-
     return render_template('ranking-details.html', movie = movie,  winners=rankings[0],  losers=rankings[1])
 
 @app.route('/ranking-details-by-stars/<int:movie_id>', methods=['GET'])
@@ -2223,6 +2240,39 @@ def updateMoviePost(movie_id):
     urlBuild = '/details/' + str(movie_id)
     return redirect(urlBuild)
 
+@app.route('/profile', methods=['GET'])
+@authenticate
+def updateUserGet():
+    # Assuming g.current_user is already set by your authentication system
+    # and it has attributes like username, etc.
+    return render_template('edit-profile.html', user=g.current_user)
+
+@app.route('/profile', methods=['POST'])
+@authenticate
+def updateUserPost():
+    # Retrieve form data
+    new_username = request.form.get('username')
+    new_password = request.form.get('newPassword')
+    confirm_new_password = request.form.get('confirmNewPassword')
+
+
+    # Perform checks and validations here (e.g., password match, unique username)
+    if len(new_password) > 0 and len(confirm_new_password) > 0 and new_password != confirm_new_password:
+        # Handle error, maybe return to the form with an error message
+        return render_template('edit-profile.html', user=g.current_user, error="Passwords do not match.")
+
+    # Assuming you have a function to update user information, e.g., update_user_info
+    # This function would also handle password hashing
+    update_result = update_user_info(g.current_user.id, new_username, new_password)
+
+    if update_result:
+        # Assuming update was successful, redirect to a confirmation page or back to profile
+        return redirect('/')
+    else:
+        # Handle case where update fails, such as username already exists
+        return render_template('edit-profile.html', user=g.current_user, error="Update failed. Please try again.")
+
+
 
 @app.route('/update-list/<int:list_id>', methods=['POST'])
 @authenticate
@@ -2262,7 +2312,7 @@ def logMoviePost(movie_id):
     newPeople = request.form.get('newPeople')
     newNotes = request.form.get('newNotes')
     newDate = request.form.get('newDate')
-    log_movie(movie_id, notes, stars, recommend, faveQuote, newLocation, newPeople, newNotes, newDate)
+    log_movie(movie_id, notes, stars, recommend, faveQuote, newLocation, newPeople, newNotes, newDate, g.current_user)
     urlBuild = '/details/' + str(movie_id)
     return redirect(urlBuild)
 

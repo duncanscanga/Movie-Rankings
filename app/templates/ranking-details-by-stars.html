@@ -8,7 +8,56 @@
 {% block content %}
 <form method="post">
 
-<div class="container">
+  <style>
+    .poster-wrapper {
+      position: relative;
+      display: inline-block;
+      overflow: hidden;
+      text-align: center !important;
+      /* Ensure that the blur does not extend outside the image area */
+    }
+  
+    .poster-wrapper img {
+      width: 100%;
+      display: block;
+      transition: filter 0.5s ease-in-out;
+      /* Smooth transition for the blur effect */
+    }
+  
+    .poster-wrapper .hover-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.7);
+      /* Light background with some opacity */
+      background-size: contain;
+      color: black;
+      /* Text color */
+      border-radius: 5px;
+      /* Soften the edges */
+      font-size: 20px;
+      /* Adjust based on your design */
+      visibility: hidden;
+      /* Hidden by default */
+      opacity: 0;
+      transition: visibility 0s, opacity 0.5s ease-in-out;
+    }
+  
+    .poster-wrapper:hover img {
+      filter: blur(2px);
+      /* Apply blur to the image on hover */
+    }
+  
+    .poster-wrapper:hover .hover-text {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+  
+
+
+<div >
   <div class="row">
     <div class="col-12" >
       <div>
@@ -34,15 +83,15 @@
       <input class="btn" type="submit" value="Rank" />
       <div class="btn-wrapper">
         <input class=" col-12 btn" type="button" value="Rank From {{star - 0.5}} to {{star + 0.5}}"
-          onclick="location.href = '/rank-by-specific-star-range/{{movie.id}}/{{star}}'" />
+          onclick="window.open('/rank-by-specific-star-range/{{movie.id}}/{{star}}')" />
       </div>
       <div class="btn-wrapper">
         <input class=" col-12 btn" type="button" value="Rank By All Stars"
-          onclick="location.href = '/rank-by-stars/{{movie.id}}'" />
+          onclick="window.open('/rank-by-stars/{{movie.id}}')" />
       </div>
       <div class="btn-wrapper">
         <input class="btn" type="button" value="Edit Movie"
-          onclick="location.href = '/log-movie/{{movie.id}}'" />
+          onclick="window.open('/log-movie/{{movie.id}}')" />
       </div>
         </div>
       </div>

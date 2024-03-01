@@ -52,7 +52,7 @@
                 {% for movie in r[0] %}
                 <tr>
                   <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img
-                        src="{{ movie.title|get_poster}}" alt="Poster Not Available."> </a></td>
+                        src="{{ movie.id|get_poster(movie.title, movie.year, movie.poster)}}" alt="Poster Not Available."> </a></td>
                   <td><a style="color: brown;" style="color: brown;"
                       href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' target="_blank"> <u>
                         {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
@@ -80,7 +80,7 @@
                 {% for movie in r[1] %}
                 <tr>
                   <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img
-                        src="{{ movie.title|get_poster}}" alt="Poster Not Available."> </a></td>
+                        src="{{ movie.id|get_poster(movie.title, movie.year, movie.poster)}}" alt="Poster Not Available."> </a></td>
                   <td style="background-color: beige;"><a href='http://www.google.com/search?q={{movie.title}}'
                       target="_blank"> <u> {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
             <span style="color: red;">&#128077;</span> <!-- Red heart -->
@@ -107,7 +107,7 @@
                 {% for movie in r[2] %}
                 <tr>
                   <td style="width: 16%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img
-                        src="{{ movie.title|get_poster}}" alt="Poster Not Available."> </a></td>
+                        src="{{ movie.id|get_poster(movie.title, movie.year, movie.poster)}}" alt="Poster Not Available."> </a></td>
                   <td><a style="color: brown;" href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})'
                       target="_blank"> <u> {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
             <span style="color: red;">&#128077;</span> <!-- Red heart -->
@@ -212,7 +212,7 @@
           {% for movie in hottestMovies %}
           <tr>
             <td style="width: 10%;"> <a href='/details/{{movie.id}}' title="#{{movie.rank}}"><img
-                  src="{{ movie.title|get_poster}}" alt="Poster Not Available."> </a></td>
+                  src="{{ movie.id|get_poster(movie.title, movie.year, movie.poster)}}" alt="Poster Not Available."> </a></td>
             <td><a style="color: brown;" href='http://www.google.com/search?q={{movie.title}} ({{movie.year}})' target="_blank"> <u> {{ movie.title }}  </u></a> {% if movie.liked == 1 %}
             <span style="color: red;">&#128077;</span> <!-- Red heart -->
           {% elif movie.liked == 2 %}

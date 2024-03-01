@@ -118,8 +118,19 @@
         </ul>
         <ul class="navbar-nav">
           {% if 'logged_in' in session %}
-          <li class="nav-item">
-            <a class="nav-link" href="/logout">Logout</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {% if g.current_user %}
+              {{ g.current_user.username }}
+              {% else %}                
+              {% endif %}
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <!-- Add FontAwesome icon for Profile -->
+              <a class="dropdown-item" href="/profile"><i class="fas fa-user"></i> Profile</a>
+              <!-- Add FontAwesome icon for Logout -->
+              <a class="dropdown-item" href="/logout"><i class="fas fa-lock"></i> Logout</a>
+            </div>
           </li>
           {% else %}
           <li class="nav-item">
@@ -129,6 +140,8 @@
         </ul>
       </div>
     </nav>
+    
+    
 
     <div class="wrapper" style="padding-top: 5px; padding-left: 5%; padding-right: 5%;">
       <div class="col-xl-12 col-lg-12 col-sm-12 col-md-12">{% block content %}{% endblock %}</div>

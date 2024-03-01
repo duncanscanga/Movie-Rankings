@@ -36,9 +36,60 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     # Stores the password
     password = db.Column(db.String(80), nullable=False)
+    role = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
         return "<User %r>" % self.id
+
+class TempMovie(db.Model):
+    """A class to represent a movie."""
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120), nullable=False)
+    year = db.Column(db.Integer, nullable=False)
+    rewatch = db.Column(db.Boolean, nullable=True)
+    rewatchScore = db.Column(db.Integer, nullable=False)
+    rewatchCount = db.Column(db.Integer, nullable=False)
+    rewatchCountList = db.Column(db.Integer, nullable=False)
+    cinematicScore = db.Column(db.Integer, nullable=False)
+    cinematicCount = db.Column(db.Integer, nullable=False)
+    poster = db.Column(db.String(100), nullable=True)
+    rank = db.Column(db.Integer, nullable=True)
+    unwatched = db.Column(db.Boolean, nullable=True)
+    director = db.Column(db.String(120), nullable=True)
+    runtime = db.Column(db.Integer, nullable=True)
+    lastWatchedDate = db.Column(db.Date, nullable=True)
+    notes = db.Column(db.String(1000), nullable=True)
+    stars = db.Column(db.Integer, nullable=True)
+    recommend = db.Column(db.String(120), nullable=True)
+    genres = db.Column(db.String(500), nullable=True)
+    location = db.Column(db.String(500), nullable=True)
+    rankingPercentage = db.Column(db.Integer, nullable=True)
+    rankingPercentageList = db.Column(db.Integer, nullable=True)
+    rankingWinCount = db.Column(db.Integer, nullable=True)
+    rankingWinCountList = db.Column(db.Integer, nullable=True)
+    pointsGained = db.Column(db.Integer, nullable=True)
+    winsGained = db.Column(db.Integer, nullable=True)
+    faveQuote = db.Column(db.String(500), nullable=True)
+    timesWatched = db.Column(db.Integer, nullable=True)
+    currentlyWatching = db.Column(db.Boolean, nullable=True)
+    beatBelow = db.Column(db.Boolean, nullable=True)
+    liked = db.Column(db.Integer, nullable=True)
+    winnerUpsetCount = db.Column(db.Integer, nullable=True)
+    loserUpsetCount = db.Column(db.Integer, nullable=True)
+    onComputer = db.Column(db.Boolean, nullable=True)
+    RuntimeString = db.Column(db.String(800), nullable=True)
+    Writer = db.Column(db.String(800), nullable=True)
+    DirectorString = db.Column(db.String(800), nullable=True)
+    Actors = db.Column(db.String(800), nullable=True)
+    Plot = db.Column(db.String(800), nullable=True)
+    imdbId = db.Column(db.String(800), nullable=True)
+    Genre = db.Column(db.String(800), nullable=True)
+    imdbRating = db.Column(db.String(800), nullable=True)
+    dataUpdateDate = db.Column(db.DateTime, nullable=True)
+    userId = db.Column(db.Integer, nullable=True)
+
+    def __repr__(self):
+        return "<TempMovie %r>" % self.title
 
 class Movie(db.Model):
     """A class to represent a movie."""
@@ -88,6 +139,57 @@ class Movie(db.Model):
 
     def __repr__(self):
         return "<Movie %r>" % self.title
+    
+class UserMovie(db.Model):
+    """A class to represent a movie and a user's relation."""
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120), nullable=False)
+    year = db.Column(db.Integer, nullable=False)
+    rewatch = db.Column(db.Boolean, nullable=True)
+    rewatchScore = db.Column(db.Integer, nullable=False)
+    rewatchCount = db.Column(db.Integer, nullable=False)
+    rewatchCountList = db.Column(db.Integer, nullable=False)
+    cinematicScore = db.Column(db.Integer, nullable=False)
+    cinematicCount = db.Column(db.Integer, nullable=False)
+    poster = db.Column(db.String(100), nullable=True)
+    rank = db.Column(db.Integer, nullable=True)
+    unwatched = db.Column(db.Boolean, nullable=True)
+    director = db.Column(db.String(120), nullable=True)
+    runtime = db.Column(db.Integer, nullable=True)
+    lastWatchedDate = db.Column(db.Date, nullable=True)
+    notes = db.Column(db.String(1000), nullable=True)
+    stars = db.Column(db.Integer, nullable=True)
+    recommend = db.Column(db.String(120), nullable=True)
+    genres = db.Column(db.String(500), nullable=True)
+    location = db.Column(db.String(500), nullable=True)
+    rankingPercentage = db.Column(db.Integer, nullable=True)
+    rankingPercentageList = db.Column(db.Integer, nullable=True)
+    rankingWinCount = db.Column(db.Integer, nullable=True)
+    rankingWinCountList = db.Column(db.Integer, nullable=True)
+    pointsGained = db.Column(db.Integer, nullable=True)
+    winsGained = db.Column(db.Integer, nullable=True)
+    faveQuote = db.Column(db.String(500), nullable=True)
+    timesWatched = db.Column(db.Integer, nullable=True)
+    currentlyWatching = db.Column(db.Boolean, nullable=True)
+    beatBelow = db.Column(db.Boolean, nullable=True)
+    liked = db.Column(db.Integer, nullable=True)
+    winnerUpsetCount = db.Column(db.Integer, nullable=True)
+    loserUpsetCount = db.Column(db.Integer, nullable=True)
+    onComputer = db.Column(db.Boolean, nullable=True)
+    RuntimeString = db.Column(db.String(800), nullable=True)
+    Writer = db.Column(db.String(800), nullable=True)
+    DirectorString = db.Column(db.String(800), nullable=True)
+    Actors = db.Column(db.String(800), nullable=True)
+    Plot = db.Column(db.String(800), nullable=True)
+    imdbId = db.Column(db.String(800), nullable=True)
+    Genre = db.Column(db.String(800), nullable=True)
+    imdbRating = db.Column(db.String(800), nullable=True)
+    dataUpdateDate = db.Column(db.DateTime, nullable=True)
+    userId = db.Column(db.Integer, nullable=True)
+    movieId = db.Column(db.Integer, nullable=True)
+
+    def __repr__(self):
+        return "<User Movie %r>" % self.title
     
 
 class Genre(db.Model):
@@ -208,6 +310,7 @@ class MovieWatch(db.Model):
     firstWatch = db.Column(db.Boolean, nullable=True)
     movieLiked = db.Column(db.Integer, nullable=True)
     confirmedStars = db.Column(db.Boolean, nullable=True)
+    userId = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
         return "<Movie_Watch %r>" % self.movieId
@@ -218,6 +321,7 @@ class List(db.Model):
     name = db.Column(db.String(500), nullable=False)
     notes = db.Column(db.String(500), nullable=True)
     count = db.Column(db.Integer, nullable=True)
+    userId = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
         return "<List %r>" % self.name
@@ -230,6 +334,7 @@ class ListMovie(db.Model):
     movieName = db.Column(db.String(500), nullable=True)
     moviePoster = db.Column(db.String(500), nullable=True)
     listName = db.Column(db.String(500), nullable=True)
+    userId = db.Column(db.Integer, nullable=True)
 
 
     def __repr__(self):
@@ -1025,7 +1130,7 @@ BadMoviesCount AS (
 def find_best_movies_by_win_percentage():
     movies = Movie.query.filter(
                                 and_(
-                                        Movie.unwatched != 1
+                                        Movie.unwatched != 1,
                                     )
                                 ).order_by(text("rankingPercentage desc, rankingWinCount desc,  rewatchCount asc")).all()    
     return set_ranks(movies)
@@ -1098,6 +1203,10 @@ def find_top_movies(num):
 
 def find_movies_all():
     movies = Movie.query.filter(Movie.unwatched != 1).order_by(desc(Movie.rewatchScore)).all()
+    return set_ranks(movies)
+
+def find_movies2_all():
+    movies = Movie.query.filter(and_(Movie.unwatched != 1, Movie.rewatch != 1)).order_by(desc(Movie.rewatchScore)).all()
     return set_ranks(movies)
 
 def find_all_movies():
@@ -3245,36 +3354,23 @@ def saveForLater(winnerId, loserId):
     db.session.add(ranking)
     db.session.commit()
 
-def add_movie(new_title, new_year, people, new_director, new_runtime, rewatched, new_poster, newFirstGenre, newSecondGenre, notes, stars, recommend, date, location, faveQuote, watchNotes):
-    if date is not None and date != '' and date != "":
-        newDate = datetime.strptime(date, '%Y-%m-%d')
+def add_movie(new_title, new_year, user):
+    if user.role == 1:
+        print("here")
+        movie = Movie(title=new_title, year=new_year, rewatch=False, rewatchScore=1500, rewatchCount=0, cinematicScore=1500, cinematicCount=0, poster="",
+     unwatched=True, director="", runtime="", notes="", stars="", recommend="",  location="", rankingPercentage=0, rankingWinCount=0, faveQuote="")
+        db.session.add(movie)
+        db.session.commit()
+
+        movie = Movie.query.filter(Movie.title == new_title).all()[0]
+
+        db.session.commit()
     else:
-        newDate = None
-    if len(people) > 0 or len (location) > 0 or (date != None and date != ""):
-        unwateched = 0
-    else:
-        unwateched = 1
-    movie = Movie(title=new_title, year=new_year, rewatch=rewatched, rewatchScore=1500, rewatchCount=0, cinematicScore=1500, cinematicCount=0, poster="",
-     unwatched=unwateched, director=new_director, runtime=new_runtime, notes=notes, stars=stars, recommend=recommend, lastWatchedDate=newDate, location=location, rankingPercentage=0, rankingWinCount=0, faveQuote=faveQuote)
-    db.session.add(movie)
-    db.session.commit()
-
-    movie = Movie.query.filter(Movie.title == new_title).all()[0]
-
-    firstGenre = Genre.query.filter(Genre.name == newFirstGenre).all()
-    if(firstGenre is not None and len(firstGenre) > 0):
-        firstMovieGenre = MovieGenre(movieId=movie.id,genreId=firstGenre[0].id)
-        db.session.add(firstMovieGenre)
-
-    secondGenre = Genre.query.filter(Genre.name == newSecondGenre).all()
-    if(secondGenre is not None and len(secondGenre) > 0):
-        secondMovieGenre = MovieGenre(movieId=movie.id,genreId=secondGenre[0].id)
-        db.session.add(secondMovieGenre)
-
-    log_movie(movie.id, movie.notes, movie.stars, movie.recommend, movie.faveQuote, location, people, watchNotes, date)
-
-    db.session.commit()
-
+        movie = TempMovie(title=new_title, year=new_year, rewatch=False, rewatchScore=1500, rewatchCount=0, cinematicScore=1500, cinematicCount=0, poster="",
+     unwatched=True, director="", runtime="", notes="", stars="", recommend="", location="", rankingPercentage=0, rankingWinCount=0, faveQuote="")
+        db.session.add(movie)
+        db.session.commit()
+        return 0
 
     return movie.id
 
@@ -3473,6 +3569,13 @@ def update_log(movie_id, location, newPeople, newNotes, date, faveQuote, recomme
 
     return log.movieId
 
+def update_user_info(id, new_username, new_password):
+    user = User.query.filter(User.id == id).first()
+    user.username = new_username
+    if len(new_password) > 3:
+        user.password = new_password
+    db.session.commit()
+    return True
 
 def update_movie(movie_id, new_title, new_year, unwatched, rewatched, new_poster, new_firstGenre, new_secondGenre, new_director, new_runtime, notes, stars, recommend, date, location, faveQuote, liked, onComputer):
     movie = Movie.query.filter(Movie.id == movie_id).all()[0]
@@ -3591,7 +3694,7 @@ def isOpenSession():
 
 
 
-def log_movie(movie_id, notes, stars, recommend, faveQuote, newLocation, newPeople, newNotes, newDate):
+def log_movie(movie_id, notes, stars, recommend, faveQuote, newLocation, newPeople, newNotes, newDate, user):
     movie = Movie.query.filter(Movie.id == movie_id).all()[0]
     movie.notes = notes
     movie.stars = stars
@@ -3641,7 +3744,7 @@ def log_movie(movie_id, notes, stars, recommend, faveQuote, newLocation, newPeop
             #the movie does not have stars 
             confirmStars = True
 
-    movieWatch = MovieWatch(movieId=movie_id, location=newLocation, people=newPeople, notes=newNotes, watchDate=NewnewDate, firstWatch=isFirstWatch, confirmedStars=confirmStars)
+    movieWatch = MovieWatch(movieId=movie_id, location=newLocation, people=newPeople, notes=newNotes, watchDate=NewnewDate, firstWatch=isFirstWatch, confirmedStars=confirmStars, userId=user.id)
     db.session.add(movieWatch)
 
     if NewnewDate is not None and isFirstWatch:
@@ -3766,7 +3869,7 @@ AND NOT EXISTS (
     WHERE ((r.winnerMovieId = m1.id AND r.loserMovieId = m2.id) OR (r.winnerMovieId = m2.id AND r.loserMovieId = m1.id))
     AND r.overwriteRankingId IS NULL
 )
-LIMIT 1 OFFSET ABS(RANDOM()) % (SELECT COUNT(*) FROM list_movie WHERE listId = :listId);
+LIMIT 1 
 """)
 
 
@@ -4220,7 +4323,7 @@ def findMoviesByIdList(ids):
     return rankings
 
 def getProximityMovie():
-    movies = find_movies_all()
+    movies = find_movies2_all()
     result = []
     
     size = len(movies)
