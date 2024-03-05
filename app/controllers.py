@@ -55,12 +55,12 @@ def login_get():
     # Check if user is already logged in
     if 'logged_in' in session:
         # User is already logged in, redirect to next page or home
-        next_page = get_safe_next_url(request)
-        return redirect(next_page)
+        # next_page = get_safe_next_url(request)
+        return redirect('/')
     else:
         # Store the URL the user was trying to access, or default to home page
-        next_page = get_safe_next_url(request, default='home')
-        session['next'] = next_page  # Store in session to use after POST
+        #next_page = get_safe_next_url(request, default='home')
+        # session['next'] = next_page  # Store in session to use after POST
         return render_template('login.html', message='Please login to your account')
 
 @app.route('/login', methods=['POST'])
@@ -70,10 +70,11 @@ def login_post():
     user = login(email, password)  # Ensure you have defined or imported the login function appropriately
     if user:
         session['logged_in'] = user.email
-        next_page = session.pop('next', url_for('home'))  # Assuming 'index' is the function name of your home page route
-        if not is_safe_url(next_page):
-            next_page = url_for('home')
-        return redirect(next_page, code=303)
+        #next_page = session.pop('next', url_for('home'))  # Assuming 'index' is the function name of your home page route
+        # if not is_safe_url(next_page):
+        #     next_page = url_for('home')
+        #return redirect(next_page, code=303)
+        return redirect('/')
     else:
         return render_template('login.html', message='Incorrect email or password.')
 @app.route('/trending')
@@ -1344,10 +1345,10 @@ def rank_by_unransfdsfkdafeggeed():
 
 
 
-    buttonName = "View Skipped"
-    buttonValue = "/skipped"
+    buttonName = "View Flagged"
+    buttonValue = "/flagged"
 
-    title = "Rank By Skipped"
+    title = "Rank By Flagged"
 
     return render_template('rank.html', title=title, buttonName=buttonName, buttonValue=buttonValue, firstMovie = firstMovie, 
                            secondMovie = secondMovie, list = list,   winner=lastRanked[0], loser=lastRanked[1],flagged=flagged, firstMovieLink=firstMovieLink, secondMovieLink=secondMovieLink)
@@ -2229,9 +2230,9 @@ def updateMoviePost(movie_id):
     else:
         unwatched = 1
     if rewatched == None:
-        rewatched = 0
-    else:
         rewatched = 1
+    else:
+        rewatched = 0
     if onComputer == None:
         onComputer = 0
     else:
@@ -2375,7 +2376,7 @@ def auto_rank_certain(winner_id):
     return redirect(request.referrer or '/')
 
 @app.route('/auto-rank-list/<int:winner_id>', methods=['GET'])
-@authenticate
+#@authenticate
 def auto_rank_list(winner_id):
     autoRankList(winner_id)
     return redirect(request.referrer or '/')

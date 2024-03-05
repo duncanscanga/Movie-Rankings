@@ -45,7 +45,10 @@
       href="https://l1nna.com/black-assets/css/blk-design-system.css?v=1.0.0"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="../static/styles/base.css" />
+    <!-- <link rel="stylesheet" href="../static/styles/base.css" /> -->
+
+    <base href="{{ url_for('index', _external=True) }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/base.css') }}">
 
     <!--   Core JS Files   -->
     <script

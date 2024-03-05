@@ -2110,7 +2110,7 @@ def autoRankDisLikedCertain(movieId):
 
         # If not ranked, update rankings
         if not existing_ranking:
-            updateRankings(movie.id, movieId, True)
+            updateRankings(movie.id, movieId, 1, True)
 
 
 def autoRankCertain(movieId):
@@ -2166,7 +2166,7 @@ def autoRankLikes1(movieId):
 
         # If not ranked, update rankings
         if not existing_ranking:
-            updateRankings(movie.id, movieId, True)
+            updateRankings(movie.id, movieId, 1, True)
 
 
 def autoRankStars1(movieId):
@@ -3083,7 +3083,7 @@ def removeSharedMovie(rankingId, movieId):
 
     SharedRanking.query.filter(SharedRanking.id == rankingId).delete()
     
-    updateRankings(winnerId, loserId, False)
+    updateRankings(winnerId, loserId, 1,  False)
     db.session.commit()
 
 def getRankingsInList(listId, movieId):

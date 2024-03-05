@@ -108,9 +108,11 @@
       <th></th>
       <th>Title</th>
       <th>Year</th>
+      <th>Plot</th>
       <th>Director</th>
       <th>Runtime</th>
       <th>Genres</th>
+      <th>Imdb Rating</th>
       <th>Watch</th>
       <th>Log</th>
     </tr>
@@ -127,10 +129,13 @@
           {% elif movie.liked == 3 %}
             <span>&#128078;</span> <!-- Trash can -->
         {% endif %}{% if movie.onComputer %} 🖥️ {% endif %}</td>
+        
       <td><a  href='/all-movies-year/{{movie.year}}'>  {{ movie.year }} </a></td>
+      <td>{{ movie.Plot }}</td>
       <td><a href='/all-movies/{{movie.DirectorString}}'> {{ movie.DirectorString }} </a></td>
-      <td>{{ movie.runtime }}</td>
+      <td>{{ movie.RuntimeString }}</td>
       <td>{{ movie.Genre }}</td>
+      <td>{{ movie.imdbRating }}/10</td>
       <td><a href='/current/{{movie.id}}'>Start Watching </a></td>
       <td><a href='/log-movie/{{movie.id}}'>Watched </a></td>
       
